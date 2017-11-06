@@ -1,0 +1,82 @@
+{* discount managment *}
+
+<form name='MainForm' method=POST>
+
+<p>
+
+{$smarty.const.ADMIN_DISCOUNTS_PROMPT}
+<br>
+
+	{$control}
+
+<p>
+  <input name="discount_type_save" type=submit value='{$smarty.const.SAVE_BUTTON}'>
+</p>
+
+
+<h5>{$smarty.const.ADMIN_DISCOUNT_GENERAL_ORDER_PRICE_TITLE}</h5>
+
+{$smarty.const.ADMIN_DISCOUNT_GENERAL_ORDER_PRICE_PROMPT}
+<br>
+<br>
+
+
+<table cellspacing=0 cellpadding=5 border=0>
+
+	<tr>
+		<td align=middle colspan=3>
+			<b>{$smarty.const.ADMIN_DISCOUNT_GENERAL_ORDER_PRICE_TITLE}</b>
+		</td>
+	</tr>
+
+	<tr class="mainmenu_selected_custord">
+		<td>
+			{$smarty.const.ADMIN_GENERAL_ORDER_PRICE}
+		</td>
+		<td>
+			{$smarty.const.ADMIN_GENERAL_ORDER_PRICE_RANGE}
+		</td>
+		<td>
+			&nbsp;
+		</td>
+	</tr>
+
+	{section name=i loop=$discounts}
+	<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}">
+		<td>
+			<input type=text name='price_range_{$discounts[i].discount_id}' 
+				value='{$discounts[i].price_range}'>
+		</td>
+		<td>
+			<input type=text name='percent_discount_{$discounts[i].discount_id}' 
+				value='{$discounts[i].percent_discount}'>
+		</td>
+		<td>
+			<a href="javascript:confirmDelete({$discounts[i].discount_id},'{$smarty.const.QUESTION_DELETE_CONFIRMATION}','admin.php?dpt=custord&sub=discounts&delete=');">
+					<img src="images/backend/button_delete.gif" border=0 alt="{$smarty.const.DELETE_BUTTON}">
+			</a>
+		</td>
+	</tr>
+	{/section}
+
+	<tr class="mainmenu_selected_custord">
+		<td align=middle colspan=3><b>{$smarty.const.ADD_BUTTON}</b></td>
+	</tr>
+
+	<tr> 
+		<td>
+			<input type=text name='new_price_range'>
+		</td>
+		<td>
+			<input type=text name='new_percent_discount'>% 
+		</td>
+		<td>&nbsp;</td>
+    </tr>
+
+</table>
+
+<p>
+	<input name="save_order_price_discounts" type=submit value='{$smarty.const.SAVE_BUTTON}'>
+</p>
+
+</form>

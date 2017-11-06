@@ -1,0 +1,150 @@
+{* order confirmation *}
+
+{if $order_success}
+
+	<b>
+		<center>
+			{$smarty.const.STRING_ORDER_PLACED}
+		</center>
+	</b>
+
+	{if $after_processing_html}
+		<p>{$after_processing_html}
+	{/if}
+
+
+{else}
+
+{if $orderSum eq NULL}
+
+	<b><center>{$smarty.const.ERROR_CANT_FIND_REQUIRED_PAGE}</center></b>
+
+{else}
+
+
+ {if $orderSum.orderContentCartProductsCount eq 0}
+	
+	<b><center>{$smarty.const.CART_EMPTY}</center></b>
+
+ {else}
+
+
+<h1><u>{$smarty.const.STRING_ORDERING}</u></h1>
+<h3>{$smarty.const.STRING_ORDER_CONFIRMATION}</h3>
+
+{if $payment_error}
+<p><font color=red><b>{$smarty.const.ADMIN_PAYMENT_ERROR}{if $payment_error ne 1}: {$payment_error}{/if}</b></font>
+{/if}
+<p>
+<table width=100%>
+
+	<tr>
+	<td>
+
+	<table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="{$smarty.const.CONF_DARK_COLOR}">
+
+		<tr bgcolor="{$smarty.const.CONF_MIDDLE_COLOR}"> 
+			<td><strong>{$smarty.const.TABLE_PRODUCT_NAME}</strong></td>
+			<td align="center"><strong>{$smarty.const.TABLE_PRODUCT_QUANTITY}</strong></td>
+			
+			<td align="center"><strong>{$smarty.const.TABLE_PRODUCT_COST_WITHOUT_TAX}</strong></td>
+		</tr>
+
+
+		{section name=i loop=$orderSum.sumOrderContent}
+		<tr bgcolor=white>
+			<td>{$orderSum.sumOrderContent[i].name}{if isset($orderSum.sumOrderContent[i].info_prod) && ($orderSum.sumOrderContent[i].info_prod|count_characters > 0)}&nbsp;&nbsp;&nbsp; ({$orderSum.sumOrderContent[i].info_prod|replace:'+':' '}){/if}</td>
+			<td align=center>{$orderSum.sumOrderContent[i].quantity}	</td>
+			
+			<td align=center>{$orderSum.sumOrderContent[i].cost}		</td>
+		</tr>
+		{/section}
+
+	</table>
+
+	</td>
+	</tr>
+
+	<tr>
+	<td>
+<table width="100%" border="0" cellspacing="1" cellpadding="5">
+
+	{if $orderSum.discount_percent>0}
+	<tr>
+		<td width="80%" align="right">{$smarty.const.ADMIN_DISCOUNT}:</td>
+		<td width="20%" align="right">{$orderSum.discount_percent}</td>
+	</tr>
+	{/if}
+
+	<tr>
+		<td width="80%" align="right">{$smarty.const.STRING_PRED_TOTAL}:</td>
+		<td width="20%" align="right">{$orderSum.pred_total_disc}</td>
+	</tr>
+	
+	<!--<tr>
+		<td width="80%" align="right">{$smarty.const.STRING_SHIPPING_TYPE} ({$orderSum.shipping_name}):</td>
+		<td width="20%" align="right">{$orderSum.shipping_cost}</td>
+	</tr>-->
+	<tr>
+		<td width="80%" align="right"><strong>{$smarty.const.TABLE_TOTAL}</strong></td>
+		<td width="20%" align="right"><strong>{$orderSum.total}</strong></td>
+	</tr>
+</table>
+
+	</td>
+	</tr>
+
+</table>
+
+
+{if $orderSum.shipping_name ne "-"}
+
+	<p>
+		{$smarty.const.STRING_SHIPPING_TYPE}: 
+		<b>{$orderSum.shipping_name|replace:"<":"&lt;"}</b><br>
+
+		{$smarty.const.DELIVERY_DEFINITION} 
+	<br><br>
+
+		{$smarty.const.STRING_TARGET_SHIPPING_ADDRESS}:<br>
+		<b>{$orderSum.shipping_address|replace:"<":"&lt;"|replace:"&lt;br>":"<br>"}</b>
+	</p>
+
+{/if}
+
+{if $orderSum.payment_name ne "-"}
+
+	<p>
+		{$smarty.const.STRING_PAYMENT_TYPE}: 
+		<b>{$orderSum.payment_name|replace:"<":"&lt;"}</b>
+		<br>
+	<!--	{$smarty.const.STRING_BILLING_ADDRESS}:<br>
+		<b>{$orderSum.billing_address|replace:"<":"&lt;"|replace:"&lt;br>":"<br>"}</b>-->
+	</p>
+
+{/if}
+
+<form name='MainForm' method=POST>
+
+	<p>
+		{$orderSum.payment_form_html}
+	</p>
+
+	<p>
+		{$smarty.const.STRING_ORDER_COMMENT}:<br>
+		<textarea name="order_comment" cols="40" rows="5"></textarea>
+	</p>
+
+	<p align="left"> 
+		<input type="submit" name="submit" value="{$smarty.const.STRING_FORMALIZE_ORDER}">
+	</p>
+
+	<input type=hidden name='totalUC' value='{$totalUC}'>
+
+</form>
+
+ {/if}
+
+{/if}
+
+{/if}

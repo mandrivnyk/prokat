@@ -1,0 +1,305 @@
+{* category view *}
+
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  		<tr>
+
+		{if $selected_category.picture}
+		<td rowspan=1 valign=top width=1%>
+			<img src="/products_pictures/{$selected_category.picture}" alt="{$selected_category.name}">
+		</td>
+		{/if}
+		<td width="{if $allow_products_search}75{else}90{/if}%" valign="top">
+					<a href="/" class="cat">{$smarty.const.LINK_TO_HOMEPAGE}</a>
+
+					{section name=i loop=$product_category_path}
+						{if $product_category_path[i].categoryID != 1}
+							> <a class="cat" href="/{$product_category_path[i].url_name}">{$product_category_path[i].name}</a>
+						{/if}
+					{/section}
+					{if $selected_category.head_text}
+							<table width="100%" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td>
+									{$selected_category.head_text}
+									</td>
+								</tr>
+							</table>
+					{/if}
+					{if $allow_products_search}
+					<center><br>
+						{include file="advanced_search_in_category.tpl.html"}
+					</center>
+					{/if}
+		</td>
+
+
+
+
+
+
+
+		</tr>
+</table>
+
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+
+	<td  {if $selected_category.picture}colspan="3"{else}colspan="2"{/if} width="{if $allow_products_search}75{else}90{/if}%" valign="top">
+
+	<!-- products list :: start -->
+{if $products_to_show}
+
+
+<form  action="index.php" style="padding-bottom:0px;margin-bottom:0px;">
+{$string_product_sort}	<!--<select   onchange="reDir(this.options[this.selectedIndex].value,{$categoryID})" name="producer">
+		<option value="all">Все производители</option>
+		{section name=i loop=$producers}
+					<option value="{$producers[i]}" {if $producer_cur eq $producers[i]} selected{/if}>{$producers[i]}</option>
+		{/section}		
+	</select>-->
+	
+	
+	</form>
+
+	<table cellpadding="0" cellspacing="0" border="0" width="100%"  >
+	  <tr>
+	  	<td align="left" style="padding-top: 10px;padding-bottom: 10px;">
+	  		 {include file="comparison_products_buttonup.tpl.html"}
+	  	</td>
+	  	<td align="right" class="nafigator"  valign="middle">
+	  		{$catalog_navigator}
+	  	</td>
+	  </tr>
+	 </table>
+		{literal}
+
+		<script>
+
+		function _formatPrice( _price )
+		{
+
+			_pointIndex = -1;
+			for( i=0; i< _price.length; i++ )
+				if ( _price.charAt(i) == '.' )
+				{
+					_pointIndex = i;
+					break;
+				}
+
+			if (  _pointIndex == -1 )
+				_price = _price + ".00";
+			else if (  _price.length-1 - _pointIndex == 1  )
+				_price = _price + "0";
+
+			_res = "";
+
+			i=0;
+			for( i=_price.length-1; i >= 0; i-- )
+			{
+				if ( _price.charAt(i) == '.' )
+					break;
+				else
+					_res = _price.charAt(i) + _res;
+			}
+
+			_res = "." + _res;
+
+			i--;
+			_digitCounter = 0;
+			for( ; i>=0; i-- )
+			{
+				_digitCounter ++;
+				_res = _price.charAt(i) + _res;
+				if ( _digitCounter == 3 && i != 0 )
+				{
+					_res = "," + _res;
+					_digitCounter = 0;
+				}
+
+			}
+
+			return _res;
+
+		}
+
+		</script>
+
+		{/literal}
+
+
+
+
+
+	 <table cellpadding="0" cellspacing="0" border="1" width="100%" class="table_main_cat">
+	  {section name=i1 loop=$products_to_show}
+
+		{if $smarty.section.i1.index is div by $smarty.const.CONF_COLUMNS_PER_PAGE}<tr>{/if}
+		<td valign=top width="{math equation="100 / x" x=$smarty.const.CONF_COLUMNS_PER_PAGE}%" format="%d" style="padding-right: 10px;padding-top: 0px;">
+		{if $smarty.section.i1.index > $smarty.const.CONF_COLUMNS_PER_PAGE-1}{/if}
+			{if $cat_parent eq  '362'  || $categoryID eq '387' || $categoryID eq '364' || $categoryID eq '363'}
+				{include file="product_brief_ligi.tpl.html"   product_info=$products_to_show[i1]}
+			{elseif $cat_parent eq  '249'  }
+				{include file="product_brief_palatka.tpl.html"   product_info=$products_to_show[i1]}
+			{elseif $cat_parent eq '283'}			
+			
+				{include file="product_brief_prokat.tpl.html"   product_info=$products_to_show[i1]}
+			{else}
+				{include file="product_brief.tpl.html"   product_info=$products_to_show[i1]}
+			{/if}
+
+		</td>
+		{if ($smarty.section.i1.index+1) is div by $smarty.const.CONF_COLUMNS_PER_PAGE}</tr>{/if}
+	  {/section}
+
+	 </table>
+	 <table cellpadding="0" cellspacing="0" border="0" width="100%"  >
+	  <tr>
+	  	<td width="40px" align="left" style="padding-top:3px;">
+	  		{include file="comparison_products_buttondown.tpl.html"}
+	  	</td>
+	  	<td align="right"  class="nafigator" valign="top">
+	  		{$catalog_navigator}
+	  	</td>
+	  </tr>
+	  <tr>
+	  	<td colspan="2"><br><br>
+
+	  		{if $selected_category.seo_text}
+							<table width="100%" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td>
+									{$selected_category.seo_text}
+									</td>
+								</tr>
+							</table>
+					{/if}
+	  	</td>
+	  </tr>
+	  <tr>
+	  	<td colspan="2" style="padding-top:5px;">
+	  								<h3 style="font-size:12px;padding:5px;">
+	 									 Интернет магазин Mandrivnyk:
+	 									 <a href="/prokat-palatok">прокат палаток</a>, рюкзаков и спальников для походов и отдыха на природе.	 									 
+	 									 Для согрева большой выбор <a href="/termobelie">термобелья</a> для всей семьи.
+	 									 Мужские и женские толстые и теплые <a href="/termonoski-vse">термоноски купить</a> в магазине. <br>			 
+	 									 Доставка при покупке: Киев, Ирпень, Буча, Львов, Днепропетровск, Донецк, Запорожье,Ровно, Хмельницкий, Винница, Кременчуг, Кривой Рог, Кировоград, Харьков, Одесса, Луганск, Черкассы, Чернигов, Ужгород, Херсон, Тернополь, Украина.
+	 								</h3>
+	  	</td>
+	  </tr>
+	  </table>
+
+
+
+
+{else}
+
+
+
+				{if $search_with_change_category_ability && !$advanced_search_in_category}
+					&nbsp;
+				{else}
+					{if $advanced_search_in_category}
+						&nbsp;&nbsp;&nbsp;&nbsp;< {$smarty.const.STRING_EMPTY_SEARCH_RESULT} >
+
+
+					{else}
+
+						 <center>
+
+							<table width="100%" border="0" cellpadding="0" cellspacing="0">
+
+							
+							<tr>
+						
+								<td align="center" style="padding-left:30px;">
+								<!--<div class="centerblock">-->
+								<!--<table width="100%" border="1" cellpadding="0" cellspacing="0">
+								<tr><td>-->
+										{section name=i loop=$categories_tree}						
+											{if $categories_tree[i].parent eq $categoryID }
+												{assign var="etoBrend" value=0}
+												{assign var="iter" value=0}
+												{section name=y loop=$brendsAll}	
+													{if $categories_tree[i].name|strpos:$brendsAll[y].name !== false}
+													{assign var="etoBrend" value=1}
+													<div class="boxDivVisualCat">
+															<div  class="tablVisualCat">
+																<table border="0" cellpadding="0" cellspacing="0" class="tablVisualCat" >
+							        	    						<tbody>								        	    						
+								        	    						<tr>
+								        	    							<td valign="top" align="center" onclick="window.location.href='/{$categories_tree[i].url_name}'" style="padding-top:5px">
+									        	    							{if $brendsAll[y].filename neq ''}	
+									        	    								<a rel="nofollow"  href="/{$categories_tree[i].url_name}"><img style="border: 0px solid red" src="/images/brends/{$brendsAll[y].filename}" alt="{$categories_tree[i].name}"  title="{$categories_tree[i].name}"><br>	
+									        	    							{/if}														
+								        	    							</td>
+								        	    						</tr> 
+								        	    						<tr>
+								        	    							<td align="center" valign="top"  onclick="window.location.href='/{$categories_tree[i].url_name}'" >
+								        	    								<A href="/{$categories_tree[i].url_name}" class="cat" alt="{$categories_tree[i].name}" title="{$categories_tree[i].name}"> {$categories_tree[i].name}</A>
+								        	    							</td>
+								        	    						</tr>     	    						       	    						
+							        	    					    </tbody>
+							        	    					</table>	
+							        	    				</div>
+							        	    		</div>									
+													{/if}
+												{/section}
+												
+												{if $etoBrend eq 0}
+													<div class="boxDivVisualCat">
+															<div  class="tablVisualCat">
+															<table border="0"  cellpadding="0" cellspacing="0" class="tablVisualCat">
+						        	    						<tbody>
+							        	    						
+							        	    						<tr>
+							        	    							<td valign="top" align="center" onclick="window.location.href='/{$categories_tree[i].url_name}'" style="padding-top:5px">
+								        	    							{if $categories_tree[i].picture neq ''}	
+								        	    								<a rel="nofollow"  href="/{$categories_tree[i].url_name}"><img style="border: 0px solid red" src="/products_pictures/{$categories_tree[i].picture}" alt="{$categories_tree[i].name}"  title="{$categories_tree[i].name}"><br>	
+								        	    							{/if}														
+							        	    							</td>
+							        	    						</tr> 
+							        	    						<tr>
+							        	    							<td align="center" valign="top"  onclick="window.location.href='/{$categories_tree[i].url_name}'" >
+							        	    								<A href="/{$categories_tree[i].url_name}" class="cat" alt="{$categories_tree[i].name}" title="{$categories_tree[i].name}"> {$categories_tree[i].name}</A><br>
+							        	    							</td>
+							        	    						</tr>     	    						       	    						
+						        	    					    </tbody>
+						        	    					</table>
+						        	    					</div>
+							        	    		</div>	
+												{/if}
+											{/if}
+									 	{/section}
+							 			<!--</td>
+							 		</tr>
+							 	 </table>		
+							 	-->
+							 	<!--</div>-->
+
+								</td>
+							
+							</tr>
+					 	</table></center>
+					 	  <br><br>
+
+
+
+					 		{$selected_category.description}
+					 		
+					 		{if $categoryID eq 283}
+                                {include file="index_prokat_price.tpl.html"}
+                            {/if}
+
+					{/if}
+				{/if}
+
+	{/if}
+
+	<!-- products list :: end -->
+
+	</td>
+
+</tr>
+
+</table>
+

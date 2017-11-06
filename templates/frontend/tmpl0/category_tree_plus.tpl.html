@@ -1,0 +1,47 @@
+{* category navigation tree *}
+
+<table width="100%">
+
+{section name=i loop=$categories_tree}
+
+	{if										   $categories_tree[i].categoryID eq '172'
+											|| $categories_tree[i].categoryID == 173
+											|| $categories_tree[i].categoryID == 174
+											|| $categories_tree[i].categoryID == 175
+											|| $categories_tree[i].categoryID == 176
+											|| $categories_tree[i].categoryID == 177
+											|| $categories_tree[i].categoryID == 178
+											|| $categories_tree[i].categoryID == 179
+	}
+
+	<tr>
+	
+	<td valign="top">{if $categories_tree[i].level == 1}{/if}&nbsp;</td>
+
+	<td>
+
+		{section name=j loop=$categories_tree max=$categories_tree[i].level-1}
+			&nbsp;&nbsp;&nbsp;
+		{/section}
+
+		{if $categories_tree[i].level > 1}{/if}
+		{assign var="k" value=$categories_tree[i].level}
+			
+				
+  		
+			{* not selected node => make a link to a category *}
+			<a  href="index.php?categoryID={$categories_tree[i].categoryID}" 
+				{if $categories_tree[i].level > 1}
+					class="menu_lev_3" 
+					{else}
+					class="menu_lev_1" 
+				{/if}>{$categories_tree[i].name}</a>
+			<br>
+  		
+
+	</td></tr>
+
+	{/if}
+{/section}
+
+</table>

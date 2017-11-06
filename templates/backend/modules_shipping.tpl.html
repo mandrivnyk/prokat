@@ -1,0 +1,115 @@
+{* shipping modules managment*}
+
+
+{if $constant_managment}
+	
+	<h1>{$smarty.const.STRING_TITLE_SHIPPING_MODULE_SETTING} : {$shipping_module->title}</h1>
+
+	<a href='admin.php?dpt=modules&sub=shipping'>
+		&lt;&lt;{$smarty.const.STRING_SHIPPING_MODULES}
+	</a>
+
+<p>
+<form method=POST name=shipping_method_form>
+
+
+	{if $settings}
+	<table width="100%" cellspacing=0 cellpadding=5 border=0>
+
+		<tr class="mainmenu_selected_{$current_dpt}">
+			<td align=center>
+				{$smarty.const.ADMIN_SETTING_NAME}
+			</td>
+			<td align=center>
+				{$smarty.const.ADMIN_VALUE}
+			</td>
+		</tr>
+
+		{section name=i loop=$settings}
+		{if $controls[i] ne -1}
+		<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}"> 
+			<td width="50%" align="right" valign="top">
+				<strong>
+					{$settings[i].settings_title}
+				</strong>:
+				<br>
+				<font size="-2">
+					{$settings[i].settings_description}
+				</font>
+			</td>
+			<td width="50%" align="left" valign="top">
+				{$controls[i]}
+			</td>
+		</tr>
+		{/if}
+		{/section}
+	</table>
+
+	<br>
+	<input type=submit name='save' value='{$smarty.const.SAVE_BUTTON}'>
+
+	{else}
+		&lt; {$smarty.const.ADMIN_NO_SETTINGS} &gt;
+	{/if}
+
+</form>
+{else}
+
+	<h1>{$smarty.const.STRING_SHIPPING_MODULES}</h1>
+	{$smarty.const.STRING_SHIPPING_MODULES_DSCR}
+	<p>
+<table width="100%">
+	<tr>
+		<td width="50%" valign="top">
+			<table cellspacing=0 cellpadding=5 border=0>
+				<tr class="mainmenu_selected_{$current_dpt}">
+					<td align=center>{$smarty.const.STRING_MODULE_NAME}</td>
+					<td align=center>{$smarty.const.STRING_MODULE_DESCRIPTION}</td>
+					<td align=center>{$smarty.const.STRING_MODULE_ACTIONS}</td>
+				</tr>
+			
+				{section name=i loop=$shipping_modules}
+				<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}"> 
+					<td valign="top">
+						{$shipping_modules[i]->title}
+					</td>
+					<td valign="top">
+						{$shipping_modules[i]->description}
+					</td>
+					<td align=center>
+						{if $shipping_modules[i]->ModuleType || !$shipping_modules[i]->is_installed()}
+						<a href='admin.php?dpt=modules&sub=shipping&install={$smarty.section.i.index}'>
+							{$smarty.const.STRING_MODULE_INSTALL}
+						</a>
+						{/if}
+					</td>
+			    	</tr>
+				{/section}
+			</table>
+		</td>
+		<td width="50%" valign="top">
+			<table cellspacing=0 cellpadding=5 border=0 width="100%">
+				<tr class="mainmenu_selected_{$current_dpt}">
+					<td colspan="3">
+						{$smarty.const.SHMODULES_INSTALLED_CONFIGS}
+					</td>
+				</tr>
+				{foreach from=$shipping_configs item=_shConfig}
+				{assign var="InstalledModuleConfigs" value=1}
+				<tr class="{cycle values="bg_white, bg_modules"}">
+					<td width="100%">{$_shConfig.ConfigName}</td>
+					<td><a href="admin.php?dpt=modules&sub=shipping&setting_up={$_shConfig.ConfigID}">{$smarty.const.EDIT_BUTTON}</a></td>
+					<td><a href="admin.php?dpt=modules&sub=shipping&uninstall={$_shConfig.ConfigID}">{$smarty.const.DELETE_BUTTON}</a></td>
+				</tr>
+				{/foreach}
+				{if !$InstalledModuleConfigs}
+				<tr bgcolor="white">
+					<td width="100%" align="center" colspan="3">{$smarty.const.ADMIN_NO_INSTALLED_MODULE_CONFS}</td>
+				</tr>
+				{/if}
+			</table>
+		</td>
+	</tr>
+</table>
+
+{/if}

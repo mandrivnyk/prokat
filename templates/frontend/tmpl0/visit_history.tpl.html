@@ -1,0 +1,68 @@
+{* visit history *}
+
+<p><a class="faq" href="index.php?user_details=yes">{$smarty.const.MY_ACCOUNT_LINK}</a>
+
+<p><TABLE BGCOLOR="#{$smarty.const.CONF_DARK_COLOR}" CELLSPACING="1" CELLPADDING="0" WIDTH=100%><TR><TD><table width=100% border=0 cellspacing="0" cellpadding="7">
+	<tr>
+		<td bgcolor="#{$smarty.const.CONF_LIGHT_COLOR}" class="myaccount_tab_bottom" width="25%">
+			<a href='index.php?contact_info=yes'>
+				{$smarty.const.STRING_CONTACT_INFORMATION_DOWN_CASE}
+			</a>
+		</td>
+
+		<td rowspan="{if $smarty.const.CONF_AFFILIATE_PROGRAM_ENABLED}5{else}4{/if}" width="75%" bgcolor="white" align="center">
+			{if $visits}
+			<p>
+				<center>{$navigator}</center>
+			<p>
+			<table border=0 cellspacing=1 cellpadding=4 
+				bgcolor=#{$smarty.const.CONF_DARK_COLOR} width=97%>
+				<tr bgcolor=#{$smarty.const.CONF_MIDDLE_COLOR} align=center>
+					<td>
+						<b>{$smarty.const.STRING_VISIT_LOG}</b>
+					</td>	
+				</tr>
+
+				{section name=i loop=$visits}
+				<tr bgcolor=#{$smarty.const.CONF_LIGHT_COLOR}>
+					<td>{$visits[i].customer_logtime}</td>
+				</tr>
+				{/section}
+
+			</table>
+			{else}
+				<p>{$smarty.const.STRING_EMPTY_LIST}
+			{/if}
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="#{$smarty.const.CONF_LIGHT_COLOR}" class="myaccount_tab_bottom" width="25%">
+			<a href='index.php?address_book=yes'>
+				{$smarty.const.STRING_ADDRESS_BOOK}
+			</a>
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="#{$smarty.const.CONF_LIGHT_COLOR}" class="myaccount_tab_bottom" width="25%">
+			<a href='index.php?order_history=yes'>
+				{$smarty.const.STRING_ORDER_HISTORY}
+			</a>
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="white" class="faq" align="center">
+			<b>{$smarty.const.STRING_VISIT_HISTORY}</b>
+		</td>
+	</tr>
+	{if $smarty.const.CONF_AFFILIATE_PROGRAM_ENABLED}
+	<tr>
+		<td bgcolor="#{$smarty.const.CONF_LIGHT_COLOR}" class="myaccount_tab_top">
+			
+			<a href='?affiliate=yes&sub=balance'>
+				{$smarty.const.STRING_AFFILIATE_PROGRAM}
+			</a>
+		</td>
+	</tr>
+	{/if}
+</table></TD></TR></TABLE>
+<P>&nbsp;

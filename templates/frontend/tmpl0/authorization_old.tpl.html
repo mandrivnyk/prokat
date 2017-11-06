@@ -1,0 +1,50 @@
+{* customers authorization form *}
+
+{if $log ne ""}
+
+	{* logout link *}
+	<table width="100%">
+	  <tr>
+		<td align="center">
+		<br><br>
+			<a class="olive" href="index.php?logout=yes">{$smarty.const.LOGOUT_LINK}</a>
+		<br><br><br>
+		</td>
+	  </tr>
+	</table>
+
+{else}
+
+	{* authorization form *}
+
+	<table cellspacing=0>
+	<form action="index.php" method=post>
+	<tr>
+	 <td>
+		<table border=0>
+		 <input type="hidden" name="enter" value="1">
+		 <tr>
+			<td align=right><font class="olive">{$smarty.const.CUSTOMER_LOGIN}</font></td>
+			<td><input type="text" class="login" name="user_login" size=10></td>
+		 </tr>
+		 <tr>
+			<td align=right><font class="olive">{$smarty.const.CUSTOMER_PASSWORD}</font></td>
+			<td><input name="user_pw" class="login" type="password" size=10></td>
+		 </tr>
+		</table>
+	 </td>
+	 <td>
+		<input type="image" src="images/arrow_olive_dark.gif" value="{$smarty.const.OK_BUTTON}"><br>
+		<a href="index.php?logging=yes" class="olive">{$smarty.const.FORGOT_PASSWORD_LINK}</a>
+	 </td>
+	</tr>
+
+		{if $productID}  <input type=hidden name=productID value="{$productID}"> {/if}
+		{if $categoryID} <input type=hidden name=categoryID value="{$categoryID}"> {/if}
+
+	</form>
+	</table>
+
+<a href="index.php?register=yes" class="olive">{$smarty.const.REGISTER_LINK}</a> 
+
+{/if}

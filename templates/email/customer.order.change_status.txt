@@ -1,0 +1,12 @@
+{* order notification for customer *}
+{$smarty.const.EMAIL_HELLO}, {$customer_firstname}
+
+{$_MSG_CHANGE_ORDER_STATUS}
+
+{if $_ADMIN_COMMENT}
+{$smarty.const.STRING_ADMIN_COMMENT}:
+{$_ADMIN_COMMENT}
+{/if}
+
+{$smarty.const.EMAIL_SINCERELY}, {$smarty.const.CONF_SHOP_NAME}
+{$smarty.const.CONF_SHOP_URL}

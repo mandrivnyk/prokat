@@ -1,0 +1,36 @@
+<form enctype="multipart/form-data" action="#" method=post name="MainForm">
+<select name="categoryID" onChange="window.location='admin.php?dpt=modules&sub=xmlHotline&selectedCID='+document.MainForm.categoryID.value;">
+{section name=i loop=$cats}
+{$cats[i].name}
+	{if $cats[i].categoryID != 1}
+		<option value="{$cats[i].categoryID}" {if $cats[i].categoryID eq $selectedCID} selected{/if}>
+			{section name=y loop=$cats[i].level}
+				&nbsp;
+			{/section}
+		{$cats[i].name}</option>
+	{/if}
+{/section}	
+
+
+
+</select>
+
+<br>
+<br>
+
+<a href="admin.php?dpt=modules&sub=xmlHotline&all=1">Отобранные категории</a>
+</form>
+{$str}
+{if isset($products)}
+Всего {$productsNum} товаров в категории <br>
+Скачать файл по ссылке: <a href="{$fileName}">{$fileName}</a>
+<table width="60%" height="80%" class="datatable">
+{section name=i loop=$products   show=false}
+	<tr>
+		<td>
+			{$products[i].name}
+		</td>
+	</tr>
+{/section}
+</table>
+{/if}

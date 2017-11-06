@@ -1,0 +1,21 @@
+{$smarty.const.STRING_ORDER_ID}: {$orderID}
+{$smarty.const.TABLE_CUSTOMER}: {$customer_firstname} {$customer_lastname}
+{$smarty.const.CUSTOMER_EMAIL} {$customer_email}
+{section name=i loop=$customer_add_fields}
+{$customer_add_fields[i].reg_field_name}: {$customer_add_fields[i].reg_field_value}
+{/section}
+{$smarty.const.ADMIN_IP_ADDRESS}: {$customer_ip}
+{$smarty.const.STRING_ORDER_TIME}: {$order_time}
+{$smarty.const.STRING_CUSTOMER_COMMENTS}: {$customer_comments}
+{$smarty.const.STRING_ORDER_CONTENT}:
+
+{section name=i loop=$content}
+{$content[i].name} (x{$content[i].Quantity}): {$content[i].Price}
+{/section}
+{$smarty.const.TABLE_TOTAL} {$order_amount}
+{$smarty.const.ADMIN_DISCOUNT}: {$discount}
+{$smarty.const.STRING_SHIPPING_TYPE}: {$shipping_type}
+{$smarty.const.STRING_RECEIVER}: {$shipping_firstname} {$shipping_lastname}
+{$smarty.const.STRING_SHIPPING_ADDRESS}: {if $shipping_address ne ""}{$shipping_address},{/if} {if $shipping_city ne ""}{$shipping_city},{/if} {if $shipping_state ne ""}{$shipping_state}{/if} {if $shipping_zip ne ""}{$shipping_zip}{/if} {if $shipping_country ne ""}{$shipping_country}{/if}
+
+{$smarty.const.STRING_PAYMENT_TYPE}: {$payment_type}

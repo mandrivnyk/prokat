@@ -1,0 +1,73 @@
+{* order statuses *}
+
+<p>
+{if $configuration_saved eq 1}
+	{$smarty.const.ADMIN_UPDATE_SUCCESSFUL}
+{/if}
+
+{if $prompt ne ""}
+	<div class="error_message">{$prompt}</div>
+{/if}
+
+<form action="admin.php" method="post">
+
+	<TABLE>
+	<TR>
+	<TD>
+
+	<table border="0" cellpadding="5" cellspacing="0">
+
+		<tr class="mainmenu_selected_{$current_dpt}">
+			<td>{$smarty.const.ADMIN_ORDER_STATUS_NAME}</td>
+			<td>{$smarty.const.ADMIN_SORT_ORDER}</td>
+			<td>&nbsp;</td>
+		</tr>
+
+		{section name=i loop=$order_statues}
+		<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}">
+			<td align=center>
+				<input type=text name=status_name_{$order_statues[i].statusID}
+					value="{$order_statues[i].status_name}">
+			</td>
+			<td align=center>
+				<input type=text name=sort_order_{$order_statues[i].statusID}
+					value="{$order_statues[i].sort_order}">
+			</td>
+			<td align=center>
+				<a href="javascript:confirmDelete({$order_statues[i].statusID},'{$smarty.const.QUESTION_DELETE_CONFIRMATION}', 'admin.php?dpt=custord&sub=order_statuses&delete=');">
+					<img src="images/backend/button_delete.gif" border=0 alt="{$smarty.const.DELETE_BUTTON}">
+				</a>
+			</td>
+		</tr>
+		{/section}
+
+		<tr class="mainmenu_selected_custord">
+			<td colspan="3" align="center">
+				{$smarty.const.ADD_BUTTON}:
+			</td>
+		</tr>
+
+		<tr>
+			<td align=center>
+				<input type=text name=new_status_name value="">
+			</td>
+			<td align=center>
+				<input type=text name=new_sort_order value="">
+			</td>
+			<td align=center>
+				&nbsp;
+			</td>
+		</tr>
+	</table>
+	
+	</TD>
+	</TR>
+	</TABLE>
+
+	<p>
+	<input type=submit value="{$smarty.const.SAVE_BUTTON}" name="save">
+	<input type=hidden name=save_successfull value=1>
+	<input type=hidden name=dpt value="custord">
+	<input type=hidden name=sub value="order_statuses">
+
+</form>

@@ -1,0 +1,164 @@
+{* aux page managment *}
+
+{if $edit || $add_new}
+
+{if $edit}
+<form action='admin.php?dpt=conf&sub=aux_pages&edit={$aux_page.aux_page_ID}' method=post>
+{else}
+<form action='admin.php?dpt=conf&sub=aux_pages&add_new=yes' method=post>
+{/if}
+
+	<p>
+		<a href="admin.php?dpt=conf&sub=aux_pages">
+			{$smarty.const.ADMIN_GOBACK_TO_AUX_PAGES}
+		</a>
+	</p>
+
+	<table border="0" cellspacing="0" cellpadding="0" width="80%">
+		<tr>
+			<td align="right" valign="top">{$smarty.const.ADMIN_CATEGORY_URL_NAME}</td>
+			<td><input name="url_name" type="text" value='{$aux_page.url_name}' size="50"></td>
+		</tr>
+		<tr>
+			<td colspan="2">&nbsp;</td>
+
+		</tr>
+		<tr>
+			<td align="right" valign="top">{$smarty.const.AUX_PAGE_NAME}:</td>
+			<td><input name="aux_page_name" type="text" value='{$aux_page.aux_page_name}' size="50"></td>
+		</tr>
+		<tr>
+			<td align="right" valign="top"></td>
+			<td>
+			<p>
+				<input type="hidden" name="aux_page_text_type" value="1">
+
+
+
+				<br>
+				</p>
+			</td>
+		</tr>
+
+		<tr>
+			<td align="right" valign="top">{$smarty.const.AUX_PAGE_TEXT}:</td>
+			<td>
+				<!--<textarea name="aux_page_text" cols="60" rows="15">{$aux_page.aux_page_text}</textarea>
+				<br>-->
+
+
+
+				{php}
+						global  $aux_page;
+					  	$oFCKeditor = new FCKeditor('aux_page_text') ;
+						$oFCKeditor->BasePath = '/js/fckeditor/' ;
+						$oFCKeditor->Value = $aux_page["aux_page_text"] ;
+		               	$oFCKeditor->Create();
+				{/php}
+
+
+
+			</td>
+		</tr>
+
+		<tr>
+			<td align='right' valign='top'>{$smarty.const.ADMIN_META_KEYWORDS}</td>
+			<td>
+				<input type=text name='meta_keywords' value='{$aux_page.meta_keywords}'>
+			</td>
+		</tr>
+
+		<tr>
+			<td align='right' valign='top'>{$smarty.const.ADMIN_META_DESCRIPTION}</td>
+			<td>
+				<textarea name="meta_description" cols="25" rows="4">{$aux_page.meta_description}</textarea>
+			</td>
+		</tr>
+
+		<tr>
+			<td align="right" valign="top">&nbsp;</td>
+			<td>
+				<input type=submit value='{$smarty.const.SAVE_BUTTON}' name='save'>
+			</td>
+		</tr>
+
+	</table>
+
+</form>
+
+{else}
+
+<p>{$smarty.const.AUX_PAGES_DESCRIPTION}
+<p>
+<table cellspacing=0 cellpadding=5 border=0>
+
+	<tr class="mainmenu_selected_{$current_dpt}">
+		<td align=middle>{$smarty.const.AUX_PAGE_NAME}</td>
+		<td align=middle>{$smarty.const.AUX_PAGE_TEXT_TYPE}</td>
+		<td align=middle>{$smarty.const.AUX_PAGE_REF}</td>
+		<td align=middle>{$smarty.const.AUX_PAGE_EDIT}</td>
+		<td align=middle>&nbsp;</td>
+	</tr>
+
+	{section name=i loop=$aux_pages}
+		<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}">
+			<td>{$aux_pages[i].aux_page_name}</td>
+			<td>
+				{if $aux_pages[i].aux_page_text_type == 0}
+					TEXT
+				{else}
+					HTML
+				{/if}
+			</td>
+			<td>
+
+				<script language='JavaScript'>
+
+				function open_full_window(link) //opens new window
+				{literal}
+				{
+				{/literal}
+					var win = "menubar=no,location=no,resizable=yes,scrollbars=yes";
+					auxPageWin = window.open(link,'auxPageWin',win);
+				{literal}
+				}
+				{/literal}
+
+				</script>
+
+				</script>
+
+				&lt;a href="/show_aux_page-{$aux_pages[i].aux_page_ID}.html"&gt;{$aux_pages[i].aux_page_name}&lt;/a&gt;
+				<br>
+				<a href='JavaScript:open_full_window("index.php?show_aux_page={$aux_pages[i].aux_page_ID}")'>
+					{$smarty.const.ADMIN_SHOW_AUX_PAGE}
+				</a>
+			</td>
+			<td>
+				<a href='admin.php?dpt=conf&sub=aux_pages&edit={$aux_pages[i].aux_page_ID}'>
+					{$smarty.const.AUX_PAGE_EDIT}...
+				</a>
+			</td>
+			<td>
+				<a
+					href="javascript:confirmDelete({$aux_pages[i].aux_page_ID},'{$smarty.const.QUESTION_DELETE_CONFIRMATION}','admin.php?dpt=conf&sub=aux_pages&delete=');">
+						<img
+							alt='{$smarty.const.DELETE_BUTTON}'
+							src="./images/backend/button_delete.gif"
+							border=0>
+				</a>
+			</td>
+		</tr>
+	{/section}
+
+	<tr>
+		<td align=center colspan=5>
+			<a href="admin.php?dpt=conf&sub=aux_pages&add_new=yes" class="big">
+				<B>{$smarty.const.AUX_PAGE_ADD_NEW}</B>
+			</a>
+		</td>
+	</tr>
+
+</table>
+
+{/if}

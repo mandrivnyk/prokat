@@ -1,0 +1,8 @@
+{* transaction result *}
+<h1 style="text-align:center;">
+{if $TransactionResult eq 'success'}
+	{$smarty.const.STRING_TRANSACTION_RESULT_SUCCESS}
+{elseif  $TransactionResult eq 'failure'}
+	{$smarty.const.STRING_TRANSACTION_RESULT_FAILURE}
+{/if}
+</h1>

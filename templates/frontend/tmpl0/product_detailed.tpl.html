@@ -1,0 +1,924 @@
+{* product detailed information view *}
+<div itemscope itemtype="http://data-vocabulary.org/Product">
+{$selected_category.skidka}
+{if $product_info ne NULL}
+
+{if !$printable_version}
+
+<table cellpadding="0"  cellspacing="0" border="0" width=95%>
+	<tr>
+
+		{if $selected_category[3]}
+		<td rowspan=2 valign=top width="1%">
+			<img src="products_pictures/{$selected_category[3]}" alt="{$selected_category[1]}">
+		</td>
+		{/if}
+
+		<td width="70%">
+					<a href="index.php" rel="nofollow" class="cat">{$smarty.const.LINK_TO_HOMEPAGE}</a>
+					<span itemprop="category" content="{section name=i loop=$product_category_path}{$product_category_path[i].name} >{/section}">
+					{section name=i loop=$product_category_path}
+						{if $product_category_path[i].categoryID != 1}
+							> <a class="cat" href="/{$product_category_path[i].url_name}">{$product_category_path[i].name}</a>
+						{/if}
+					{/section}
+					</span>
+		</td>
+
+
+		<td align=right width="30%"> {* printable version link *}
+		 <table>
+		  <tr><td><a rel="nofollow" href="javascript:open_printable_version('printable.php?productID={$product_info.productID}');"><img src="images/printer-icon.gif" width="20px" border=0 alt="{$smarty.const.STRING_PRINTABLE_VERSION}"></a></td>
+		  <td style="font-size:11px;"><a rel="nofollow" href="javascript:open_printable_version('printable.php?productID={$product_info.productID}');">{$smarty.const.STRING_PRINTABLE_VERSION}</a></td>
+		  </tr>
+		 </table>
+		</td>
+
+
+	</tr>
+</table>
+
+{/if}
+
+
+<section>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table_main_cat1" >
+	<tr>
+		<td valign=top width=99% colspan="2">
+			<table width=100% border="0" cellpadding="0" cellspacing="0">
+				<tr>
+
+						<td valign=top class="product_detail_td">
+							<table width="100%" cellpadding="0" cellspacing="0">
+								<tr>
+									<td style="padding-left: 12px;">
+										<h1 style="font-size:18px; font-weight: bold; color: #800080;">
+										  <span style="font-size: 12px; font-weight:normal;">{$product_info.title_one}</span><br>
+										  {if $product_info.producer neq 'null' }<span itemprop="brand">{$product_info.producer}</span>{/if} <span itemprop="name">{$product_info.name}</span>
+										</h1>
+									</td>
+									<td class="product_detail_td" valign="top">
+									<span itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer">
+													<h1>{if $currencies_count ne 0 && $product_info.Price > 0}
+											{* show list price? *}
+											{if $product_info.list_price > 0 && $product_info.list_price > $product_info.Price && $product_info.Price > 0}
+
+												<font color=brown>
+													<del>{$product_info.list_priceWithUnit}</del>
+												</font>
+												<br>
+											{/if}
+
+											<b>
+											<font class="big" color="{if $product_info.in_stock > 0}#309919{else}red{/if}" id='currentPrice'>
+												{if $product_info.Price <= 0}
+													n/a
+												{else}
+												<span itemprop="price">{$product_info.PriceWithOutUnit}</span><meta itemprop="currency" content="UAH" />{$smarty.const.GRN}
+												{/if}<br>
+											</font>
+											</b>
+
+
+											{* you save *}
+											{if $product_info.list_price > 0 &&
+												$product_info.list_price > $product_info.Price &&
+												$product_info.Price > 0}
+
+												{$smarty.const.YOU_SAVE}:
+													<font color=brown>
+														{$product_info[14]} ({$product_info[15]}%)
+													</font>
+												<br>
+											{/if}
+										{/if}
+										</h1>
+											{* in stock info *}
+												{if $smarty.const.CONF_CHECKSTOCK == '1'}<span itemprop="availability" content="in_stock">
+													{$smarty.const.IN_STOCK}:
+													<b>
+													{if $product_info.in_stock > 0}
+
+														{if $smarty.const.CONF_EXACT_PRODUCT_BALANCE}
+															<font color="#289711">{*$product_info.in_stock*}{$smarty.const.ANSWER_YES}</font>
+														{else}
+															{$smarty.const.ANSWER_YES}
+														{/if}
+													{else}
+														<font color=red>{$smarty.const.ANSWER_NO}</font>
+													{/if}
+													</b></span>
+													<br>
+												{/if}
+									</span>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2"><span itemprop="description">{$product_info.brief_description}</span></td>
+								</tr>
+							</table>
+
+
+						</td>
+
+
+
+						<td width="1%" align="center" valign="top" border="0" class="product_detail_td" rowspan="3">
+
+							{if $product_info.img_orig}
+								{if $product_info.img_big}
+									{if !$printable_version}
+
+
+									<a title="нажмите, чтоб увеличить" onclick="return hs.expand(this)" class="highslide" href="/images/products/{$product_info.img_big}" style="">
+
+									{/if}
+											<img border=0 src="images/products/{$product_info.img_small}" alt="{$product_info.title_one} {$product_info.producer} {$product_info.name|escape:'html'}">
+									</a>
+
+									{if !$printable_version}
+										<div class="highslide-caption">
+				    						{$product_extra[0].option_value}
+											{$product_info.name}
+										</div>
+									<br>
+										<table><tr><td><img src="images/enlarge.gif"></td><td>
+											<a title="нажмите, чтоб увеличить" onclick="return hs.expand(this)" class="highslide" href="/images/products/{$product_info.img_big}" style="">
+												{$smarty.const.ENLARGE_PICTURE}
+											</a>
+											<div class="highslide-caption">
+					    						{$product_extra[0].option_value}
+												{$product_info.name}
+											</div>
+										</td></tr></table>
+									{/if}
+								{else}
+									<img src="images/products/{$product_info.img_small}" border=0 alt="{$product_info.name|escape:'html'}">
+								{/if}
+							{else}
+								{if $product_info.thumbnail}
+									{if $product_info.big_picture}
+										{if !$printable_version}
+
+										<div class="section" id="samples-wrapper">
+										<div class="thumbwrapper" >
+										<div style="border: 0px solid blue; position: relative;">
+										{/if}
+										<a title="нажмите, чтоб увеличить" onclick="return hs.expand(this,{literal}{{/literal} outlineType: 'rounded-white' {literal}}{/literal})" class="highslide" href="/products_pictures/{$product_info.big_picture}" style="">
+											{section name=i loop=$imgs_topsale}
+												{if $imgs_topsale[i].num_topsale eq $product_info.num_topsale}
+													<i style="background: url('/images/topsale/{$imgs_topsale[i].filename}') no-repeat scroll 0 0 transparent;" class="top-sale"></i>
+												{/if}
+											{/section}
+											<img itemprop="image" border=0 src="/products_pictures/{$product_info.thumbnail}" title="{$product_info.producer} {$product_info.name|escape:'html'}" alt="{$product_info.title_one} {$product_info.producer} {$product_info.name|escape:'html'}">
+										</a>
+										{if !$printable_version}
+											<div class="highslide-caption">
+					    						{$product_extra[0].option_value}
+												{$product_info.name}&nbsp;&nbsp;&nbsp;&nbsp;
+												{if $currencies_count ne 0 && $product_info.Price > 0}
+													<b>{$smarty.const.CURRENT_PRICE}:
+													<font class="big" color="red" id='currentPrice'>
+														{if $product_info.Price <= 0}
+															n/a
+														{else}
+															{$product_info.PriceWithOutUnit} {$smarty.const.GRN}
+														{/if}
+													</font>
+													</b>
+												{/if}
+											</div>
+											</div>
+											</div>
+											</div>
+
+										<br>
+											<table>
+												<tr>
+												<td><img src="images/enlarge.gif"></td>
+												<td>
+													<a onclick="return hs.expand(this)" class="highslide" href="/products_pictures/{$product_info.big_picture}" style="">
+
+														{$smarty.const.ENLARGE_PICTURE}
+													</a>
+													<div class="highslide-caption">
+							    						{$product_extra[0].option_value}
+														{$product_info.name}&nbsp;&nbsp;&nbsp;&nbsp;
+												{if $currencies_count ne 0 && $product_info.Price > 0}
+													<b>{$smarty.const.CURRENT_PRICE}:
+													<font class="big" color="red" id='currentPrice'>
+														{if $product_info.Price <= 0}
+															n/a
+														{else}
+															{$product_info.PriceWithOutUnit} {$smarty.const.GRN}
+														{/if}
+													</font>
+													</b>
+												{/if}
+													</div>
+												</td>
+												</tr>
+											</table>
+										{/if}
+									{else}
+				  						<img border=0 src="/products_pictures/{$product_info.thumbnail}" alt="{$product_info.name|escape:'html'}">
+									{/if}
+								{/if}
+							{/if}
+
+							{if $all_product_pictures}
+
+							<p>{$smarty.const.ADMIN_PHOTOS}:<br>
+							<table cellpadding="0">
+							{section name=i loop=$all_product_pictures}
+								{if $smarty.section.i.index % 2 == 0}<tr>{/if}
+								<td>
+
+								<a onclick="return hs.expand(this)" class="highslide" href="/products_pictures/{$all_product_pictures[i].enlarged}">
+									<img src="products_pictures/{$all_product_pictures[i].thumbnail}" border=0>
+								</a>
+
+
+													<div class="highslide-caption">
+							    						{$product_extra[0].option_value}
+														{$product_info.name}&nbsp;&nbsp;&nbsp;&nbsp;
+												{if $currencies_count ne 0 && $product_info.Price > 0}
+													<b>{$smarty.const.CURRENT_PRICE}:
+													<font class="big" color="red" id='currentPrice'>
+														{if $product_info.Price <= 0}
+															n/a
+														{else}
+															{$product_info.PriceWithOutUnit} {$smarty.const.GRN}
+														{/if}
+													</font>
+													</b>
+												{/if}
+													</div>
+
+
+
+
+								</td>
+								{if ($smarty.section.i.index+1) % 2 == 0}</tr>{/if}
+							{/section}
+							</table>
+
+							{/if}
+
+							 {* add to cart *}
+							<br>
+
+									{if !$printable_version}
+
+									  <form action="index.php?productID={$product_info.productID}"
+											method=post name="HiddenFieldsForm">
+
+									  {if $smarty.const.CONF_OPEN_SHOPPING_CART_IN_NEW_WINDOW eq 0}
+
+											{* shopping cart page is shown in the same window - in this cart 'add to cart' button is a form submit button *}
+
+											{if $product_info.Price>0 && ( $smarty.const.CONF_SHOW_ADD2CART eq 1 ) &&
+												( $smarty.const.CONF_CHECKSTOCK==0 || $product_info.in_stock > 0 ) }
+
+												<input name='cart' type=image src="images/cart_big_navy.gif"alt="{$smarty.const.ADD_TO_CART_STRING}">
+											{else}
+												&nbsp;
+											{/if}
+
+									  {else}
+
+											{* show shopping cart page in a new window => add hidden values as FORM elements and to the cart.php URL *}
+
+											{if $product_info.Price>0 && ( $smarty.const.CONF_SHOW_ADD2CART eq 1 ) &&
+												( $smarty.const.CONF_CHECKSTOCK==0 || $product_info.in_stock > 0 ) }
+												{if isset($size_arr)}
+													<select onchange="" id="size_select">
+														<option >-Выберите размер-</option>
+														{section name=i loop=$size_arr}
+															<option value="{$size_arr[i]}">{$size_arr[i]}</option>
+
+														{/section}
+													</select><br><br>
+												{/if}
+												{if isset($colors_arr)}
+												<select id="colors_select">
+													<option>-Выберите цвет-</option>
+													{section name=i loop=$colors_arr}
+														<option value="{$colors_arr[i]}">{$colors_arr[i]}</option>
+
+													{/section}
+												</select><br><br>
+												{/if}
+	<script langauge='JavaScript'>
+	{literal}
+	function get_size_selected()
+	{
+		var ret_base = 'cart.php?';
+		var ret_size = '';
+		var ret_color = '';
+
+
+		//alert(1);
+
+		if(document.getElementById('size_select') != null)
+		{
+			if(document.getElementById('size_select').value != '-Выберите размер-')
+			{
+				var Size_sel = document.getElementById('size_select').value;
+				//alert(Size_sel);
+				ret_size =  'size_sel='+Size_sel+'&';
+			}
+		}
+		//alert(1);
+
+		if(document.getElementById('colors_select') != null)
+		{
+			if(document.getElementById('colors_select').value != '-Выберите цвет-')
+			{
+				var Color_sel = document.getElementById('colors_select').value;
+				//alert(Size_sel);
+				ret_color =  'color_sel='+Color_sel+'&';
+			}
+		}
+		return ret_base+ret_size+ret_color;
+
+
+	}
+	{/literal}
+	</script>
+<a id="cart_id" href="javascript: var url_mod =  get_size_selected(); open_window(url_mod+'addproduct={$product_info.productID}{counter name='select_counter_hidden' start=0 skip=1 print=false}{counter name='select_counter_hidden_extra' start=0 skip=1 print=false}{section name=i loop=$product_extra}{if $product_extra[i].option_type eq 1}{section name=s loop=$product_extra[i].option_show_times}&option_select_hidden_{counter name=select_counter_hidden}='+document.HiddenFieldsForm.option_select_hidden_{counter name=select_counter_hidden_extra}.value+'{/section}{/if}{/section}',400,300);"><img border=0 src="images/cart_big_navy.gif"
+													alt="{$smarty.const.ADD_TO_CART_STRING}"></a>
+
+											{else}
+												&nbsp;
+											{/if}
+
+									  {/if}
+
+											{counter name='select_counter_hidden' start=0 skip=1 print=false}
+											{section name=i loop=$product_extra}
+												{if $product_extra[i].option_type eq 1}
+													{section name=s loop=$product_extra[i].option_show_times}
+														<input type=hidden name='option_select_hidden_{counter name=select_counter_hidden}' value='1'>
+													{/section}
+												{/if}
+											{/section}
+
+									  </form>
+
+									 {/if}
+
+
+
+									 		{if $product_info.color  neq ''}
+								<b>{$smarty.const.ADMIN_PALATKA_COLOR}</b>: {$product_info.color }  <br>
+							{/if}
+
+
+
+						{if $product_info.shipping_freightUC}
+							{$smarty.const.ADMIN_SHIPPING_FREIGHT}:&nbsp;
+								<font color=brown>{$product_info.shipping_freightUC}</font>
+	 							<br>
+						{/if}
+
+						{if $product_info.min_order_amount > 1}
+							{$smarty.const.STRING_MIN_ORDER_AMOUNT}: {$product_info.min_order_amount}
+								{$smarty.const.STRING_ITEM}
+							<br>
+						{/if}<br>
+
+
+						<!-- AddThis Button BEGIN -->
+						<div class="addthis_toolbox addthis_default_style" style="padding-left: 13px;" >
+						<a class="addthis_button_preferred_1"></a>
+						<a class="addthis_button_preferred_2"></a>
+						<a class="addthis_button_preferred_3"></a>
+						<a class="addthis_button_preferred_4"></a>
+						<a class="addthis_button_compact"></a>
+						<a class="addthis_counter addthis_bubble_style"></a>
+						</div>
+						<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4ee738ac3b7392bb"></script>
+						<!-- AddThis Button END -->
+
+
+
+						</td>
+
+
+
+
+				</tr>
+
+				{if $akcia==1 &&  ($product_info.PriceWithOutUnit > 1500)  && ($product_info[15] == 0)
+                && $producer neq 'Lasting' &&  $producer neq 'Alpine pro' &&  $producer neq 'Salewa' && $producer neq 'Bizioni' && $producer neq 'Esbit'&& $producer neq 'Osprey' &&  $producer neq 'Rock Technologies'
+                && $producer neq 'Trimm' &&  $producer neq 'Turbat' &&   $producer neq 'Wind x-treme' &&   $producer neq 'Zamberlan'  }
+				<tr>
+					<td style="padding-left: 30px;" align="center">
+						<fieldset style="text-align: center; width: 400px;"><legend><span style="color:red; font-size: 25px;"><b>{$smarty.const.AKCION_PREDLOG}:</b></span></legend>
+
+
+							<h3 style="color:#309919;font-size: 25px;">
+							<img src="/products_pictures/{$product_info.thumbnail}" alt="{$product_info.name|escape:'html'}" title="{$product_info.name|escape:'html'}"><span class="saleAkcii"> +
+							{if $product_info.PriceWithOutUnit > 1500 && $product_info.PriceWithOutUnit < 2500} <!------------------- akcii 1-->
+								<img src="/images/Gift-Box-Icon.png" alt="{$smarty.const.GIFT}" title="{$smarty.const.GIFT}"> ={$product_info.PriceWithOutUnit} {$smarty.const.GRN}
+                                <div class="akciiMore"><a  class="akciiMore" target="_blank" href="/podarki-akcii-1" title="{$smarty.const.CHOOSE_YOUR_GIFT}"  alt="{$smarty.const.CHOOSE_YOUR_GIFT}">{$smarty.const.MORE_INFO_ON_PRODUCT}</a></div>
+							{elseif $product_info.PriceWithOutUnit > 2500 && $product_info.PriceWithOutUnit < 4000} <!------------------- akcii 2-->
+								<img src="/images/Gift-Box-Icon.png" alt="{$smarty.const.GIFT}" title="{$smarty.const.GIFT}"> ={$product_info.PriceWithOutUnit} {$smarty.const.GRN}
+                               <div class="akciiMore"> <a  target="_blank" href="/podarki-akcii-2" title="{$smarty.const.CHOOSE_YOUR_GIFT}"  alt="{$smarty.const.CHOOSE_YOUR_GIFT}">{$smarty.const.MORE_INFO_ON_PRODUCT}</a></div>
+							{elseif $product_info.PriceWithOutUnit > 4000 } <!------------------- akcii 3-->
+								<img src="/images/Gift-Box-Icon.png" alt="{$smarty.const.GIFT}" title="{$smarty.const.GIFT}"> ={$product_info.PriceWithOutUnit} {$smarty.const.GRN}
+                                   <div class="akciiMore"><a class="akciiMore" target="_blank" href="/podarki-akcii-3" title="{$smarty.const.CHOOSE_YOUR_GIFT}"  alt="{$smarty.const.CHOOSE_YOUR_GIFT}">{$smarty.const.MORE_INFO_ON_PRODUCT}</a></div>
+							{/if}
+							</span></h3>
+
+						</fieldset>
+
+					</td>
+				</tr>
+				<tr>
+					<td align="center">
+
+					</td>
+				</tr>
+				{/if}
+				<tr>
+
+					<td class="product_detail_td" colspan="1">
+
+						<form action="index.php?productID={$product_info.productID}" method=post name="MainForm">
+
+						{* extra parameters *}
+						<p>
+						<table cellpadding="0" border="0" >
+							{counter name='select_counter' start=0 skip=1 print=false assign='select_counter_var'}
+								<tr>
+									<td colspan="2" align="left" class="STR_CHARACTER">{$smarty.const.STR_CHARACTER} {$producer} {$product_info.name}</td>
+								</tr>
+								{if isset($producer)}
+								<tr bgcolor="{if $smarty.section.i.index % 2 == 0}#{$smarty.const.CONF_LIGHT_COLOR}{else}white{/if}" class="table_extra_par">
+											<td valign="top" style="padding-left:5px; padding-right:5px; padding-top:2px;padding-bottom:2px;" class="table_extra_par">
+
+												{$smarty.const.ADMIN_PRODUCER}:
+											</td>
+											<td class="table_extra_par">
+												<b>{$producer}
+												{if $producer eq 'Alpine pro'}(Чехия)
+												{elseif $producer eq 'Trimm'}(Чехия)
+												{elseif $producer eq 'Hannah'}(Чехия)
+												{elseif $producer eq 'Babyweavers'}(Англия)
+												{elseif $producer eq 'Kama'}(Чехия)
+												{elseif $producer eq 'Pinguin'}(Чехия)
+												{elseif $producer eq 'Lasting'}(Чехия)
+												{elseif $producer eq 'Loap'}(Чехия)
+												{elseif $producer eq 'WARMPEACE'}(Чехия)
+												{elseif $producer eq 'Bizioni'}(подразделение фирмы Lasting, Чехия)
+												{elseif $producer eq 'Снаряжение'}(Россия)
+												{elseif $producer eq 'Ижевск'}(Россия)
+												{elseif $producer eq 'Gronell'}(Италия)
+												{elseif $producer eq 'Ferrino'}(Италия)
+												{elseif $producer eq 'Asolo'}(Италия)
+												{elseif $producer eq 'Carrera'}(Италия, сделано в Словении)
+												{elseif $producer eq 'Trezeta'}(Италия)
+												{elseif $producer eq 'Dolomite'}(Италия)
+												{elseif $producer eq 'Zamberlam'}(Италия)
+												{elseif $producer eq 'Mandrivnyk'}(Украина)
+												{elseif $producer eq 'Capricorn'}(Украина)
+												{elseif $producer eq 'Traveland (Capricorn)'}(Украина)
+												{elseif $producer eq 'Commandor'}(Украина)
+												{elseif $producer eq 'Commandor (Neve)'}(Украина)
+												{elseif $producer eq 'Travel Extreme'}(Украина)
+												{elseif $producer eq 'Terra Incognita'}(Украина)
+												{elseif $producer eq 'VR'}(Украина)
+												{elseif $producer eq 'SOL'}(Китай)
+												{elseif $producer eq 'Fire-Maple'}(Китай)
+												{elseif $producer eq 'Tramp'}(Китай)
+												{elseif $producer eq 'Totem'}(Китай)
+												{elseif $producer eq 'Arakan'}(Китай)
+												{elseif $producer eq 'Kovea'}(Корея)
+												{elseif $producer eq 'Salewa'}(Германия)
+												{elseif $producer eq 'Tatonka'}(Германия)
+												{elseif $producer eq 'Reusch'}(Германия)
+												{elseif $producer eq 'Norveg'}(Германия)
+												{elseif $producer eq 'Douter'}(Германия)
+												{elseif $producer eq 'Сampingaz'}(Франция)
+												{elseif $producer eq 'Petzl'}(Франция)
+												{elseif $producer eq 'Bolle'}(Франция)
+												{elseif $producer eq 'X-Socks'}(Швейцария)
+												{elseif $producer eq 'X-Bionic'}(Швейцария)
+												{elseif $producer eq 'Leki Sport'}(Швейцария)
+												{elseif $producer eq 'Craft'}(Швеция)
+												{elseif $producer eq 'Primus'}(Швеция)
+												{elseif $producer eq 'Kellys'}(Словакия)
+												{elseif $producer eq 'Elan'}(Словения)
+												{elseif $producer eq 'Silva'}(Швеция)
+												{elseif $producer eq 'Coleman'}(Польша)
+												{elseif $producer eq 'Destroyer'}(Польша)
+												{elseif $producer eq 'Teva'}(США)
+												{elseif $producer eq 'Osprey'}(США)
+												{elseif $producer eq 'Vasque'}(США)
+												{elseif $producer eq 'Gary Fisher'}(США)
+												{elseif $producer eq 'Trek'}(США)
+												{elseif $producer eq 'Oakley'}(США)
+												{elseif $producer eq 'Smith Optics'}(Made in the USA)
+												{/if}
+
+												</b>
+
+
+											</td>
+										</tr>
+
+								{/if}
+                            {if isset($product_info.warranty) && $product_category_path[1].categoryID neq '283'}
+                            <tr bgcolor="{if $smarty.section.i.index % 2 == 0}#{$smarty.const.CONF_LIGHT_COLOR}{else}white{/if}" class="table_extra_par">
+                                <td valign="top" style="padding-left:5px; padding-right:5px; padding-top:2px;padding-bottom:2px;" class="table_extra_par">
+
+                                    {$smarty.const.ADMIN_WARRANTY}:
+                                </td>
+
+                                <td class="table_extra_par">
+                                    <b>
+                                    {if   $product_category_path[1].categoryID eq '343' }
+                                        от магазина 14 дней (<a href="/garantija" noindex rel="nofollow">подробнее</a>)
+                                    {elseif $product_info.warranty eq 0}
+                                        от производителя 14 дней (<a href="/garantija" noindex rel="nofollow">подробнее</a>)
+                                        {else}
+                                        от производителя {$product_info.warranty} месяцев (<a href="/garantija" noindex rel="nofollow">подробнее</a>)
+                                    {/if}
+                                    </b>
+                                </td>
+                            </tr>
+                            {/if}
+								{section name=i loop=$product_extra}
+									{if $product_extra[i].option_type eq 0 }
+										<tr bgcolor="{if $smarty.section.i.index % 2 == 0}#{$smarty.const.CONF_LIGHT_COLOR}{else}white{/if}" class="table_extra_par">
+											<td valign="top" style="padding-left:5px; padding-right:5px; padding-top:2px;padding-bottom:2px;" class="table_extra_par">
+
+												{$product_extra[i].name}:
+											</td>
+											<td class="table_extra_par">
+											{if $product_extra[i].name eq 'Артикул'}
+												<b><span itemprop="identifier" content="{$product_extra[i].option_value}">{$product_extra[i].option_value}</span></b>
+											{else}
+												<b>{$product_extra[i].option_value}</b>
+											{/if}
+
+											</td>
+										</tr>
+									{else}
+										{counter name='option_show_times' start=0 skip=1 print=false}
+										{section name=k loop=$product_extra[i].option_show_times}
+											<tr bgcolor="{if $smarty.section.i.index % 2 == 0}#{$smarty.const.CONF_LIGHT_COLOR}{else}white{/if}">
+												<td>
+													{$product_extra[i].name}{if $product_extra[i].option_show_times > 1 }
+														({counter name=option_show_times}):{else}:{/if}
+												</td>
+												<td>
+													{counter name=select_counter}
+													{if $smarty.section.k.index == 0}
+														<select name='option_select_{$select_counter_var}'
+															onchange='JavaScript:GetCurrentCurrency();'>
+															{section name=j loop=$product_extra[i].values_to_select}
+																{if $product_extra[i].values_to_select[j].variantID eq $product_extra[i].variantID}
+																	<option value='{$product_extra[i].values_to_select[j].price_surplus}:{$product_extra[i].values_to_select[j].variantID}' selected>
+																{else}
+																	<option value='{$product_extra[i].values_to_select[j].price_surplus}:{$product_extra[i].values_to_select[j].variantID}'>
+																{/if}
+																		{$product_extra[i].values_to_select[j].option_value}
+																	</option>
+															{/section}
+														</select>
+													{else}
+														<select name='option_select_{$select_counter_var}'
+															onchange='JavaScript:GetCurrentCurrency();'>
+															<option value='0:-1'>{$smarty.const.NOT_DEFINED}</option>
+																{section name=j loop=$product_extra[i].values_to_select}
+																	<option value='{$product_extra[i].values_to_select[j].price_surplus}:{$product_extra[i].values_to_select[j].variantID}'>
+																		{$product_extra[i].values_to_select[j].option_value}
+																	</option>
+																{/section}
+														</select>
+													{/if}
+												</td>
+											</tr>
+										{/section}
+									{/if}
+								{/section}
+						</table>
+
+						{if $select_counter_var != 0}
+
+							{if $product_info.Price > 0}
+
+							<b>{$smarty.const.CURRENT_PRICE_OPTION}:</br>
+
+							{/if}
+
+							<input type=hidden value="{php}echo(getPriceUnit());{/php}"
+								name="priceUnit">
+							{if $product_info.Price <= 0}
+								<input type=hidden value="" id="optionPrice">
+							{else}
+								<input type=text value=""
+									class="totalPrice"
+									readonly
+									id="optionPrice" >
+							{/if}
+
+							{literal}
+							<script langauge='JavaScript'>
+								document.MainForm.optionPrice.readOnly = true;
+
+								function _formatPrice( _price )
+								{
+
+									_pointIndex = -1;
+									for( i=0; i< _price.length; i++ )
+										if ( _price.charAt(i) == '.' )
+										{
+											_pointIndex = i;
+											break;
+										}
+
+									if (  _pointIndex == -1 )
+										_price = _price + ".00";
+									else if (  _price.length-1 - _pointIndex == 1  )
+										_price = _price + "0";
+
+									_res = "";
+
+									i=0;
+									for( i=_price.length-1; i >= 0; i-- )
+									{
+										if ( _price.charAt(i) == '.' )
+											break;
+										else
+											_res = _price.charAt(i) + _res;
+									}
+
+									_res = "." + _res;
+
+									i--;
+									_digitCounter = 0;
+									for( ; i>=0; i-- )
+									{
+										_digitCounter ++;
+										_res = _price.charAt(i) + _res;
+										if ( _digitCounter == 3 && i != 0 )
+										{
+											_res = "," + _res;
+											_digitCounter = 0;
+										}
+									}
+
+									return _res;
+								}
+
+								function GetCurrentCurrency()
+								{
+							{/literal}
+									_selectionCount={$select_counter_var};
+									_sum = {$product_info.PriceWithOutUnit};
+
+									{counter name='select_counter2' start=1 skip=1 print=false
+										assign='select_counter_var2'}
+										{section name=i loop=$product_extra}
+										{section name=k loop=$product_extra[i].option_show_times}
+
+											_value =
+												document.MainForm.option_select_{$select_counter_var2}.value;
+											price_surplus = ( _value.split(":") )[0];
+											_sum += new Number( price_surplus );
+											variantID = ( _value.split(":") )[1];
+											document.HiddenFieldsForm.option_select_hidden_{$select_counter_var2}.value =
+												variantID;
+
+											{counter name=select_counter2}
+
+										{/section}
+										{/section}
+
+										_sumStr = new String(_sum);
+										_commaIndex = _sumStr.indexOf(".");
+										if ( _commaIndex == -1 )
+											_sumStr = _sum;
+										else
+											_sumStr = _sumStr.substr(0, _commaIndex + 3);
+										{php}
+											echo("locationPriceUnit=".getLocationPriceUnit().";\n");
+											echo("priceUnit='".getPriceUnit()."';\n");
+										{/php}
+
+										_sumStr = _formatPrice( _sumStr );
+
+										if ( locationPriceUnit )
+											document.MainForm.optionPrice.value =
+												_sumStr + document.MainForm.priceUnit.value;
+										else
+											document.MainForm.optionPrice.value =
+												document.MainForm.priceUnit.value + _sumStr;
+								{literal}
+									}
+								{/literal}
+								GetCurrentCurrency();
+							</script>
+						{/if}
+
+						</form>
+
+					</td>
+
+				</tr>
+
+			</table>
+
+
+
+
+		</td>
+	</tr>
+
+	<tr>
+		<td colspan=2 class="product_detail_td" >
+
+			<table border=0 width="100%">
+				<tr>
+					<td height="100%" valign=top bgcolor="#{$smarty.const.CONF_LIGHT_COLOR}">
+						{$product_info.description}
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+
+
+										<span style="color: red; font-size: 18;">
+											<fieldset width="50%"><legend>Информация:</legend>
+												Доставка нового снаряжения бесплатная при заказе на сумму более {$smarty.const.DELIVERY_COST}{$smarty.const.GRN}: Киев, Ирпень, Буча, Украина.<br>
+                                                 Прокатное снаряжение, акционные, б/у и товары со скидкой доставляются платно. (<a href="/delivery">Условия доставки</a>)
+											</fieldset>
+										</span>
+						<p><strong>{$product_info.title_one} {$producer} {$product_info.name}</strong> в интернет магазине Mandrivnyk в Киеве, Ирпене, Буче, в Украине.
+						</p>
+					</td>
+				</tr>
+			</table>
+
+		</td>
+	</tr>
+</table>
+</section>
+
+{if !$printable_version}
+{if $product_related_number > 0}
+<section  style="padding-top:5px;">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table_main_cat1" >
+		{* related products *}
+
+
+		  <tr>
+			<td colspan=2 class="product_detail_td" >
+
+				<p>
+				<u>
+					{$smarty.const.STRING_RELATED_ITEMS}:
+				</u>
+				<p>
+					<table border=0>
+					{section name=i loop=$product_related}
+						<tr>
+							<td align="center">
+							{if $product_related[i].pictures.default.thumbnail}
+								<a href="index.php?productID={$product_related[i][0]}">
+								<img border="0" src="./products_pictures/{$product_related[i].pictures.default.thumbnail}" />
+								</a>
+							{/if}
+							</td>
+							<td>
+								<a href="index.php?productID={$product_related[i][0]}">
+									{$product_related[i][1]}
+								</a>
+							</td>
+							<td>
+								<nobr>&nbsp;<font color=brown>{$product_related[i][2]}</font></nobr>
+							</td>
+						</tr>
+					{/section}
+					</table>
+			</td>
+		  </tr>
+
+	</table>
+</section>
+{/if}
+{/if}
+<section style="padding-top:5px;">
+{include file="comment.tpl.html" productID=$product_info.productID}
+</section>
+{if !$printable_version}
+<section style="padding-top:5px;">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table_main_cat1" >
+		 <tr>
+		 	<td  align="left" width="100%" style="padding-left: 10px;">
+
+			 	<table width="100%" cellpadding="0" cellspacing="0" border="0" >
+					<tr >
+				       <td align="center">
+				       		<h1>Другие товары категории:</h1>
+				       </td>
+				   	</tr>
+					<tr >
+						<td style="padding-left: 0px;padding-bottom:15px;">
+												{section name=i loop=$CloudTags}
+													<div class="box_car_div_empty">
+					        	    					<table width="250px" height="130" border="0" class="tabl-tovar-empty">
+					        	    						<tr>
+					        	    							<td style="padding: 8 0 0 0" valign="middle" align="center" rowspan="2" height="118px">
+					        	    								<a href="{$CloudTags[i].url_name}"  rel="nofollow"><img border="0" title="{$CloudTags[i].producer} {$CloudTags[i].name}" alt="{$CloudTags[i].producer} {$CloudTags[i].name}" src="/products_pictures/{$CloudTags[i].thumbnail}" > </a><br>
+																	<img src="/images/line-100x1.jpg" alt="line-100x1" title="line-100x1">
+					        	    							</td>
+					        	    							<td  valign="top" class="opisanie-tovar-empty" align="justify">
+					        	    								<a  alt="{$CloudTags[i].producer} {$CloudTags[i].name}" title="{$CloudTags[i].producer} {$CloudTags[i].name}"  href="{$CloudTags[i].url_name}">{$CloudTags[i].producer} {$CloudTags[i].name}</a><br><br>
+					        	    								{$CloudTags[i].brief_description|strip_tags|truncate:110}
+					        	    							</td>
+					        	    						</tr>
+					        	    						<tr>
+					        	    							<td  align="right" class="cennik-fon-grey" valign="bottom" height="12px">
+					        	    								{$CloudTags[i].Price} грн
+					        	    							</td>
+					        	    						</tr>
+					        	    					</table>
+													</div>
+												{/section}
+						</td>
+					</tr>
+				</table>
+
+
+
+		 								<h3 style="font-size:12px;padding:5px;">
+		 									<span itemprop="seller"> Интернет магазин Mandrivnyk</span>:
+
+		 								{if $product_info.categoryID eq 275}	<!-- термобелье-->
+
+
+										{elseif $product_info.categoryID eq 252}	<!-- палатки-->
+											 работает услуга <a href="/prokat-palatok">прокат палаток</a>.
+		 									 <a href="/termobelie">Термобелье</a> лучших производителей Европы.
+
+										{elseif $product_info.categoryID eq 267}	<!-- спальники-->
+
+											 услуга: "<a href="/">прокат туристического снаряжения</a>" экономит ваши деньги.
+		 									 <a href="/termobelie">Термобелье Киев</a>.
+
+										{elseif $product_info.categoryID eq 297}	<!-- термоноски -->
+
+
+										{elseif $product_info.categoryID eq 312}	<!-- рюкзаки -->
+		 									 <a href="http://turprokat.com.ua/prokat-palatok-arenda-palatki-naprokat-Kiev-Bucha/">прокат палатки </a> в нашем пункте проката.
+		 									 Качественное <a href="/termobelie">Термобелье</a> Craft, Lasting, Commandor.
+
+										{elseif $product_info.categoryID eq 330}	<!-- Пончо -->
+											 <a href="/prokat-rukzakov">прокат рюкзаков</a> на 30-100 литров.
+		 									 Топовое <a href="/termobele-craft">термобелье</a> от шведского бренда Craft по скидкам.
+
+										{elseif $product_info.categoryID eq 338}	<!-- коврики -->
+											 <a href="/">палатки напрокат</a> 2-4 местные, не промокаемые.
+		 									 Европейское <a href="/termobelie">термобелье купить Киев</a> с бесплатнок доставкой.
+
+										{elseif $product_info.categoryID eq 264}	<!-- тенты -->
+											 <a href="/prokat-rukzakov">прокат рюкзаков</a> на 30-100 литров.
+		 									 Комплекты <a href="/termobele-craft">термобелья Craft</a> для зимы и весны.
+
+										{elseif $product_info.categoryID eq 344}	<!-- палатки бу -->
+											 услуга <a href="/">прокат палаток в г.Киев</a>.
+		 									 Качественное <a href="/termobelie">термобелье купить для отвода влаги</a>  и сохранения тепла.
+
+										{elseif $product_info.categoryID eq 340}	<!-- рюкзаки бу -->
+											 услуга <a href="http://turprokat.com.ua/prokat-palatok-arenda-palatki-naprokat-Kiev-Bucha/">прокат палатки Киев</a>.
+		 									 <a href="/termobelie">Термобелье</a> для спорта и туризма.
+
+										{elseif $product_info.categoryID eq 341}	<!-- спальники бу -->
+											 услуга <a href="/">прокат палаток Киев</a> - только качественное снаряжение.
+		 									 <a href="/men-termobelie">Термобелье мужское Киев</a> со скидкой.
+
+										{elseif $product_info.categoryID eq 342}	<!-- коврики бу -->
+											услуга <a href="http://turprokat.com.ua/prokat-palatok-arenda-palatki-naprokat-Kiev-Bucha/">прокат палаток</a> в Киеве.
+		 									 Для согрева и отвода влаги используется <a href="/termobelie">термобелье</a>.
+
+		 								{else}
+		 									предлагаем воспользоваться услугой "<a href="/prokat-palatok">прокат палаток</a>", рюкзаков, спальников и др.
+		 									<a href="/krossovki-trekingovye-v-kieve">Треккинговые кроссовки</a> ведущих брендов.
+										{/if}
+
+		 								</h3>
+		 	</td>
+		 </tr>
+		{/if}
+
+	</table>
+</section>
+{/if}
+
+</div>

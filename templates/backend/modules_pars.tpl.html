@@ -1,0 +1,171 @@
+{literal}
+<script type="text/javascript" src="./js/prototype.js"></script>
+<script>
+
+//alert(num_rows);
+  var gUrl = './pars-srv-gorgany.php';  
+
+    function togglevis_img_in_div(DIV)
+
+  {
+
+   // alert(DIV);
+
+    var div_elem = document.getElementById(DIV);
+
+    div_elem.innerHTML ='<span style="padding-left: 0px;"><img width="16" height="16"  src="/images/loading_ajax.gif" border="0" /></span>';
+
+  }
+
+function pars(CID, TI, TW, UTPF, PR, MD, MK) // ----------
+
+  {
+		 togglevis_img_in_div('el_pars');
+		 var today = new Date();
+	     var time  =   today.getTime();
+		 var myAjax = new Ajax.Updater('el_pars', gUrl, {method: 'post', asynchronous: true, parameters: {times:time, cid:CID, ti:TI, tw:TW, utpf: UTPF, pr:PR, md:MD, mk:MK,insert:0}, evalScripts: true});     	
+
+
+  }
+function parsINSERT(NUM) // ----------
+
+  {
+		 togglevis_img_in_div('el_pars');
+		 var today = new Date();
+	     var time  =   today.getTime();
+		 var myAjax = new Ajax.Updater('el_pars', gUrl, {method: 'post', asynchronous: true, parameters: {times:time, insert:1, num:NUM}, evalScripts: true});     	
+
+
+  }
+
+-->
+
+</script>
+{/literal}
+
+
+	
+{if isset($categoryID)}	
+	
+	categoryID = {$categoryID}<br>
+	title_one = {$title_one}<br>
+	title_two = {$title_two}<br>
+	url_to_pars_from = {$url_to_pars_from}<br>
+	producer = {$producer}<br>
+	meta_description = {$meta_description}<br>
+	meta_keywords = {$meta_keywords}<br>
+
+
+
+To pars please press button: <br>
+
+<!-- enable(1,5) - тут 1- с 1 файла начать, 5 - это шаг  -->
+
+<span id="el_pars"><img border="0" onclick="pars('{$categoryID}', '{$title_one}', '{$title_two}', '{$url_to_pars_from}', '{$producer}', '{$meta_description}', '{$meta_keywords}')" title="" src="/images/backend/enable-no.jpg" id="img_pars"></span>
+<div id="pars_info"> INFO:</div>
+
+
+
+{/if}
+
+
+
+<form enctype="multipart/form-data" action="admin.php?dpt=modules&sub=pars" method="post" name="PARSform">
+
+<table class="datatable" width="100%">
+
+
+<tr>
+<td align=right>{$smarty.const.ADMIN_CATEGORY_PARENT}</td>
+<td align="left">
+<select name="categoryID" {php}
+	if (CONF_FULLY_EXPAND_CATEGORIES_IN_ADMIN_MODE == 0) // update list
+		echo "onChange=\"window.location='products.php?productID=".$_GET["productID"]."&change_category='+document.MainForm.categoryID.value;\"";
+{/php}>
+{php}
+	if (CONF_FULLY_EXPAND_CATEGORIES_IN_ADMIN_MODE == 1) echo "<option value=\"1\">".ADMIN_CATEGORY_ROOT."</option>";
+	//show categories select element
+	$core_category = (isset($_GET["change_category"])) ? (int)$_GET["change_category"] : $product["categoryID"] ;
+	if (CONF_FULLY_EXPAND_CATEGORIES_IN_ADMIN_MODE == 0)
+		$cats = catGetCategoryCompactCList($core_category);
+	else
+		$cats = catGetCategoryCList();
+	for ($i=0; $i<count($cats); $i++)
+	{
+		echo "<option value=\"".$cats[$i]["categoryID"]."\"";
+		if ($categoryID == $cats[$i]["categoryID"]) //select category
+			echo " selected";
+		echo ">";
+		for ($j=0;$j<$cats[$i]["level"];$j++) echo "&nbsp;&nbsp;";
+		echo $cats[$i]["name"];
+		echo "</option>";
+	}
+{/php}
+
+</select>
+</td>
+</tr>
+<tr>
+	<td align='left'>
+		{$smarty.const.ADMIN_CATEGORY_TITLE_ONE}
+	</td>
+	<td align="left">
+		<input type="text"  size="40" name="title_one" value="{$title_one}">
+	</td>
+</tr>
+<tr>
+	<td align="left">
+		{$smarty.const.ADMIN_CATEGORY_TITLE_TWO}
+	</td>
+	<td align="left">
+		<textarea name="title_two" 	rows="3" cols="60">{$title_two}</textarea>
+	</td>
+</tr>
+<tr>
+	<td align=left>
+		{$smarty.const.ADMIN_URL_TO_PARS_FROM}
+	</td>
+	<td  align="left">
+		<input type="text"  size="40" name="url_to_pars_from" value="">
+	</td>
+</tr>
+<!--<tr>
+	<td align=left>
+		{$smarty.const.ADMIN_DIR_TO_PUT_IMAGES}
+	</td>
+	<td>
+		<input type="text"  size="40" name="dir_to_put_images" value="">
+	</td>
+</tr>-->
+<tr>
+	<td align=left>
+		{$smarty.const.ADMIN_PRODUCER}
+	</td>
+	<td  align="left">
+		<input type="text"  size="40" name="producer" value="{$producer}">
+	</td>
+</tr>
+<tr>
+	<td align="left">
+		{$smarty.const.ADMIN_META_DESCRIPTION}
+	</td>
+	<td align="left">
+		<textarea name='meta_description' rows=10 cols=90>{$meta_description}</textarea>
+	</td>
+</tr>
+<tr>
+	<td align="left" >
+		{$smarty.const.ADMIN_META_KEYWORDS}</td>
+	<td align="left">
+		<textarea name='meta_keywords' 	rows=10 cols=90>{$meta_keywords}</textarea>
+	</td>
+</tr>
+</table>
+
+
+
+
+  <input type=submit name="" value="submit">
+
+
+</form>

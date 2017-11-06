@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+{include file="head.tpl.html"}
+<body>
+<header>
+<table width="100%"  height="100%" cellpadding="0" cellspacing="0" border="0">
+   <tr>
+    					<td colspan="3" align="center">
+    					
+	    					<h1 style="font-size: 11px; padding-top: 3px; padding-left: 10px; margin-top: 0px; padding-bottom: 0px;">
+							Экипировочный центр Mandrivnyk - прокат и продажа нового и б/у туристического снаряжения - доставка  Киев, Ирпень, Буча, Украина. </h1>
+    					</td>
+    </tr>
+    <tr>
+
+					<td width="200px;" align="left" valign="top">
+						<section> 
+						<table  width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
+							<tr>
+								<td id="phonenumbers">		
+											<h1 style="color:#309919; padding-left:12px;margin:0px;padding-top:0px;font-weight:bold;font-size:16px;" >
+										        044-232-99-68<br>
+										        067-338-75-23<br>
+										        093-170-08-99
+											</h1>
+								</td>
+							</tr>
+							<tr>
+								<td style="font-weight: 13px; padding-top:5px; padding-bottom:0px; padding-left:12px;">
+									Магазин: г.Киев, м.Берестейская, ул.Дружковская 10, ком.108
+								</td>
+							</tr>
+							<tr>
+								<td valign="bottom" style="padding-bottom:0px">
+									<img src="/images/line200px.gif" width="200px" alt="line200px" title="line200px" >
+									<a class=light href="{if $smarty.const.CONF_OPEN_SHOPPING_CART_IN_NEW_WINDOW eq 1}javascript:open_window('/cart.php',400,300);{else}index.php?shopping_cart=yes{/if}"><img border="0" alt="ваша корзина" src="/images/cartBIG.gif"></a><br>
+								</td>
+							</tr>
+						</table>
+						</section>					
+					</td>
+					<td width="100%" align="center" valign="top">
+						<a href="/" rel="nofollow"><img class="logo" border="0" alt="logo" src="/images/shapka1.jpg"/ ></a>
+					</td>
+					<td width="200px;" align="left" valign="top">
+						<section>
+						<table  width="100%"  cellpadding="0" cellspacing="0" border="0">
+							<tr>
+								<td style="font-size:13px;padding-left:10px;padding-bottom:10px;">
+											<span style="font-size:16px;">Режим работы:</span><br>
+												<span style="color: red">Пн.: 10.00-19.00</span><br>
+												Вт.: 10.00-18.00<br>
+												Ср.: 10.00-18.00<br>
+												Чт.: 10.00-18.00<br>
+												<span style="color: red">Пт.: 10.00-19.00</span>
+											
+										    
+								</td>
+							</tr>
+							<tr>
+								<td  valign="bottom" style="padding-bottom:0px">
+
+											<img src="/images/line200px.gif"  alt="line200px" title="line200px" >
+								        	<a class=light href="{if $smarty.const.CONF_OPEN_SHOPPING_CART_IN_NEW_WINDOW eq 1}javascript:open_window('/cart.php',400,300);{else}index.php?shopping_cart=yes{/if}"><img border="0" alt="ваша корзина" src="/images/cartBIG.gif"></a>
+								        	<!--<a class=light href="{if $smarty.const.CONF_OPEN_SHOPPING_CART_IN_NEW_WINDOW eq 1}javascript:open_window('/cart.php',400,300);{else}index.php?shopping_cart=yes{/if}" style="text-decoration:none; font-size: 15px;"><font color="Black"> {$smarty.const.CART_TITLE}</font></a>-->
+								</td>
+							</tr>
+						</table>
+						</section>
+					</td>
+
+	</tr>
+</table>
+</header>
+<table width="100%"  height="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+    	<td colspan="3" >
+    		<table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
+
+    			<tr>
+    				<td  valign="top" bgcolor="#F6F6EA" width="200px;">
+    					<nav>
+    					<table width="100%" cellpadding="0" cellspacing="0" border="0">
+    						<tr>
+    							<td class="header_menu">
+    								ПРОКАТ СНАРЯЖЕНИЯ
+    							</td>
+
+			    			</tr>
+    						<tr>
+    							<td id="nav">
+    								<ul>{include file="category_tree_first.tpl.html"}
+										<li><a href="/prokat-rules" style="{if $REQUEST_URI eq '/show_aux_page-2.html'}font-weight:bold;{/if}" alt="Правила проката" title="Правила проката">Правила проката</a>  </li>
+										<li><a href="/prokat-regions" rel="nofollow" style="{if $REQUEST_URI eq '/show_aux_page-1.html'}font-weight:bold;{/if}" title="Прокат в вашем регионе" alt="Прокат в вашем регионе">Прокат в вашем регионе</a>  </li>
+									</ul>
+								</td>
+							</tr>
+							<tr>
+    							<td class="header_menu">
+    								ПРОДАЖА СНАРЯЖЕНИЯ
+    							</td>
+
+			    			</tr>
+							<tr>
+								<td id="nav">
+									<ul>
+										{include file="category_tree.tpl.html"}
+										<li><a href="/podbor-razmera-craft" style="{if $REQUEST_URI eq '/show_aux_page-11.html'}font-weight:bold;{/if}" title="Подбор размера CRAFT" alt="Подбор размера CRAFT"  rel="nofollow">Подбор размера CRAFT</a>  </li>
+										<li><a href="/razmernaya-tablica-lasting" style="{if $REQUEST_URI eq '/show_aux_page-11.html'}font-weight:bold;{/if}" title="Подбор размера Lasting" alt="Подбор размера Lasting"  rel="nofollow">Подбор размера Lasting</a>  </li>
+
+									</ul>
+								</td>
+							</tr>
+							<tr>
+    							<td class="header_menu">
+    								Б/У СНАРЯЖЕНИЕ
+    							</td>
+
+			    			</tr>
+			    			<tr>
+    							<td id="nav">
+    								<ul>
+
+
+										<li><A href="/bu-snarjagenie"  style="{if $REQUEST_URI eq '/bu-snarjagenie'}font-weight:bold;{/if}" title="Б/У снаряжение" alt="Б/У снаряжение">Б/У снаряжение</A></li>
+
+									</ul>
+								</td>
+							</tr>
+
+							<tr>
+    							<td class="header_menu">
+    								ИНФОРМАЦИЯ
+    							</td>
+
+			    			</tr>
+			    			<tr>
+								<td id="nav">
+
+										<ul>
+										<li><a href="/library" style="{if $REQUEST_URI eq '/show_aux_page-6.html'}font-weight:bold;{/if}" title="Библиотека" alt="Библиотека">Библиотека </a>  </li>
+										<li><a href="/bicycle-routes" style="{if $REQUEST_URI eq '/show_aux_page-7.html'}font-weight:bold;{/if}" title="Веломаршруты Украины" alt="Веломаршруты Украины">Веломаршруты Украины</a>  </li>
+										<li><a href="/articles" style="{if $REQUEST_URI eq '/show_aux_page-8.html'}font-weight:bold;{/if}" title="Статьи по снаряжению" alt="Статьи по снаряжению">Статьи по снаряжению</a>  </li>
+										<li><a href="/kak-vibratj-termobelie-craft" style="{if $REQUEST_URI eq '/show_aux_page-8.html'}font-weight:bold;{/if}" title="Как выбрать термобелье Craft" alt="Как выбрать термобелье Craft">Как выбрать термобелье Craft</a>  </li>
+
+										</ul>
+								</td>
+							</tr>
+							<tr>
+    							<td class="header_menu">
+    								КОНТАКТЫ
+    							</td>
+
+			    			</tr>
+							<tr>
+								<td id="nav">
+									<ul>
+										<li><a href="/contact" style="{if $REQUEST_URI eq '/show_aux_page-3.html'}font-weight:bold;{/if}" title="Контакты" alt="Контакты">Контакты</a>  </li>
+										
+										<li><a href="/delivery" style="{if $REQUEST_URI eq '/show_aux_page-5.html'}font-weight:bold;{/if}" title="Доставка и оплата" alt="Доставка">Доставка и оплата</a>  </li>
+										<li><a href="/garantija" style="{if $REQUEST_URI eq '/show_aux_page-14.html'}font-weight:bold;{/if}" title="Гарантия" alt="Гарантия">Гарантия</a>  </li>
+										<li><a href="/index.php?show_price=yes" style="{if $REQUEST_URI eq '/index.php?show_price=yes'}font-weight:bold;{/if}" title="Карта сайта" alt="Карта сайта">Карта сайта</a>  </li>
+
+									</ul>
+									</td>
+
+			    			</tr>
+			    			<tr>
+								<td style="padding:10px; ">
+
+
+										<br>
+										    <h3>
+										        044-232-99-68<br>
+										        067-338-75-23<br>
+										        093-170-08-99<br><br>										       
+										    </h3>
+										<br>
+										<br>
+										<br>
+										 <a href="mailto:snarjaga@ukr.net" class="kum"> Не нашли что искали?</a>
+
+
+
+    							</td>
+    						</tr>
+    						<tr>
+    							<td><img src="/images/line200px.gif" alt="line200px" title="line200px" ></td>
+    						</tr>
+    					</table>
+    					</nav>
+
+
+				    	</td>
+				    	<td id="content" valign="top" width="100%">				    					    	
+				    	<article>
+				    			 {include file="$main_content_template"}
+				    			 {if $first eq '1'}
+				    				{include file="index_plus.tpl.html"}
+				    				
+								{/if}
+								{if $error eq '404'}
+				    				{include file="error404.tpl.html"}
+				    				
+								{/if}
+								
+						</article>										
+				    	</td>
+				    	<td valign="top" style="padding-left: 0px;padding-top: 0px;" bgcolor="#F6F6EA" width="200px;">
+				    	<aside>
+				    		<table border="0" cellspacing="0" cellpadding="0">
+
+
+								<tr>
+	    							<td class="header_menu">
+	    								Информация
+	    							</td>
+
+				    			</tr>
+								<tr>
+									<td id="nav">
+										<ul>
+											<li><a href="/contact" style="{if $REQUEST_URI eq '/show_aux_page-3.html'}font-weight:bold;{/if}" title="Контакты" alt="Контакты">Контакты</a>  </li>
+											
+											<li><a href="/delivery" style="{if $REQUEST_URI eq '/show_aux_page-5.html'}font-weight:bold;{/if}" title="Доставка и оплата" alt="Доставка">Доставка и оплата</a>  </li>
+											<li><a href="/garantija" style="{if $REQUEST_URI eq '/show_aux_page-14.html'}font-weight:bold;{/if}" title="Гарантия" alt="Гарантия">Гарантия</a>  </li>
+										</ul>
+										</td>
+
+				    			</tr>
+
+			                    <tr>
+	    							<td class="header_menu_right">
+	    								{$smarty.const.ADMIN_NEWS}
+	    							</td>
+
+			    				</tr>
+			                    <tr>
+			                    	<td style="padding-left:10px;">
+			                    		{if $NewsShortListTpl}
+						                  {include file=$NewsShortListTpl}
+						                  <br> <br>
+						                  {/if}
+
+			                    	</td>
+			                    </tr>
+								<tr>
+									<td align="center">
+										<b><a href="/akcionnye-tovary"  rel="nofollow" class="skidki">Скидки</a></b>
+										<br><br>
+										<a href="/akcionnye-tovary"><img src="/images/skidki-small.jpg" width="175px"></a></td>
+								</tr>
+								<tr>
+									<td><img src="/images/line200px.gif"></td>
+								</tr>
+			                  </table>
+			             </aside>     
+
+				    	</td>
+    			</tr>
+    		</table>
+    	</td>
+
+
+    </tr>
+</table> 
+
+<footer>
+	<table width="100%"  height="100%" cellpadding="0" cellspacing="0" border="0">   
+	    <tr>
+	
+	    	<td  align="left" style="padding-top: 10px; padding-left: 10px;" width="20%">
+	    	{if $first eq '1'}
+								<span style="font-size:10px">
+								У нас <a href="/prokat-palatok" target="blank">прокат палаток</a> для вашего отдыха <br>
+								Выбрать, пощупать и <a href="/termobelie" target="blank">купить термобелье</a> в нашем магазине в Киеве<br>
+								</span>
+			{/if}
+	    	</td>
+	    	<td valign="bottom" align="center" style="padding-left:0px;padding-top:10px;padding-bottom:10px;" width="60%">
+	    	
+									Наc ищут по таким запросам: Магазин Мандрівник Київ, туристический магазин Мандривнык, пункт проката Mandrivnyk, Mandrivnuk<br>
+									© 2003–2013 Прокат и продажа, нового и б/у снаряжения для отдыха и туризма  — туристический магазин Mandrivnyk
+			
+	    	</td>
+	    	<td width="20%">&nbsp;</td>
+	    </tr>
+	</table>
+	{literal}
+		<script>	
+		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+		<script >
+		var pageTracker = _gat._getTracker("UA-4895657-1");
+		pageTracker._initData();
+		pageTracker._trackPageview();
+		</script>
+	{/literal}
+</footer>
+</body>
+</html>

@@ -1,0 +1,172 @@
+{* payment types configuration *}
+
+<p>
+{if $configuration_saved eq 1}
+	{$smarty.const.ADMIN_UPDATE_SUCCESSFUL}
+{/if}
+
+
+<form action="admin.php" method=post>
+
+	<table cellpadding="5" cellspacing="0" border="0" width="100%">
+
+		<tr class="mainmenu_selected_{$current_dpt}">
+			<td>{$smarty.const.ADMIN_ON_OFF}</td>
+			<td>{$smarty.const.STRING_NAME}</td>
+			<td>{$smarty.const.STRING_DESCRIPTION}</td>
+			<td>{$smarty.const.STRING_SHIPPING_METHODS_ARE_ALLOWED}</td>
+			<td>{$smarty.const.STRING_PAYMENT_CALCTAX}</td>
+			<td>{$smarty.const.STRING_PAYMENT_MODULE_EMAIL_COMMENTS_TEXT}</td>
+			<td>{$smarty.const.STRING_MODULE_NAME}</td>
+			<td>{$smarty.const.ADMIN_SORT_ORDER}</td>
+			<td>&nbsp;</td>
+		</tr>
+
+
+		{section name=i loop=$payment_types}
+
+		<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}">
+			<td>
+				<input type=checkbox name=Enabled_{$payment_types[i].PID}
+					{if $payment_types[i].Enabled} checked{/if}>
+			</td>
+			<td>
+				<input type=text name=name_{$payment_types[i].PID} 
+					value="{$payment_types[i].Name|replace:'"':'&quot;'}">
+			</td>
+			<td>
+				<input type=text name=description_{$payment_types[i].PID} 
+					value="{$payment_types[i].description|replace:'"':'&quot;'}">
+			</td>
+
+			<td>
+				<table>
+				{section name=j loop=$payment_types[i].ShippingMethodsToAllow}
+					<tr>
+						<td>
+							<input type=checkbox name='ShippingMethodsToAllow_{$payment_types[i].PID}_{$payment_types[i].ShippingMethodsToAllow[j].SID}'
+								{if $payment_types[i].ShippingMethodsToAllow[j].allow == 1}
+									checked
+								{/if}
+							>
+						</td>
+						<td>
+							{$payment_types[i].ShippingMethodsToAllow[j].name}
+						</td>
+					</tr>
+				{/section}
+				</table>
+			</td>
+
+			<td align=center>
+				<input type=checkbox name=calculate_tax_{$payment_types[i].PID}
+					{if $payment_types[i].calculate_tax} checked{/if}>
+			</td>
+
+			<td>
+				<textarea name="email_comments_text_{$payment_types[i].PID}" cols="20" 
+							rows="4">{$payment_types[i].email_comments_text|replace:'"':'&quot;'}</textarea>
+			</td>
+
+			<td>
+				<select name='module_{$payment_types[i].PID}'>
+					<option value='null'>
+						--
+					</option>
+					{section name=j loop=$payment_modules}
+					<option value='{$payment_modules[j]->get_id()}'
+					{if $payment_modules[j]->get_id() == $payment_types[i].module_id}
+						selected
+					{/if}
+					>
+						{$payment_modules[j]->title}
+					</option>
+					{/section}
+				</select>
+			</td>
+
+			<td>
+				<input type=text name=sort_order_{$payment_types[i].PID} 
+					value="{$payment_types[i].sort_order|replace:'"':'&quot;'}">
+			</td>
+
+			<td>
+				<a href="javascript:confirmDelete({$payment_types[i].PID},'{$smarty.const.QUESTION_DELETE_CONFIRMATION}','admin.php?dpt=conf&sub=payment&delete=');">
+					<img src="images/backend/button_delete.gif" border=0 alt="{$smarty.const.DELETE_BUTTON}">
+				</a>
+			</td>
+		</tr>
+		{/section}
+
+		<tr class="mainmenu_selected_{$current_dpt}">
+			<td colspan=9>{$smarty.const.ADD_BUTTON}:</td>
+		</tr>
+
+		<tr class="bg_white">
+			<td>
+				<input type=checkbox name=new_Enabled checked>
+			</td>
+			<td>
+				<input type=text name=new_name>
+			</td>
+
+			<td>
+				<input type=text name=new_description>
+			</td>
+
+			<td>
+				<table>
+					{section name=j loop=$shipping_methods}
+					<tr>
+						<td>
+							<input type=checkbox name='new_ShippingMethodsToAllow_{$shipping_methods[j].SID}'>
+						</td>
+						<td>
+							{$shipping_methods[j].Name}
+						</td>
+					</tr>
+					{/section}
+				</table>
+				&nbsp;
+			</td>
+
+			<td align=center>
+				<input type=checkbox name=new_calculate_tax>
+			</td>
+
+
+			<td>
+				<textarea name="new_email_comments_text" cols="20" 
+							rows="4"></textarea>
+			</td>
+
+			<td>
+				<select name='new_module'>
+					<option value='null'>
+						--
+					</option>
+					{section name=j loop=$payment_modules}
+					<option value='{$payment_modules[j]->get_id()}'>
+						{$payment_modules[j]->title}
+					</option>
+					{/section}
+				</select>
+			</td>
+
+			<td>
+				<input type=text name=new_sort_order>
+			</td>
+
+			<td>&nbsp;</td>
+		</tr>
+
+
+	</table>
+
+	<p>
+		<input type=hidden name=dpt value=conf>
+		<input type=hidden name=sub value=payment>
+		<input type=hidden name=save_payment value=yes>
+		<input type=submit value="{$smarty.const.SAVE_BUTTON}">
+
+</form>

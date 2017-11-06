@@ -1,0 +1,38 @@
+{literal}
+<style type="text/css">
+.newsdiv{
+	border:0 dashed black;
+	border-width: 1 0 0 0;
+	margin:3px;
+}
+.newsblock{
+	float:left;
+	width:100%;
+}
+</style>
+{/literal}
+<h1>{$smarty.const.ADMIN_NEWS}</h1>
+
+<table cellpadding="4" width="100%"><tr><td>
+
+
+
+
+
+		<div class="newsblock">
+		<h3>{$news_posts.title}</h3>
+		<p>{$news_posts.add_date}
+		<p>
+		{if $news_posts.picture_exists}
+			<img src="/products_pictures/{$news_posts.picture}" hspace="10" align="left" />
+		{/if}
+		{$news_posts.textToPublication}
+		</p>
+		</div>
+		
+		
+
+
+
+
+</td></tr></table>

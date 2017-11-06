@@ -1,0 +1,284 @@
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table_main_cat1" >
+		 <tr>
+		 	<td  align="left" width="100%" style="padding-left: 10px;">
+
+{literal}
+<script>
+         var a = Math.ceil(Math.random() * 10);
+         var b = Math.ceil(Math.random() * 10);
+         var c = a + b;
+
+
+
+    $(document).ready(function(){
+    DrawBotBoot();
+    //getCommentsJSON();
+   getCommentsJSONPHP({/literal}{$productID}{literal});
+
+     });
+
+
+
+   function getCommentsJSONPHP(productID)
+   {
+        $.ajax({
+       type: "GET",
+       url: "/public_scripts/ajax_comment_get.php",
+       data: "productID="+productID,
+
+       success: function(responseText){
+
+               $("#comments").html(responseText);
+
+       }
+     });
+   }
+
+
+   function getCommentsJSON()
+   {
+     //  $.ajaxSetup({ scriptCharset: "windows-1251" , contentType: "application/json; charset=windows-1251"});
+         $.getJSON( "/comments/"+{/literal}{$productID}{literal}+".json", function( data ) {
+
+            //var com_str = '';
+            $('#comments').html("");
+            $.each( data, function( key, val ) {
+                var com_str = "<div class='comment-box'><div class='comment-head'><div class='comment-name'> "+val.name+"</div>";
+                var mark = '';
+                for(var i=1; i<=5; i++)
+                {
+                    if(i<=val.mark)
+                        mark = mark+"<div   class='reviews-add-stars-i-sm active'></div>";
+                    else
+                        mark = mark+"<div   class='reviews-add-stars-i-sm '></div>";
+                }
+                //val.text = decodeURIComponentX(val.text);
+              //  val.text = decode_utf8(val.text);
+                var com_str = com_str+mark+"<div class='comment-date'> "+val.date+"</div></div><div class='comment-plus'>";
+                var com_str = com_str+"<span class='comment-plus-head'>Плюсы:</span> "+val.pluses+"</div><div class='comment-minus'><span class='comment-minus-head'>Минусы:</span> "+val.minuses+"</div>";
+                var com_str = com_str+"<div class='comment-text'><span class='comment-text-head'>Отзыв/Вопрос:</span> "+val.text+"</div></div>";
+                var com_prev =   $('#comments').html();
+                $('#comments').html(com_prev+com_str);
+            });
+           // alert(com_str);
+
+                //alert('key = '+key); alert('val = '+val.name); });
+           // $( "<ul/>", {"class": "my-new-list", html: items.join( "" )}).appendTo( "body" );
+      });
+   }
+
+
+    $(document).ready(function(){
+	  $("#button-review").click(function(event){
+	      if(ValidBotBoot())
+	      {
+	         if(!$('#name').val())
+	           name = "anonymous";
+	         else
+	           name = $('#name').val();
+
+	         if(!$('#text').val())
+	         {
+	             alert('Введите текст вашего отзыва/вопроса');
+	             $('#text').css("background-color", "#faa9a9");
+	            // $('#text').delay(9000).css("background-color","#ffd6d6");
+	             $('#text').focus();
+
+	         }
+	         else
+	      	    saveComment($('#pluses').val(),$('#minuses').val(),name,$('#text').val(),{/literal}{$productID}, '{$product_info.url_name}'{literal}, $('#mark').val(), $('#email').val() );
+	      }
+	      else
+	        alert('Введите правильно сумму цифр');
+	  });
+	});
+
+    function saveComment(pluses, minuses, name, text, productID, productUrl, mark, email)
+    {
+      //alert(name+text);
+      $.ajax({
+       type: "POST",
+       url: "/public_scripts/ajax_comment_save.php",
+       data: "name="+name+"&email="+email+"&text="+text+"&productID="+productID+"&productUrl="+productUrl+"&pluses="+pluses+"&minuses="+minuses+"&mark="+mark,
+       beforeSend: function(){
+            $('#ajaxLoading').html('<img id="imgcode" src="/images/ajax-loader.gif">');
+	        },
+       success: function(msg){
+            alert( "Ваше сообщение сохранено" );
+            //getComments();
+            getCommentsJSONPHP({/literal}{$productID}{literal});
+            $('#ajaxLoading').html(" ");
+            DrawBotBoot();
+            ClearAfterSave();
+
+       }
+     });
+    }
+    function ClearAfterSave()
+    {
+        clearStar("activeAdd");
+        $("#mark").val(0);
+        $("#pluses").val("");
+        $("#minuses").val("");
+        $("#text").val("");
+        $("#name").val("");
+        starText(0);
+
+    }
+
+    function DrawBotBoot(){
+      $('#captcha-digits').html("*Сколько будет "+ a + " + " + b +"? "+"<input id='BotBootInput' type='text' maxlength='2' size='2'/>");
+      return true;
+    }
+    function ValidBotBoot(){
+        var d = $("#BotBootInput").val();
+       // alert(d);
+        //document.getElementById('BotBootInput').value;
+        if (d == c) return true;
+        return false;
+
+    }
+
+    $(document).ready(function(){
+        $("#star_1").click(function(event){OnOffStars(1);});
+        $("#star_1").mouseover(function(event){starsOverOut(1);});
+        $("#star_1").mouseout(function(event){starsOverOut(1);});
+
+        $("#star_2").click(function(event){OnOffStars(2);});
+        $("#star_2").mouseover(function(event){starsOverOut(2);});
+        $("#star_2").mouseout(function(event){starsOverOut(2);});
+
+        $("#star_3").click(function(event){OnOffStars(3);});
+        $("#star_3").mouseover(function(event){starsOverOut(3);});
+        $("#star_3").mouseout(function(event){starsOverOut(3);});
+
+        $("#star_4").click(function(event){OnOffStars(4);});
+        $("#star_4").mouseover(function(event){starsOverOut(4);});
+        $("#star_4").mouseout(function(event){starsOverOut(4);});
+
+        $("#star_5").click(function(event){OnOffStars(5);});
+        $("#star_5").mouseover(function(event){starsOverOut(5);});
+        $("#star_5").mouseout(function(event){starsOverOut(5);});
+     });
+
+     function starsOverOut(sum){
+                if($("#star_"+sum).hasClass("active")){
+                    clearStar("active");
+                 if(!$("#star_"+sum).hasClass("activeAdd"))
+                    starText(0);
+                }
+                else {
+                    clearStar("active");
+                    for(var i=1;i<=sum;i++){$("#star_"+i).addClass("active");}
+                    starText(sum);
+                }
+     }
+
+     function OnOffStars(sum){
+                if($("#star_"+sum).hasClass("activeAdd")){
+                    clearStar("activeAdd");
+                    $("#mark").val(0);
+                    starText(0);
+                }
+                else {
+                    clearStar("activeAdd");
+                    for(var i=1;i<=sum;i++){$("#star_"+i).addClass("activeAdd");}
+                    $("#mark").val(sum);
+                    starText(sum);
+                }
+      }
+
+      function starText(sum)
+      {
+         switch(sum) {
+            case 1:
+               $("#starText").html("ужасно");
+               break;
+            case 2:
+               $("#starText").html("плохо");
+               break;
+            case 3:
+               $("#starText").html("средне");
+               break;
+            case 4:
+               $("#starText").html("хорошо");
+               break;
+            case 5:
+               $("#starText").html("отлично");
+               break;
+            default:
+               $("#starText").html("");
+            }
+      }
+
+      function clearStar(classCSS){
+          for(var i=1;i<=5;i++){
+                $("#star_"+i).removeClass(classCSS);
+            }
+      }
+
+
+
+      $(document).ready(function(){
+           $("#review-title").click(function(){
+              $("#tab-review").slideToggle("slow");
+            }).first().click();
+
+
+           $("#comment-title").click(function(){
+              $("#comments").slideToggle("slow");
+            });
+     });
+
+</script>
+{/literal}
+<div id="comment-title" class="comment-title">
+    <img src="/images/comment_icon.png"  alt="Просмотр комментариев" title="Просмотр комментариев">
+    <span   alt="Просмотр комментариев" title="Просмотр комментариев">Отзывы</span><br>
+</div>
+<div id="comments">Нет отзывов, возможно ваш будет первым</div>
+
+<div  id="review-title" class="review-title">
+    <img src="/images/comment_edit.png" alt="просто, быстро и без регистрации" title="просто, быстро и без регистрации">
+    <span alt="просто, быстро и без регистрации" title="просто, быстро и без регистрации">Написать отзыв или задать вопрос</span><br>
+</div>
+<div id="tab-review" class="tab-content">
+    <div class="review">
+       <div class="ratingText">Оцените модель</div>
+       <div name="rating" class="">
+    					<div name="points" class="detail-tab-reviews-add-stars clearfix inline">
+    						<div name="1" id="star_1" class="reviews-add-stars-i" title="ужасно"></div>
+    						<div name="2" id="star_2" class="reviews-add-stars-i" title="плохо"></div>
+    						<div name="3" id="star_3" class="reviews-add-stars-i" title="средне"></div>
+    						<div name="4" id="star_4" class="reviews-add-stars-i" title="хорошо"></div>
+    						<div name="5" id="star_5" class="reviews-add-stars-i" title="отлично"></div>
+    						<div name="starText" id="starText" class="reviews-add-stars-text" title="starText"></div>
+    					</div>
+    					<input type="hidden" value="0" name="mark" id="mark">
+    	</div>
+	</div>
+	<div class="review-fields" id="review-fields">
+        <b>Введите ваше имя:</b><br />
+        <input type="text" name="name" id="name" value="" size="60" />
+        <br />
+	<br />
+	<b>Введите ваш email (на сайте отображаться не будет, на него вы получите ответ):</b><br />
+        <input type="email" name="email" id="email" value="" size="60" />
+        <br />
+        <br />
+        <b>Достоинства:</b><br>
+        <textarea name="text" id="pluses" cols="10" rows="4" style="width: 80%;"></textarea><br />
+        <b>Недостатки:</b><br>
+        <textarea name="text" id="minuses" cols="10" rows="4" style="width: 80%;"></textarea><br />
+        <b>*Ваш отзыв/вопрос:</b><br>
+        <textarea name="text" id="text" cols="10" rows="4" style="width: 80%;"></textarea>
+        <span style="font-size: 11px;"></span><br />
+        <br />
+        <div id="captcha-digits" class="captcha-digits"></div><br>
+        <input type="button"  id="button-review"  value="Сохранить отзыв">
+        <div id="ajaxLoading" class="ajaxLoading"></div>
+    </div>
+ </div>
+</td>
+					</tr>
+				</table>

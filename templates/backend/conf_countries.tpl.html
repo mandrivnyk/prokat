@@ -1,0 +1,93 @@
+{* countries configuration *}
+
+<p>
+{if $configuration_saved eq 1}
+	{$smarty.const.ADMIN_UPDATE_SUCCESSFUL}
+{/if}
+
+
+
+{literal}
+<script language='JavaScript'>
+	function open_window(link,w,h) //opens new window
+	{
+		var win = "width="+w+",height="+h+",menubar=no,location=no,resizable=yes,scrollbars=yes";
+		wishWin = window.open(link,'wishWin',win);
+	}
+</script>
+{/literal}
+
+
+<form action="{$urlToSubmit}" method=post enctype="multipart/form-data">
+
+<table cellpadding=5 cellspacing=0 border=0>
+
+
+	{if $navigator}
+	<tr>
+		<td colspan=4>
+			{$navigator}
+		</td>
+	</tr>
+	{/if}
+
+	<tr class="mainmenu_selected_{$current_dpt}">
+		<td>{$smarty.const.ADMIN_COUNTRY_NAME}</td>
+		<td>{$smarty.const.ADMIN_COUNTRY_ISO2}</td>
+		<td>{$smarty.const.ADMIN_COUNTRY_ISO3}</td>
+		<td>&nbsp;</td>
+	</tr>
+
+	{section name=i loop=$countries}
+
+		<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}">
+			<td>
+				<input type=text name=country_name_{$countries[i].countryID} 
+						value="{$countries[i].country_name}">
+			</td>
+			<td>
+				<input type=text name=country_iso2_{$countries[i].countryID} 
+						value="{$countries[i].country_iso_2}">
+			</td>
+			<td>
+				<input type=text name=country_iso3_{$countries[i].countryID}
+						value="{$countries[i].country_iso_3}">
+			</td>
+			<td>
+				<a href="javascript:confirmDelete({$countries[i].countryID},'{$smarty.const.QUESTION_DELETE_CONFIRMATION}','{$urlToDelete}&delete=');">
+					<img src="images/backend/button_delete.gif" border=0 alt="{$smarty.const.DELETE_BUTTON}">
+				</a>
+			</td>
+		</tr>
+
+	{/section}
+
+	<tr class="mainmenu_selected_{$current_dpt}">
+		<td colspan=4 align=center>{$smarty.const.ADD_BUTTON}:</td>
+	</tr>
+
+	<tr>
+		<td>
+			<input type="text" name="new_country_name">
+		</td>
+		<td>
+			<input type="text" name="new_country_iso2">
+		</td>
+		<td>
+			<input type="text" name="new_country_iso3">
+		</td>
+		<td>
+			&nbsp;
+		</td>
+	</tr>
+
+
+</table>
+
+<p>
+<input type=hidden name=dpt value=conf>
+<input type=hidden name=sub value=countries>
+<input type=hidden name=save_countries value=yes>
+<input type=submit value="{$smarty.const.SAVE_BUTTON}">
+
+</form>

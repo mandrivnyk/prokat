@@ -1,0 +1,43 @@
+{* category navigation tree *}
+
+<table width="100%">
+
+{section name=i loop=$categories_tree}
+
+	{if $categories_tree[i].categoryID != 1}
+
+	<tr>
+	
+	<td valign="top">{if $categories_tree[i].level == 1}<img src="images/arrow_category_small.gif" width="6" height="5">{/if}&nbsp;</td>
+
+	<td>
+
+		{section name=j loop=$categories_tree max=$categories_tree[i].level-1}
+			&nbsp;&nbsp;&nbsp;
+		{/section}
+
+		{if $categories_tree[i].level > 1}<img src="images/point{if $categoryID == $categories_tree[i].categoryID}_v{/if}.gif" width="8" height="8">{/if}
+
+  		{if $categoryID == $categories_tree[i].categoryID}
+			{* selected node => point category and don't make a link *}
+			<b>
+				<font class="faq">{$categories_tree[i].name}
+				</font>
+			</b>
+			<br>
+
+  		{else}
+			{* not selected node => make a link to a category *}
+			<a href="index.php?categoryID={$categories_tree[i].categoryID}" 
+				{if $categories_tree[i].level > 1}
+					class="standardsmall" 
+				{/if}>{$categories_tree[i].name}</a>
+			<br>
+  		{/if}
+
+	</td></tr>
+
+	{/if}
+{/section}
+
+</table>

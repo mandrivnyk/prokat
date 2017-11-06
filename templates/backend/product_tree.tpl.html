@@ -1,0 +1,124 @@
+{* product tree for froogle-module and yandexmarket-module *}
+{literal}
+<script language="javascript" type="text/javascript">
+<!--
+function checkAllProducts(_ProdNum){
+	
+	for(var i=1; i<=_ProdNum; i++){
+
+		document.getElementById('prod'+i).checked = document.getElementById('id_checkallprod').checked
+	}
+}
+//-->
+</script>
+{/literal}
+<input name="expandID" type="hidden" />
+<input name="unexpandID" type="hidden" />
+<input name="showProducts" type="hidden" />
+<input name="updateCategory" value="" type="hidden" />
+<input name="clear_session" value="{$smarty.const.RESET_BUTTON}" type="submit" />
+<table>
+{foreach from=$ProductCategories item=_ProductCategory}
+	<tr>
+		<td style="padding-left:{$_ProductCategory.level*20}">
+			{if $_ProductCategory.ExistSubCategories}
+				{if $_ProductCategory.ExpandedCategory}
+				<a href="javascript:void(0)"
+					onclick="
+							document.form_export.elements['unexpandID'].value = {$_ProductCategory.categoryID};
+							document.form_export.submit();
+							return false;"><img src="./images/minus.gif"  border="0" /></a>
+				{else}
+				<a href="javascript:void(0)"
+					onclick="document.form_export.elements['expandID'].value = {$_ProductCategory.categoryID};
+							document.form_export.submit();
+							return false;"><img src="./images/plus.gif"  border="0" /></a>
+				{/if}
+			{else}
+				<img src="./images/plus.gif"  border="0" style="visibility:hidden;" />
+			{/if}
+			
+			{count array=$smarty.session.selectedProducts[$_ProductCategory.categoryID] item=_ProductsNum}
+			
+			<input name="CHECKED_CATEGORIES[{$_ProductCategory.categoryID}]" 
+						type="checkbox" class="checknomarging" value="1"
+						onclick="
+							document.form_export.elements['updateCategory'].value = {$_ProductCategory.categoryID};
+							document.form_export.submit();
+							return false;"
+						id="{$_ProductCategory.categoryID}"
+						{if $smarty.session.checkedCategories[$_ProductCategory.categoryID] or $_ProductsNum or $smarty.session.selectedProductsIncSub[$_ProductCategory.categoryID]} checked="checked"{/if} />
+			{if $_ProductCategory.products_count_category}
+			<a class="standard" href="javascript:void(0)" 
+				onclick="
+					document.form_export.elements['showProducts'].value = {$_ProductCategory.categoryID};
+					document.form_export.submit();
+					return false;
+					">{$_ProductCategory.name}</a> 
+			{else}
+				{$_ProductCategory.name}
+			{/if}
+			{if $_ProductCategory.ExpandedCategory or !$_ProductCategory.ExistSubCategories}
+				(
+				{if $_ProductsNum}
+					{$_ProductsNum} 
+				{elseif $smarty.session.checkedCategories[$_ProductCategory.categoryID]}
+					{$_ProductCategory.products_count_category}
+				{else}
+				0
+				{/if}
+				/
+				{$_ProductCategory.products_count_category}
+				)
+			{else}
+				(
+				{if $smarty.session.selectedProductsIncSub[$_ProductCategory.categoryID]}
+					{$smarty.session.selectedProductsIncSub[$_ProductCategory.categoryID]} 
+				{elseif $smarty.session.selectedProductsIncSub[$_ProductCategory.categoryID]}
+					{$_ProductCategory.products_count}
+				{else}0
+				{/if}
+				/
+				{$_ProductCategory.products_count}
+				)
+			{/if}
+			{if $showProducts==$_ProductCategory.categoryID and $ProductsNum}
+			<br /><br />
+			<input name="cIDForProducts" value="{$showProducts}" type="hidden" />
+			<table cellspacing="0" cellpadding="5" style="margin-left:20px;">
+				<tr class="mainmenu_selected_{$current_dpt}">
+					<td><input type="checkbox" onclick="checkAllProducts({$ProductsNum})" id="id_checkallprod"
+					{if $smarty.session.checkedCategories[$_ProductCategory.categoryID]}
+						checked="checked"
+					{/if}
+					 /></td>
+					<td>{$smarty.const.ADMIN_PRODUCT_NAME}</td>
+					<td>{$smarty.const.ADMIN_PRODUCT_PRICE},&nbsp;{$smarty.const.STRING_UNIVERSAL_CURRENCY}</td>
+				</tr>
+				{counter start=0 skip=1 print=false}
+				{foreach from=$Products item=_Product}
+				<tr class="{cycle values="bg_white, bg_modules"}">
+					<td><input name="PRODUCTS[{$_Product.productID}]" value="1" id="prod{counter}" 
+							type="checkbox"
+							{if $smarty.session.selectedProducts[$showProducts][$_Product.productID]}
+								checked="checked"
+							{/if} /></td>
+					<td>{$_Product.name}</td>
+					<td align="right">
+					{if $_Product.Price}
+						{$_Product.Price}
+					{else}
+						{$smarty.const.MSG_COST_DOESNT_EXIST}
+					{/if}
+						</td>
+				</tr>
+				{/foreach}
+				<tr>
+					<td colspan="3"><input name="save_products" value="{$smarty.const.SELECT_BUTTON}" type="submit"</td>
+				</tr>
+			</table>
+			{/if}
+		</td>
+	</tr>
+{/foreach}
+</table>

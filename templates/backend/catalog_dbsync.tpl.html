@@ -1,0 +1,58 @@
+{* database synchronization tool *}
+
+{* export *}
+<p>
+{$smarty.const.ADMIN_SYNCR_DESC}
+
+<p>
+<table bgcolor=#C0C5CD cellpadding=10 cellspacing=1>
+<tr bgcolor=white>
+
+ <form action="admin.php" enctype="multipart/form-data" method=post>
+ <td>
+
+ <h5><U>{$smarty.const.ADMIN_EXPORT_DB_TO_FILE}</U></h5>
+
+	 {if $sync_action ne "export"}
+	 <input type=submit name=export_db value="{$smarty.const.ADMIN_EXPORT_DB_TO_FILE}">
+	 <input type=hidden name=dpt value="catalog">
+	 <input type=hidden name=sub value="dbsync">
+	 {else}
+		<b><font color=blue>{$smarty.const.ADMIN_DB_EXPORTED_TO}
+			<a href="get_file.php?getFileParam={$getFileParam}">database.sql</a> ({$database_filesize} b)
+		</font></b>
+	 {/if}
+ </td>
+ </form>
+
+</tr>
+<tr bgcolor=white>
+
+{* import*}
+<form action="admin.php" enctype="multipart/form-data" method=post>
+
+	<td>
+
+	{$smarty.const.ADMIN_IMPORT_FROM_SQL}
+	{if $sync_action eq "import"}
+	 <p>
+	 {if $sync_successful eq 0}
+		{$smarty.const.ERROR_FAILED_TO_UPLOAD_FILE}
+	 {else}
+		{$smarty.const.ADMIN_UPDATE_SUCCESSFUL}
+	 {/if}
+
+	{/if}
+
+	<p>
+	<input type=file name=db>
+	<input type=hidden name=dpt value="catalog">
+	<input type=hidden name=sub value="dbsync">
+	<input type=submit name="import_db" value="{$smarty.const.OK_BUTTON}">
+
+	</td>
+
+</form>
+
+</tr>
+</table>

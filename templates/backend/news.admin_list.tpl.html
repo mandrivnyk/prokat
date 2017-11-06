@@ -1,0 +1,277 @@
+{* news module *}
+{literal}
+<style type="text/css">
+
+#addnews_block{
+	display: none;
+}
+.newsdiv{
+	border:0 dashed black;
+	border-width: 1 0 0 0;
+	margin:3px;
+}
+.newsblock{
+	float:left;
+	width:100%;
+}
+</style>
+<script type="text/javascript" language="javascript">
+	function addlistNews(){
+		
+		var Obj = document.getElementById('addnews_block');
+		if(Obj.style.display == 'block'){
+			
+			Obj.style.display = 'none'
+		}else{
+			
+			Obj.style.display = 'block'
+		}
+	}
+</script>
+{/literal}
+{if $smarty.const.CONF_BACKEND_SAFEMODE eq 1}
+<p>{$smarty.const.ADMIN_SAFEMODE_BLOCKED}</p>
+
+{/if}
+
+<h1>{$smarty.const.ADMIN_NEWS}</h1>	
+
+{if $Message}
+	<div class="{if $Message.type=='ok'}ok_msg_f{else}error_msg_f{/if}">{$Message.text}</div>
+{/if}
+{if !$NewsEdit}
+<a href="javascript:void(0)" onclick="addlistNews()"><span id="addlist_news">{$smarty.const.ADMIN_NEW_NEWSARTICLE}</span></a>
+<hr />
+<form action="{$xRequestURI}" method="POST"	enctype="multipart/form-data" name='MainForm'  id="addnews_block" {if $NewsInfo}style="display:block;"{/if}>
+	<input type="hidden" name="fACTION" value="ADD_NEWS" />
+	<table>
+		<tr>
+			<td align="right" valign="top" valign="top">
+				{$smarty.const.STRING_PRIORITY}:
+			</td>
+			<td>
+				<input type=text name='DATA[priority]' value="{if $NewsInfo.priority}{$NewsInfo.priority}{else}0{/if}" />
+			</td>
+		</tr>
+		<tr>
+			<td align="right" valign="top" valign="top">
+				{$smarty.const.ADMIN_CURRENT_DATE}:
+			</td>
+			<td>
+				<input type=text name='DATA[add_date]' value="{if $NewsInfo.add_date}{$NewsInfo.add_date}{else}{$current_date}{/if}">
+			</td>
+		</tr>
+
+		<tr>
+			<td align="right" valign="top">
+				{$smarty.const.ADMIN_NEWS_TITLE}:
+				<br>
+				( {$smarty.const.ADMIN_NOT_HTML} )
+			</td>
+			<td>
+				<input type=text name='DATA[title]' value='{$NewsInfo.title}'>
+			</td>
+		</tr>
+
+		<tr>
+			<td align="right" valign="top">
+				{$smarty.const.ADMIN_PICTURE}:
+			</td>
+			<td>
+				<input type=file name='picture'>
+			</td>
+		</tr>
+
+		<tr>
+			<td align="right" valign="top">
+				{$smarty.const.ADMIN_TEXT_TO_PUBLICATION}:
+				<br>
+				( {$smarty.const.ADMIN_HTML} )
+			</td>
+			<td>
+				<textarea name='DATA[textToPublication]' cols=40 rows=10>{$NewsInfo.textToPublication}</textarea>
+			</td>
+		</tr>
+
+		<tr>
+			<td align="right" valign="top">
+				{$smarty.const.ADMIN_TEXT_TO_MAIL}:
+				<br>
+				( {$smarty.const.ADMIN_NOT_HTML} )
+			</td>
+			<td>
+				<textarea cols=40 rows=6 name='DATA[textToMail]'>{$NewsInfo.textToMail}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td align="right" valign="top">
+				{$smarty.const.ADMIN_SEND_NEWS_TO_SUBSCRIBERS}
+			</td>
+			<td>
+				<input type="checkbox" name="DATA[emailed]" value="1"{if $NewsInfo.emailed} checked="checked"{/if} />
+			</td>
+		</tr>
+		<tr>
+			<td align="right" valign="top">
+				&nbsp;
+			</td>
+			<td>
+				<input type=submit value="{$smarty.const.ADD_BUTTON}">
+			</td>
+		</tr>
+
+	</table>
+<hr />
+</form>
+{if $configuration_saved eq 1}
+	<p>{$smarty.const.ADMIN_UPDATE_SUCCESSFUL}
+{/if}
+
+	{if $LastPage>1}
+		{if $CurrentPage>1}
+			&nbsp; <a class="no_underline" href ="{"news_page=`$CurrentPage-1`"|set_query:$xRequestURI}">&lt;&lt; {$smarty.const.STRING_PREVIOUS}</a>
+		{/if}
+		{foreach from=$ListerRange item=_page}
+			&nbsp; {if $_page!=$CurrentPage}<a class="no_underline" href="{"news_page=`$_page`"|set_query:$xRequestURI}">{$_page}</a> {else}{$_page}{/if}
+		{/foreach}
+		{if $CurrentPage<$LastPage}
+			&nbsp; <a class="no_underline" href ="{"news_page=`$CurrentPage+1`"|set_query:$xRequestURI}">{$smarty.const.STRING_NEXT} &gt;&gt;</a>
+		{/if}
+	<div class="newsdiv">&nbsp;</div>
+	{/if}{* $LastPage>1 *}
+	
+	{section name=i loop=$news_posts}
+
+	<div class="newsblock">
+	<h3>{$news_posts[i].title}</h3>
+	<strong>{$news_posts[i].add_date}</strong> ({$smarty.const.STRING_PRIORITY}: {$news_posts[i].priority})
+	<br />
+	<nobr><a href="{"news_number=`$news_posts[i].NID`"|set_query:$xRequestURI}">{$smarty.const.EDIT_BUTTON}</a> | <a href="{"&delete=`$news_posts[i].NID`"|set_query:$xRequestURI}" onclick="return window.confirm('{$smarty.const.QUESTION_DELETE_CONFIRMATION}');">{$smarty.const.DELETE_BUTTON}</a></nobr>
+	<p>
+	{if $news_posts[i].picture_exists}
+		<img src="./products_pictures/{$news_posts[i].picture}" hspace="10" align="left" />
+	{/if}
+	{$news_posts[i].textToPublication}
+	</p>
+	</div>
+	<div class="newsblock">
+	<div class="newsdiv"></div>
+	</div>
+	{sectionelse}
+
+	{$smarty.const.STRING_EMPTY_LIST}
+
+	{/section}
+	{if $LastPage>1}
+		{if $CurrentPage>1}
+			&nbsp; <a class="no_underline" href ="{"news_page=`$CurrentPage-1`"|set_query:$xRequestURI}">&lt;&lt; {$smarty.const.STRING_PREVIOUS}</a>
+		{/if}
+		{foreach from=$ListerRange item=_page}
+			&nbsp; {if $_page!=$CurrentPage}<a class="no_underline" href="{"news_page=`$_page`"|set_query:$xRequestURI}">{$_page}</a> {else}{$_page}{/if}
+		{/foreach}
+		{if $CurrentPage<$LastPage}
+			&nbsp; <a class="no_underline" href ="{"news_page=`$CurrentPage+1`"|set_query:$xRequestURI}">{$smarty.const.STRING_NEXT} &gt;&gt;</a>
+		{/if}
+	{/if}{* $LastPage>1 *}
+{else}
+
+{* Editing news *}
+<a href="{"news_number="|set_query:$xRequestURI}">{$smarty.const.MOD_NEWS_TXT_NEWS_LIST}</a>
+<hr />
+<h3>{$smarty.const.MOD_NEWS_TXT_NEWS_EDIT}</h3>
+
+<form action="{$xRequestURI}" method="POST" enctype="multipart/form-data" name='MainForm'>
+	<input type=hidden name="fACTION" value="SAVE_NEWS" />
+	<input type=hidden name="DATA[NID]" value="{$NewsInfo.NID}" />
+	<table>
+		<tr>
+			<td align="right" valign="top" valign="top">
+				{$smarty.const.STRING_PRIORITY}:
+			</td>
+			<td>
+				<input type=text name='DATA[priority]' value="{$NewsInfo.priority}">
+			</td>
+		</tr>
+		<tr>
+			<td align="right" valign="top" valign="top">
+				{$smarty.const.ADMIN_CURRENT_DATE}:
+			</td>
+			<td>
+				<input type=text name='DATA[add_date]' value="{$NewsInfo.add_date}">
+			</td>
+		</tr>
+		<tr>
+			<td align="right" valign="top">
+				{$smarty.const.ADMIN_NEWS_TITLE}:
+				<br>
+				( {$smarty.const.ADMIN_NOT_HTML} )
+			</td>
+			<td>
+				<input type=text name='DATA[title]' value='{$NewsInfo.title}'>
+			</td>
+		</tr>
+
+		<tr>
+			<td align="right" valign="top">
+				{$smarty.const.ADMIN_PICTURE}:
+			</td>
+			<td>
+				<input type=file name='picture'>
+
+				{if $NewsInfo.picture}
+					<br>
+					<font size=2>
+						{if !$NewsInfo.picture_exists}{$smarty.const.ERROR_CANT_READ_FILE} : {/if}{if $NewsInfo.picture_exists}<a href="products_pictures/{$NewsInfo.picture}" target="_blank">{$NewsInfo.picture}</a> - <a href="{"&dlt_picture=1"|set_query:$xRequestURI}">{$smarty.const.DELETE_BUTTON}</a>{else}{$NewsInfo.picture}{/if}
+					</font>
+				{/if}
+			</td>
+		</tr>
+
+		<tr>
+			<td align="right" valign="top">
+				{$smarty.const.ADMIN_TEXT_TO_PUBLICATION}:
+				<br>
+				( {$smarty.const.ADMIN_HTML} )
+			</td>
+			<td>
+				<textarea name='DATA[textToPublication]' cols=40 rows=10>{$NewsInfo.textToPublication}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td align="right" valign="top" valign="top">
+				{$smarty.const.MOD_NEWS_TXT_EMAILED}:
+			</td>
+			<td><b>
+				{if $NewsInfo.emailed}
+				{$smarty.const.ANSWER_YES}
+				{else}
+				{$smarty.const.ANSWER_NO}
+				{/if}</b>
+			</td>
+		</tr>
+		{if $NewsInfo.emailed}
+		<tr>
+			<td align="right" valign="top">
+				{$smarty.const.ADMIN_TEXT_TO_MAIL}:
+				<br>
+				( {$smarty.const.ADMIN_NOT_HTML} )
+			</td>
+			<td valign="top">
+				<div style="background-color: white; margin-bottom:7px;padding:10px; float:left; border-width:1px;border-style:inset;border-color:black;">
+				{$NewsInfo.textToMail}
+				</div>
+			</td>
+		</tr>
+		{/if}
+		<tr>
+			<td align="right" valign="top">
+				&nbsp;
+			</td>
+			<td>
+				<input type=submit value="{$smarty.const.SAVE_BUTTON}">
+			</td>
+		</tr>
+
+	</table>
+</form>
+{/if}{* !$NewsEdit *}

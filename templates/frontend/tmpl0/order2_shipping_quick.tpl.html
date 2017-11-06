@@ -1,0 +1,117 @@
+{* order etap 2 *}
+
+<h1><u>{$smarty.const.STRING_ORDERING}</u></h1>
+<h3>{$smarty.const.STRING_ORDER_SHIPPING}</h3>
+
+<table border="0" cellspacing="1" cellpadding="5">
+	<tr>
+		<td>
+			<p>{$smarty.const.STRING_SHIPPING_ADDRESS}:<br>
+			<b>{$strAddress}</b>
+		</td>
+	</tr>
+</table>
+
+
+<p>{$smarty.const.STRING_SELECT_ORDER_SHIPPING_METHOD_PROMPT}:</p>
+
+<form name='MainForm' method=POST>
+
+	{if $shipping_methods}
+	<table border="0" cellspacing="1" cellpadding="4">
+
+		{section name=i loop=$shipping_methods}
+		 {if $shipping_costs[i] ne "n/a"}
+		 <tr>
+
+			<td valign=top>
+				<input type="radio" name="select_shipping_method"
+				onclick="JavaScript:select_shipping_methodClickHandler()"
+				value="{$shipping_methods[i].SID}"
+				{if $shipping_methods_count == 1} checked{/if}>
+			</td>
+
+			<td valign=top>
+				<b>{$shipping_methods[i].Name}</b>
+				<br>
+				{$shipping_methods[i].description}
+			</td>
+
+			<td valign=top>
+				{count item=_CostsNum array=$shipping_costs[i]}
+				{if $_CostsNum>1}
+					<select name="shServiceID[{$shipping_methods[i].SID}]">
+					{foreach from=$shipping_costs[i] item=_Rate}
+						<option value="{$_Rate.id}">{$_Rate.name} - {$_Rate.rate}</option>
+					{/foreach}
+					</select>
+				{else}
+					{$shipping_costs[i][0].rate}
+				{/if}
+			</td>
+
+		 </tr>
+		 {/if}
+		{/section}
+
+	</table>
+	{else}
+		<font color=red><b>{$smarty.const.STRING_NO_SHIPPING_METHODS_TO_SELECT}...</b></font>
+	{/if}
+
+
+	{literal}
+	<script language='JavaScript'>
+	function select_shipping_methodClickHandler()
+	{
+	{/literal}
+
+		{if $shipping_methods_count > 1}
+
+			document.MainForm.continue_button.disabled = true;
+			for( i=0; i<{$shipping_methods_count}; i++ )
+			{literal}
+			{
+				if(document.MainForm.select_shipping_method[i])
+				{
+					if ( document.MainForm.select_shipping_method[i].checked )
+					{
+						document.MainForm.continue_button.disabled = false;
+						break;
+					}
+				}
+				else
+				{
+					if(document.MainForm.select_shipping_method){
+						
+						if ( document.MainForm.select_shipping_method.checked ){
+							
+							document.MainForm.continue_button.disabled = false;
+							break;
+						}
+					}
+
+				}
+			}
+			{/literal}
+
+		{/if}
+
+	{literal}
+	}
+
+	</script>
+	{/literal}
+
+
+	<p>
+		{if $shipping_methods}
+			<input type="submit" name="continue_button" value="{$smarty.const.CONTINUE_BUTTON} &gt;&gt;">
+		{/if}
+	</p>
+{if $shipping_methods_count > 1}
+	<script language='JavaScript'>
+		select_shipping_methodClickHandler();
+	</script>
+{/if}
+</form>

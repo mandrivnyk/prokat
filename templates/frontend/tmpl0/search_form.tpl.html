@@ -1,0 +1,34 @@
+{* simple search form *}
+
+	<form action="index.php" method=get>
+<table width="100%" height="30px" cellpadding="0" cellspacing="0" border="0">
+<tr>
+<td valign="top">
+
+
+
+	{section name=i loop=$searchstrings}
+		<input type=hidden name='search_string_{$smarty.section.i.index}' 
+			value="{$searchstrings[i]}">		
+	{/section}
+
+
+			<input type="text" name="searchstring" size="20" class="search_input" value="{$searchstring|default:""}">
+			
+</td>
+<td valign="top" style="padding-right: 9px; padding-top:1px;">
+			<input type="image" border=0 src="images/search_go.jpg">
+
+		<!--
+		{if $old_search_query ne ""}
+			<input type=hidden name="oldproducts" value="{$old_search_query}">
+		{/if}
+		-->
+
+	
+
+
+</td>			
+</tr>
+</table>
+	</form>

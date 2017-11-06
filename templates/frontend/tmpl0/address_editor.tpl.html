@@ -1,0 +1,195 @@
+{* address editor *}
+
+<p><a class="faq" href="index.php?user_details=yes">{$smarty.const.MY_ACCOUNT_LINK}</a>
+
+
+{if $add_new_address}
+	<form name='AddressForm' action='index.php?add_new_address=yes' method=post>
+{/if}
+
+{if $address_editor}
+	<form name='AddressForm' action='index.php?address_editor={$address_editor}' method=post>
+{/if}
+
+<TABLE BGCOLOR="#{$smarty.const.CONF_DARK_COLOR}" CELLSPACING="1" CELLPADDING="0" WIDTH=100%><TR><TD><table width=100% border=0 cellspacing="0" cellpadding="7">
+	<tr>
+		<td bgcolor="#{$smarty.const.CONF_LIGHT_COLOR}" class="myaccount_tab_bottom" width="25%">
+			<a href='index.php?contact_info=yes'>
+				{$smarty.const.STRING_CONTACT_INFORMATION_DOWN_CASE}
+			</a>
+		</td>
+		<td rowspan="{if $smarty.const.CONF_AFFILIATE_PROGRAM_ENABLED}5{else}4{/if}" width="75%" bgcolor="white">
+
+
+		<a href='index.php?address_book=yes'>
+			{$smarty.const.STRING_GO_TO_ADDRESS_LIST}
+		</a>
+
+		<p>
+		<b><font color=red>{$error}</font></b>
+
+		<p>{$smarty.const.STRING_REQUIRED}
+
+		<p>
+		<table border="0" cellspacing="1" cellpadding="3">
+
+			<tr>
+				<td><font color=red>*</font> {$smarty.const.CUSTOMER_FIRST_NAME}</td>
+				<td>
+					<input type="text" name="first_name" 
+						value='{$first_name}'>
+				</td>
+			</tr>
+
+			<tr>
+				<td><font color=red>*</font> {$smarty.const.CUSTOMER_LAST_NAME}</td>
+				<td>
+					<input type="text" name="last_name" 
+						value='{$last_name}'>
+				</td>
+			</tr>
+
+			{if $smarty.const.CONF_ADDRESSFORM_ADDRESS ne 2}
+			<tr>
+				<td>{if $smarty.const.CONF_ADDRESSFORM_ADDRESS eq 0}<font color=red>*</font> {/if}{$smarty.const.CUSTOMER_ADDRESS}</td>
+				<td><textarea name="address">{$address}</textarea></td>
+			</tr>
+			{else}
+			<input type=hidden name='address' value=''>
+			{/if}
+
+			{if $smarty.const.CONF_ADDRESSFORM_CITY ne 2}
+			<tr>
+				<td>{if $smarty.const.CONF_ADDRESSFORM_CITY eq 0}<font color=red>*</font> {/if}{$smarty.const.CUSTOMER_CITY}</td>
+				<td><input type="text" name="city" value='{$city}'></td>
+			</tr>
+			{else}
+			<input type=hidden name='city' value=''>
+			{/if}
+
+			{if $smarty.const.CONF_ADDRESSFORM_STATE ne 2}
+			<tr>
+				<td>{if $smarty.const.CONF_ADDRESSFORM_STATE eq 0}<font color=red>*</font> {/if}{$smarty.const.CUSTOMER_STATE}</td>
+				<td>
+					{if $zones}
+						{if $select_zone_statement ne NULL}<p><b>{$select_zone_statement}</b><br>{/if}
+
+						<select name="zoneID">
+						{section name=i loop=$zones}
+							<option 
+								{if $zones[i].zoneID == $zoneID}
+									selected
+								{/if}
+								value='{$zones[i].zoneID}' >
+								{$zones[i].zone_name}
+							</option>
+						{/section}
+						</select>
+					{else}
+						<input type=text value='{$state}' name='state'>
+					{/if}
+				</td>
+			</tr>
+			{else}
+				{if $zones}
+					<input type=hidden name='zoneID' value='0'>
+				{else}
+					<input type=hidden name='state' value=''>
+				{/if}
+			{/if}
+
+			{if $smarty.const.CONF_ADDRESSFORM_ZIP ne 2}
+			<tr>
+				<td>{if $smarty.const.CONF_ADDRESSFORM_ZIP eq 0}<font color=red>*</font> {/if}{$smarty.const.CUSTOMER_ZIP}</td>
+				<td><input type="text" name="zip" value='{$zip}'></td>
+			</tr>
+			{else}
+			<input type=hidden name='zip' value=''>
+			{/if}
+
+			<tr>
+				<td>
+					{if $countries}
+						<font color=red>*</font> {$smarty.const.CUSTOMER_COUNTRY}
+					{/if}
+				</td>
+				<td>
+					{if $countries}
+					<select name="countryID"
+						onchange="JavaScript:changeCountryHandler();"
+					>
+						{section name=i loop=$countries}
+							<option value='{$countries[i].countryID}'
+							{if $countryID ne NULL}
+								{if $countryID == $countries[i].countryID}
+									selected
+								{/if}
+							{else}
+								{if $smarty.const.CONF_DEFAULT_COUNTRY == $countries[i].countryID}
+									selected
+								{/if}
+							{/if}
+							>
+								{$countries[i].country_name}
+							</option>
+						{/section}
+					</select>
+					{else}
+						<input type=hidden name="countryID" value='NULL'>
+					{/if}
+
+					{literal}
+					<script language='JavaScript'>
+
+						function changeCountryHandler()
+						{
+							document.AddressForm.submit();
+						}
+
+					</script>
+					{/literal}
+
+				</td>
+			</tr>
+
+		</table>
+
+		<p>
+		<input type=submit name='save' value='{$smarty.const.SAVE_BUTTON}'>
+
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="white" class="faq" align="center">
+			<b>{$smarty.const.STRING_ADDRESS_BOOK}</b>
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="#{$smarty.const.CONF_LIGHT_COLOR}" class="myaccount_tab_top">
+			<a href='index.php?order_history=yes'>
+				{$smarty.const.STRING_ORDER_HISTORY}
+			</a>
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="#{$smarty.const.CONF_LIGHT_COLOR}" class="myaccount_tab_top">
+			<a href='index.php?visit_history=yes'>
+				{$smarty.const.STRING_VISIT_HISTORY}
+			</a>
+		</td>
+	</tr>
+	{if $smarty.const.CONF_AFFILIATE_PROGRAM_ENABLED}
+	<tr>
+		<td bgcolor="#{$smarty.const.CONF_LIGHT_COLOR}" class="myaccount_tab_top">
+			
+			<a href='?affiliate=yes&sub=balance'>
+				{$smarty.const.STRING_AFFILIATE_PROGRAM}
+			</a>
+		</td>
+	</tr>
+	{/if}
+</table></TD></TR></TABLE>
+
+</form>
+
+<p>&nbsp;

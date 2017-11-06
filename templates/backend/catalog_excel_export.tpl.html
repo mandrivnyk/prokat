@@ -1,0 +1,64 @@
+{* export products and categories into a CSV file *}
+
+{if $excel_export_successful eq 1}
+<p>
+<font color=blue class=cat><b>{$smarty.const.ADMIN_EXCEL_EXPORT_SUCCESSFUL}</b></font><br>
+
+<p>
+<a href="get_file.php?getFileParam={$getFileParam}">{$smarty.const.ADMIN_DOWN_LOAD}</a> ({$excel_filesize} Kb)
+
+{else}
+
+<p>
+{if $excel_errormsg ne NULL}
+<font color=red><b>{$excel_errormsg}</b></font>
+{/if}
+
+<form action="admin.php" method=post>
+
+<p>{$smarty.const.STRING_EXCEL_EXPORT_DESCRIPTION}
+
+<p><table bgcolor=#C0C5CD cellpadding=10 cellspacing=1>
+<tr bgcolor=white>
+ <td align=left>
+	<table>
+	<tr>
+	<td><input type=checkbox name=categ_1></td>
+	<td><b>{$smarty.const.ADMIN_CATEGORY_ROOT}</b></td>
+	</tr>
+	{section name=i loop=$categories}
+	<tr>
+	<td><input type=checkbox name=categ_{$categories[i][0]} checked></td>
+	<td>{$categories[i][1]}</td>
+	</tr>
+	{/section}
+	</table>
+ </td>
+</tr>
+</table>
+
+	<p>
+	<table cellpadding=3>
+	<tr>
+		<td align=right>
+		{$smarty.const.ADMIN_EXCEL_DELIMETER}
+		</td>
+		<td valign=top>
+			<select name="delimiter">
+				<option value=";">{$smarty.const.ADMIN_EXCEL_DELIMETER_SEMICOLON} (;)</option>
+				<option value=",">{$smarty.const.ADMIN_EXCEL_DELIMETER_COMMA} (,)</option>
+				<option value="	">{$smarty.const.ADMIN_EXCEL_DELIMETER_TAB}</option>
+			</select>
+		</td>
+	</tr>
+	</table>
+
+<p>
+	<input type=submit value="{$smarty.const.STRING_EXCEL_EXPORT_BUTTON}">
+	<input type=hidden name=dpt value=catalog>
+	<input type=hidden name=sub value=excel_export>
+	<input type=hidden name=excel_export value=excel>
+
+</form>
+
+{/if}

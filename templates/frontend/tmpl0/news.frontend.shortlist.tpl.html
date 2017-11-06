@@ -1,0 +1,69 @@
+{* news *}
+
+<table width="160px" class="news_frontend_short">
+
+<form action="index.php" name="subscription_form" method=post>
+
+	{section name=i loop=$news_array}
+	<tr>
+		<td id="nav">
+			<b><a href="/new/yes/idn/{$news_array[i].NID}.html" {if $first neq '1'} rel="nofollow"{/if}>{$news_array[i].add_date}</a></b>
+		</td>
+	</tr>
+	<tr>
+		<td id="nav">
+			<a href="/new/yes/idn/{$news_array[i].NID}.html" {if $first neq '1'} rel="nofollow"{/if}>{$news_array[i].title}</a>
+			<br><br>
+		</td>
+	</tr>
+	{/section}
+
+
+	{if $news_array}
+	<tr>
+		<td id="nav">
+			<a href='/newes-yes.html' {if $first neq '1'} rel="nofollow"{/if}>
+				<b>
+					{$smarty.const.STRING_ALL_NEWS}...
+				</b>
+			</a>
+		</td>
+	</tr>
+	{/if}
+
+	<!--<tr>
+		<td align=center id="nav">
+
+		{if $subscribe == NULL} {* show newsletter subscription form *}
+
+			{if $error_message}
+				<font color="red"><b>{$error_message}</b></font>
+			{/if}
+<hr style="color:#063E6F;height:1px;">
+			<p>
+			<font class=light>{$smarty.const.CUSTOMER_SUBSCRIBE_FOR_NEWS}:</font>
+			<br><br>
+
+			<input type=text name=email value="{$email_to_subscribe|replace:'"':'&quot;'|replace:"\'":"'"|replace:"<":"&lt;"|replace:">":"&gt;"|default:""}" class=ss size=15><br>
+			<input type=submit value="{$smarty.const.OK_BUTTON}">
+			<input type=hidden name=subscribe value="yes">
+
+			{if $productID ne NULL} 
+				<input type=hidden name=productID value="{$productID}"> 
+			{/if}
+			
+			{if $categoryID ne NULL} 
+				<input type=hidden name=categoryID value="{$categoryID}"> 
+			{/if}
+
+		{else} {* show 'thank you' message *}
+
+			<font class=light>{$smarty.const.STRING_THANK_YOU}</font>
+
+		{/if}
+		</td>
+	</tr>-->
+
+</form>
+
+</table>

@@ -1,0 +1,65 @@
+{* customers authorization form *}
+
+{if $log ne ""}
+
+	{* logout link *}
+	<table width="100%">
+	  <tr>
+		<td align="center">
+		<br><br>
+			<a class="olive" href="index.php?logout=yes">{$smarty.const.LOGOUT_LINK}</a>
+		<br><br><br>
+		</td>
+	  </tr>
+	</table>
+
+{else}
+
+	{* authorization form *}
+
+	<table cellspacing=0 border="0" width="100%" bgcolor="#E6E7E6" >
+	<form action="index.php" method=post>
+	<tr>
+	 <td colspan="2">
+		<table border=0 width="100%" bgcolor="#E6E7E6">
+		 <input type="hidden" name="enter" value="1">
+		 <tr>
+			<td align="left" class="auth_text">{$smarty.const.CUSTOMER_LOGIN}</td>
+			<td width="113px" align="right"><input type="text" class="auth_input" name="user_login" size="20"></td>
+		 </tr>
+		 <tr>
+			<td align="left" class="auth_text">{$smarty.const.CUSTOMER_PASSWORD}</td>
+			<td width="113px" align="right"><input name="user_pw" class="auth_input" type="password" size="20"></td>
+		 </tr>
+		</table>
+	 </td>
+
+	</tr>
+
+		{if $productID}  <input type=hidden name=productID value="{$productID}"> {/if}
+		{if $categoryID} <input type=hidden name=categoryID value="{$categoryID}"> {/if}
+
+	
+	<tr>
+		<td height="1px">
+			<a href="index.php?register=yes" class="auth_link">{$smarty.const.REGISTER_LINK}</a>		
+		</td>
+		<td align="right" class="auth_ok_button">
+			<input type="image" src="images/auth_ok.jpg" value="{$smarty.const.OK_BUTTON}">	
+			
+		</td>
+	
+	</tr>
+	<tr>
+		<td colspan="2" style="padding-bottom: 10px;">
+			<a href="index.php?logging=yes" class="auth_link">{$smarty.const.FORGOT_PASSWORD_LINK}</a>	
+				
+		</td>
+	
+	</tr>
+	</table>
+
+
+</form>
+
+{/if}

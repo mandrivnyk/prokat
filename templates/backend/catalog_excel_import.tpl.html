@@ -1,0 +1,93 @@
+{* catalog import from Excel *}
+
+{if $excel_import_configurator ne NULL}
+
+  {* excel import configuration (columns definition) *}
+
+  <p>{$smarty.const.ADMIN_IMPORT_DESC1}
+  <p>{$smarty.const.ADMIN_IMPORT_DESC2}
+
+
+  <form action=admin.php method=post>
+
+
+
+	{$excel_import_configurator}
+
+	<p>{$smarty.const.ADMIN_PRIMARY_COLUMN}
+		<select name=update_column>
+			<option value="product_code">{$smarty.const.ADMIN_PRODUCT_CODE}</option>
+			<option value="name">{$smarty.const.ADMIN_PRODUCT_NAME}</option>
+			<option value="Price">{$smarty.const.ADMIN_PRODUCT_PRICE}</option>
+			<option value="description">{$smarty.const.ADMIN_PRODUCT_DESC}</option>
+			<option value="brief_description">{$smarty.const.ADMIN_PRODUCT_BRIEF_DESC}</option>
+			<option value="sort_order">{$smarty.const.ADMIN_SORT_ORDER}</option>
+		</select><br>
+	{$smarty.const.ADMIN_PRIMARY_COLUMN_DESC}
+	<p><input type=submit name=do_excel_import value="{$smarty.const.OK_BUTTON}">
+	<input type=hidden name=dpt value=catalog>
+	<input type=hidden name=sub value=excel_import>
+	<input type=hidden name=number_of_titles_line value=$notl>
+	<input type=hidden name=delimeter value="{$delimeter}">
+	<input type=hidden name=filename value="{$file_excel_name}">
+
+  </form>
+
+
+
+{else}
+
+	{* CSV file selection form *}
+
+	<p>
+	{if $excel_import_result eq "upload_file_error"}{$smarty.const.ERROR_FAILED_TO_UPLOAD_FILE}{/if}
+	{if $excel_import_result eq "update_column_error"}<p><b><font color=red>{$smarty.const.ERROR_UPDATE_COLUMN_IS_NOT_SET}</font></b>{/if}
+	{if $excel_import_result eq "ok"}<b><font class=cat color=blue><u>{$smarty.const.ADMIN_DB_UPDATE_SUCCESSFUL}</u></font></b>{/if}
+
+
+	<p>
+	<form enctype="multipart/form-data" action="admin.php" method=POST>
+	{$smarty.const.ADMIN_EXCEL_DESC1}
+	<p>
+	{$smarty.const.ADMIN_EXCEL_SPECIFY_FILE}: <input type="file" name="csv">
+
+	<p>
+	<table cellpadding=3>
+	<tr>
+		<td align=right>
+		{$smarty.const.ADMIN_EXCEL_DELIMETER}
+		</td>
+		<td valign=top>
+			<select name="delimeter">
+				<option value=";">{$smarty.const.ADMIN_EXCEL_DELIMETER_SEMICOLON} (;)</option>
+				<option value=",">{$smarty.const.ADMIN_EXCEL_DELIMETER_COMMA} (,)</option>
+				<option value="	">{$smarty.const.ADMIN_EXCEL_DELIMETER_TAB}</option>
+			</select>
+		</td>
+	</tr>
+	</table>
+
+	<p>
+	<table cellpadding=7>
+		<tr>
+		<td valign=top><input type="radio" name=mode value=0 checked></td>
+		<td>{$smarty.const.ADMIN_EXCEL_UPDATE_DB}
+		</td>
+		</tr>
+
+		<tr>
+		<td valign=top><input type="radio" name=mode value=2></td>
+		<td>{$smarty.const.ADMIN_EXCEL_CLEAR_DB}<br>{$smarty.const.ADMIN_EXCEL_CLEAR_DB_DESC}
+		</td>
+		</tr>
+	</table>
+
+	<p>
+	<input type=submit value="{$smarty.const.OK_BUTTON}">
+	<input type=hidden name=proceed value=1>
+	<input type=hidden name=dpt value="catalog">
+	<input type=hidden name=sub value="excel_import">
+
+	</form>
+
+{/if}

@@ -1,0 +1,228 @@
+{* change address to order shipping *}
+
+<h1><u>{$smarty.const.STRING_ORDERING}</u></h1>
+
+<form method=post name='address_selection_form'>
+<input name="shServiceID" value="{$smarty.get.shServiceID}" type="hidden" />
+<table border="0" cellspacing="1" cellpadding="4">
+
+	<tr>
+		<td colspan=2><h5>{$smarty.const.STRING_CHANGE_ADDRESS}:</h5></td>
+	</tr>
+
+	{section name=i loop=$addresses}
+	<tr>
+		<td>
+			<input type="radio" name="address_radiobutton" value="{$addresses[i].addressID}"
+			{if $addressID == $addresses[i].addressID}
+				checked
+			{/if}
+			 onClick="JavaScript:select_address_radio_button_hanler(0);">
+		</td>
+		<td><b>{$addresses[i].strAddress}</b></td>
+	</tr>
+	{/section}
+
+	<tr>
+		<td valign=top>
+			<input type="radio" name="address_radiobutton" value="0"
+			{if $addressID eq 0}
+				checked
+			{/if}
+			 onClick="JavaScript:select_address_radio_button_hanler(1);">
+		</td>
+		<td>
+			<p><b>{$smarty.const.STRING_OTHER_ADDRESS}:</b>
+
+			<p>{$smarty.const.STRING_REQUIRED}
+
+			<p>
+			<table>
+				<tr>
+					<td colspan=3>
+						{if $error_message}
+							<font color=red><b>{$error_message}</b></font>
+						{/if}
+					</td>
+				</tr>
+
+				<tr>
+					<td colspan=2 align=right>
+						<font color=red>*</font> 
+							{$smarty.const.STRING_RECEIVER_FIRST_NAME}
+					</td>
+					<td>
+						<input type=text disabled=true name='receiver_first_name' 
+							value='{$receiver_first_name}'>
+					</td>
+				</tr>
+
+
+				<tr>
+					<td colspan=2 align=right>
+						<font color=red>*</font> 
+							{$smarty.const.STRING_RECEIVER_MIDDLE_NAME}
+					</td>
+					<td>
+						<input type=text disabled=true name='receiver_middle_name' 
+							value='{$receiver_middle_name}'>
+					</td>
+				</tr>
+
+
+				<tr>
+					<td colspan=2 align=right>
+						<font color=red>*</font> 
+							{$smarty.const.STRING_RECEIVER_LAST_NAME}
+					</td>
+					<td>
+						<input type=text disabled=true name='receiver_last_name' 
+							value='{$receiver_last_name}' >
+					</td>
+				</tr>
+
+				{if $smarty.const.CONF_ADDRESSFORM_ADDRESS ne 2}
+				<tr>
+					<td colspan=2 align=right>
+						{if $smarty.const.CONF_ADDRESSFORM_ADDRESS eq 0}<font color=red>*</font> {/if}{$smarty.const.CUSTOMER_ADDRESS}
+					</td>
+					<td>
+						<textarea name="address" disabled=false rows=4>{$address}</textarea>
+					</td>
+				</tr>
+				{else}
+				<input type=hidden name='address' value=''>
+				{/if}
+
+				{if $smarty.const.CONF_ADDRESSFORM_CITY ne 2}
+				<tr>
+					<td colspan=2 align=right>
+						{if $smarty.const.CONF_ADDRESSFORM_CITY eq 0}<font color=red>*</font> {/if}{$smarty.const.CUSTOMER_CITY}
+					</td>
+					<td>
+						<input type="text" disabled=true name="city" 
+							value="{$city}">
+					</td>
+				</tr>
+				{else}
+				<input type=hidden name='city' value=''>
+				{/if}
+
+				{if $smarty.const.CONF_ADDRESSFORM_STATE ne 2}
+				<tr>
+					<td colspan=2 align=right>
+						{if $smarty.const.CONF_ADDRESSFORM_STATE eq 0}<font color=red>*</font> {/if}{$smarty.const.CUSTOMER_STATE}
+					</td>
+					<td>
+						{if !$zones}
+							<input type="text" disabled=true name="state" 
+								value="{$state}">
+						{else}
+							<select disabled=true name=zoneID>
+								{section name=i loop=$zones}
+								<option value={$zones[i].zoneID}{if $zones[i].zoneID == $zoneID} selected{/if}>
+									{$zones[i].zone_name}
+								</option>
+								{/section}
+							</select>
+						{/if}
+					</td>
+				</tr>
+				{else}
+					{if !$zones}
+						<input type=hidden name='state' value=''>
+					{else}
+						<input type=hidden name='zoneID' value='0'>
+					{/if}
+				{/if}
+
+				{if $smarty.const.CONF_ADDRESSFORM_ZIP ne 2}
+				<tr>
+					<td colspan=2 align=right>
+						{if $smarty.const.CONF_ADDRESSFORM_ZIP eq 0}<font color=red>*</font> {/if}{$smarty.const.CUSTOMER_ZIP}
+					</td>
+					<td>
+						<input type="text" disabled=true name="zip" 
+							value="{$zip}">
+					</td>
+				</tr>
+				{else}
+				<input type=hidden name='zip' value=''>
+				{/if}
+
+{if $countries}
+				<tr>
+					<td colspan=2 align=right>
+						<font color=red>*</font> 
+							{$smarty.const.CUSTOMER_COUNTRY}
+					</td>
+					<td>
+						
+						<select disabled=true name=countryID>
+							{section name=i loop=$countries}
+							<option value={$countries[i].countryID}
+								{if $countryID ne NULL}
+									{if $countries[i].countryID == $countryID}
+										selected
+									{/if}
+								{else}
+									{if $countries[i].countryID == $smarty.const.CONF_DEFAULT_COUNTRY}
+										selected
+									{/if}
+								{/if}
+							>
+								{$countries[i].country_name}
+							</option>
+							{/section}
+		 				</select>
+
+					</td>
+				</tr>
+{else}
+				<input type=hidden name='countryID'	value='NULL'>
+{/if} 
+
+			</table>
+
+		</td>
+	</tr>
+
+
+	<tr>
+		<td colspan=2>
+			<input type=submit name='select_address' value='{$smarty.const.SELECT_BUTTON}'>
+		</td>
+	</tr>
+
+</table>
+
+<script language='JavaScript'>
+
+function select_address_radio_button_hanler(val)
+{literal}{{/literal}
+
+	if (val == 1)
+		val = false;
+	else
+		val = true;
+
+	document.address_selection_form.receiver_first_name.disabled = val;
+	document.address_selection_form.receiver_middle_name.disabled = val;
+	document.address_selection_form.receiver_last_name.disabled = val;
+	document.address_selection_form.countryID.disabled = val;
+	{if !$zones}
+		document.address_selection_form.state.disabled = val;
+	{else}
+		document.address_selection_form.zoneID.disabled = val;
+	{/if}
+	document.address_selection_form.zip.disabled = val;
+	document.address_selection_form.city.disabled = val;
+	document.address_selection_form.address.disabled = val;
+
+{literal}}{/literal}
+
+select_address_radio_button_hanler( {if $addressID eq 0}1{else}{/if} );
+
+</script>
+
+</form>

@@ -1,0 +1,274 @@
+{* shopping cart *}
+{if $this_is_a_popup_cart_window}
+<html>
+<head>
+<link rel=STYLESHEET href="style1.css" type="text/css">
+<meta http-equiv="Content-Type" content="text/html; charset={$smarty.const.DEFAULT_CHARSET}">
+<title>{$smarty.const.CART_TITLE}</title>
+</head>
+<body>
+{/if}
+
+<center>
+
+{if $cart_content}
+
+	<table width=75% border=0>
+
+		<tr>
+			<td>
+				<b>{$smarty.const.CART_TITLE}:</b>
+			</td>
+
+			<td align=right>
+				<a href="{$cart_php_file}?shopping_cart=yes&clear_cart=yes">
+					<img src="images/remove.jpg" border=0 > 
+						<u>{$smarty.const.CART_CLEAR}</u>
+					</img>
+				</a>
+			</td>
+
+		</tr>
+
+		{if $make_more_exact_cart_content}
+		<tr>
+			<td colspan=2>
+				<font color=red>
+					<b>{$smarty.const.STRING_MAKE_MORE_EXACT_CART_CONTENT}</b>
+				</font>
+			</td>
+		</tr>
+		{/if}
+
+	</table>
+
+	{if $cart_amount<$smarty.const.CONF_MINIMAL_ORDER_AMOUNT}
+	<div id="id_too_small_order_amount" class="error_message"{if !$minOrder} style="display:none;"{/if}>{$smarty.const.CART_TOO_SMALL_ORDER_AMOUNT} {$cart_min}</div>
+	{/if}
+	{counter name=product_count start=1 skip=1 print=false}
+
+	<form action="{$cart_php_file}?shopping_cart=yes" method=post>
+
+	<table width={if $this_is_a_popup_cart_window}100{else}75{/if}% border=0 cellspacing=1 cellpadding=2 bgcolor=#{$smarty.const.CONF_DARK_COLOR}>
+		<tr align=center bgcolor=#{$smarty.const.CONF_MIDDLE_COLOR}>
+			<td>
+				{$smarty.const.TABLE_PRODUCT_NAME}
+			</td>
+			<td>
+				{$smarty.const.TABLE_PRODUCT_QUANTITY}
+			</td>
+			<td>
+				{$smarty.const.TABLE_PRODUCT_COST}, {$currency_name}
+			</td>
+			<td width=20>
+			</td>
+		</tr>
+
+	{if $this_is_a_popup_cart_window}
+		{assign var="ProductsNum" value=0}
+	{/if}
+	 {section loop=$cart_content name=i}
+
+		{counter name=product_count print=false}
+
+		<tr bgcolor=white>
+			<td>
+				{if $this_is_a_popup_cart_window}
+					<b>{$cart_content[i].name} {if isset($cart_content[i].info_prod) && ($cart_content[i].info_prod|count_characters > 0)}&nbsp;&nbsp;&nbsp; ({$cart_content[i].info_prod|replace:'+':' '}){/if}</b>
+				{else}
+					<a href='{$cart_php_file}?productID={$cart_content[i].productID}'>{$cart_content[i].name}</a>
+				{/if}
+			</td>
+
+			<td align=center>
+				{if $this_is_a_popup_cart_window}
+					{assign var="ProductsNum" value=$ProductsNum+$cart_content[i].quantity}
+				{/if}
+				{if $session_items}
+					<input type="text" name="count_{$session_items[i]}" size=5 value="{$cart_content[i].quantity}">
+				{else}
+					<input type="text" name="count_{$cart_content[i].id}" size=5 value="{$cart_content[i].quantity}">
+				{/if}
+				<br>
+				{if $cart_content[i].min_order_amount}
+					<font color=red>
+						<b>
+							{$smarty.const.STRING_MIN_ORDER_AMOUNT} 
+								{$cart_content[i].min_order_amount} 
+							{$smarty.const.STRING_ITEM}
+						</b>
+					</font>
+				{/if}
+			</td>
+
+			<td align=center>
+				{$cart_content[i].cost|replace:'&amp;':'&'}
+			</td>
+			{if $session_items}
+				<td align=center>
+					<a href="{$cart_php_file}?shopping_cart=yes&remove={$session_items[i]}"><img src="images/remove.jpg" border=0 alt="{$smarty.const.DELETE_BUTTON}">
+					</a>
+				</td>
+			{else}
+				<td align=center>
+					<a href="{$cart_php_file}?shopping_cart=yes&remove={$cart_content[i].id}"><img src="images/remove.jpg" border=0 alt="{$smarty.const.DELETE_BUTTON}">
+					</a>
+				</td>
+			{/if}
+		</tr>
+	 {/section}
+
+	{if $discount_prompt != 0}
+
+		{counter name=product_count print=false}
+
+		{if $discount_prompt == 1 && $discount_percent != 0}
+		<tr bgcolor=white>
+			<td colspan=2>
+				{$smarty.const.ADMIN_DISCOUNT} {$discount_percent}
+			</td>
+			<td align=center>
+				{$discount_value}	
+			</td>
+			<td>
+				&nbsp;
+			</td>
+		</tr>
+		{/if}
+
+		{if $discount_prompt == 2}
+
+		{counter name=product_count print=false}
+
+		<tr bgcolor=white>
+			<td colspan=4>
+				{$smarty.const.STRING_UNREGISTERED_CUSTOMER_DISCOUNT_PROMPT}
+			</td>
+		</tr>
+		{/if}
+
+		{if $discount_prompt == 3 && $discount_percent != 0}
+
+		{counter name=product_count print=false}
+
+		<tr bgcolor=white>
+			<td colspan=2>
+				{$smarty.const.ADMIN_DISCOUNT} {$discount_percent}
+				<br>
+				{$smarty.const.STRING_UNREGISTERED_CUSTOMER_COMBINED_DISCOUNT_PROMPT}
+			</td>
+			<td align=center>
+				{$discount_value}	
+			</td>
+			<td>
+				&nbsp;
+			</td>
+		</tr>
+		{/if}
+
+	{/if}
+
+
+	<tr bgcolor=white>
+		<td>
+			<font class=cat><b>{$smarty.const.TABLE_TOTAL}</b></font>
+		</td>
+		<td>
+			<br><br>
+		</td>
+		<td bgcolor=#{$smarty.const.CONF_LIGHT_COLOR} align=center>
+			<font class=cat><b>{$cart_total}</b>
+			</font>
+		</td>
+		<td></td>
+	</tr>
+</table>
+
+	<input type=hidden name=update value=1>
+	<input type=hidden name=shopping_cart value=1>
+
+	<p>
+	<table width=75% border=0>
+		<tr>
+			<td align=right>
+				<input type="submit" value="{$smarty.const.UPDATE_BUTTON}">
+			</td>
+		</tr>
+	</table>
+	</form>
+
+	<form action="index.php" method=get>
+		<table width=75% border=0>
+			<tr>
+				<td align=center>
+				 {if $this_is_a_popup_cart_window}
+					<input type="button"
+						value="{$smarty.const.CLOSE_BUTTON}"
+						onClick="JavaScript:window.close();">
+				 {else}
+					<input type="button"
+						value="{$smarty.const.STRING_BACK_TO_SHOPPING}"
+						onClick="JavaScript:window.location='{$cart_php_file}';">
+				 {/if}
+				</td>
+				<td align=center>
+					<input type="button" value="{$smarty.const.CART_PROCEED_TO_CHECKOUT}" onClick="{if $cart_amount<$smarty.const.CONF_MINIMAL_ORDER_AMOUNT}document.getElementById('id_too_small_order_amount').style.display='block';return false;{/if}window{if $this_is_a_popup_cart_window}.opener{/if}.location='index.php?{if $log ne NULL}order2_shipping=yes&shippingAddressID={$shippingAddressID}{else}quick_register=yes{/if}';{if $this_is_a_popup_cart_window}window.close();{/if}">
+				</td>
+			</tr>
+		</table>
+	</form>
+
+{else}
+
+<p><font>{$smarty.const.CART_EMPTY}</font>
+
+{/if}
+
+</center>
+
+{if $this_is_a_popup_cart_window}
+
+{* adjust cart window height *}
+<script>
+{literal}
+function adjust_cart_window(counter)
+{
+	var scr_h = screen.availHeight - 50;
+	var wnd_h = 210 + counter*50;
+	window.resizeTo( 400, Math.min(scr_h, wnd_h) );
+	
+}
+{/literal}
+	adjust_cart_window({counter name=product_count});
+	{if $this_is_a_popup_cart_window}
+		{if $ProductsNum}
+			window.opener.document.getElementById('shpcrtgc').innerHTML="{$ProductsNum} {$smarty.const.STRING_PRODUCTS}"
+			window.opener.document.getElementById('shpcrtca').innerHTML='{$cart_total}'
+		{else}
+			window.opener.document.getElementById('shpcrtgc').innerHTML="{$smarty.const.CART_CONTENT_EMPTY}"
+			window.opener.document.getElementById('shpcrtca').innerHTML="<br />"
+		{/if}
+	{/if}
+</script>
+<script type="text/javascript">
+{literal}
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+<script type="text/javascript">
+{literal}
+var pageTracker = _gat._getTracker("UA-4895657-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+{/literal}
+</script><br>
+<br>
+<br>
+<br>
+
+
+</body>
+</html>
+
+{/if}

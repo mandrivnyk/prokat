@@ -1,0 +1,175 @@
+<html>
+
+<head>
+
+<link href="/titan1.css" rel="stylesheet" type="text/css" charset="windows-1251">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<title>Сравнение товаров</title>
+</head>
+<body style="padding:10px;">
+{* product comparation *}
+<!--<div  style="overflow:auto; width: 600px;display: block;">-->
+<div>
+<script language='JavaScript'>
+function del_el(num)
+	{literal}
+		{
+	{/literal}
+			var el = document.getElementById('cmp-table');
+
+			//alert(el.rows.length);
+			for(var i=0;i<el.rows.length;i++)
+			{literal}
+				{
+			{/literal}
+				el.rows[i].cells[num].style.display="none";
+				//alert(el.rows[0].cells.length);
+
+			{literal}
+				}
+			{/literal}
+			var not_last = 0;
+			for(var y=1;y<el.rows[0].cells.length;y++)
+				{literal}
+					{
+				{/literal}
+				//alert('y = '+y);
+				//alert(el.rows[0].cells[y].style.display);
+
+					if( el.rows[0].cells[y].style.display ==  '')
+						not_last = 1;
+					//if( last == 0)
+
+						//document.close();
+					//el.removeChild(el.rows[i].cells[num]);
+
+
+					//alert(el.rows[0].cells.length);
+				{literal}
+					}
+				{/literal}
+				if(not_last == 0)
+					window.close();
+				//alert('not_last = '+not_last);
+
+	{literal}
+		}
+	{/literal}
+
+
+</script>
+<font class=big>
+	<center><h1>{$smarty.const.STRING_PRODUCT_COMPARISON}</h1></center>
+</font>
+
+{if $product_category_path}
+	<br>
+	<font class=cat>
+		<b>
+			<a href="index.php" rel="nofollow" class="cat">{$smarty.const.LINK_TO_HOMEPAGE}</a> :
+			{section name=i loop=$product_category_path}
+				{if $product_category_path[i].categoryID != 1}
+					<a class="cat" href="/{$product_category_path[i].url_name}">{$product_category_path[i].name}</a> :
+				{/if}
+			{/section}
+		</b>
+	</font>
+	<br>
+	{$category_description}
+
+	<br>
+{/if}{* $product_category_path *}
+<br>
+
+<table border=0 bgcolor={$smarty.const.CONF_MIDDLE_COLOR} cellpadding=3 cellspacing=1 width=100% id="cmp-table">
+
+	<!-- product name -->
+	<tr>
+		<td bgcolor={$smarty.const.CONF_LIGHT_COLOR} width=100px>
+			{$smarty.const.TABLE_PRODUCT_NAME}
+		</td>
+		{section name=i loop=$products}
+		<td bgcolor=white align=center width="{math equation="round(95 / $products_count)"}%">
+			<a href='{$products[i].url_name}' target="_blank">
+				{$products[i].name}
+			</a>&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="javascript: del_el({$smarty.section.i.index_next});">удалить</a>
+		</td>
+		{/section}
+	</tr>
+
+	<!-- picture -->
+	<tr>
+		<td bgcolor={$smarty.const.CONF_LIGHT_COLOR}>
+			{$smarty.const.ADMIN_PRODUCT_PICTURE}
+		</td>
+		{section name=i loop=$products}
+		<td bgcolor=white align="center">
+			{if $products[i].thumbnail}
+				<a href='index.php?productID={$products[i].productID}' target="_blank">
+					<img src="products_pictures/{$products[i].thumbnail}" border="0" alt="{$products[i].name|replace:'"':'&quot;'}" width="100px">
+				</a>
+			{else}
+				-
+			{/if}
+		</td>
+		{/section}
+	</tr>
+
+	<!-- price -->
+	<tr>
+		<td bgcolor={$smarty.const.CONF_LIGHT_COLOR}>
+			{$smarty.const.STRING_PRODUCT_PRICE}
+		</td>
+		{section name=i loop=$products}
+		<td bgcolor=white valign=top align=center>
+
+			<nobr><b><font color=red>
+					{if $products[i].Price <= 0}
+						n/a
+					{else}
+						{$products[i].PriceWithUnit}
+					{/if}
+				</font></b></nobr>
+
+		</td>
+		{/section}
+	</tr>
+
+	<!-- description -->
+	<tr>
+		<td bgcolor={$smarty.const.CONF_LIGHT_COLOR}>
+			{$smarty.const.STRING_PRODUCT_BRIEF_DESC}
+		</td>
+		{section name=i loop=$products}
+		<td bgcolor=white valign=top>
+			{if $products[i].brief_description}
+				{$products[i].brief_description}
+			{else}
+				-
+			{/if}
+		</td>
+		{/section}
+	</tr>
+
+
+	{section name=i loop=$definedOptions}
+	<tr>
+		<td bgcolor={$smarty.const.CONF_LIGHT_COLOR}>
+			{$definedOptions[i].name}
+		</td>
+
+		{section name=j loop=$products}
+		<td bgcolor=white>
+			<b>{$products[j][i]}</b>
+		</td>
+		{/section}
+	</tr>
+	{/section}
+
+</table>
+
+</div>
+
+</body>
+</html>

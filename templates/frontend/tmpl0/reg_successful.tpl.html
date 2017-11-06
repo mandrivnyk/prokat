@@ -1,0 +1,33 @@
+{* regitration successful message *}
+
+{if $reg_terminated} {* account termination message*}
+
+	<center><b>{$smarty.const.STRING_SUCCESSFUL_ACCOUNT_TERMINATION}</b></center>
+
+{else}
+
+	{if $reg_updating}
+		<br><br><br>
+		<center><b>{$smarty.const.STRING_ACOOUNT_UPDATE_SUCCESSFUL}</b></center>
+	{else}
+
+		{if $smarty.const.CONF_ENABLE_REGCONFIRMATION}
+		<center><h1>{$smarty.const.REGACTIVATION}</h1></center>
+		{else}
+		<br><br><br>
+		{/if}
+
+		<center><b>{$smarty.const.STRING_REGISTRATION_SUCCESSFUL}</b></center>
+		
+		{if $smarty.const.CONF_ENABLE_REGCONFIRMATION}
+			<form method="get" action="" style="text-align:center;">
+				<input type="hidden" name="act_customer" value="1" />
+				{$smarty.const.REGCONFIRM_TYPE_CODE}  <input type="text" name="act_code" value="{$ActCode}" />
+				<br />
+				<br />
+				<input type="submit" value="{$smarty.const.ACTIVATE_BUTTON}" />
+			</form>
+		{/if}
+	{/if}
+
+{/if}

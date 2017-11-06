@@ -1,0 +1,617 @@
+{* products and categories view *}
+<script type="text/javascript" src="./js/prototype.js"></script>
+
+<script language="javascript">
+<!--
+{literal}
+
+  var gUrl = './public_scripts/ajax_admin.php';
+
+  function togglevis_img_in_div(DIV)
+  {
+    //alert(DIV);
+    var div_elem = document.getElementById(DIV);
+    div_elem.innerHTML ='<span style="padding-left: 0px;"><img width="16" height="16"  src="/images/loading_ajax.gif" border="0" /></span>';
+
+
+
+  }
+  function changeDisplayState_tree(id)
+  {
+    e=document.getElementById(id);
+    if (e.style.display == 'none' || e.style.display =="") {
+     e.style.display = 'block';
+
+    } else {
+     e.style.display = 'none';
+
+    }
+  }
+
+
+  function enable(ID_CAT, STATUS) // ----------
+  {
+	//alert(STATUS);
+  	//alert(div_elem);
+		 //alert(par_two);
+		 //alert(par_three);
+	//alert(ID_CAT);
+	//alert(status);
+
+	//exit;
+
+  	 var div_elem = document.getElementById('img_'+ID_CAT);
+//if((div_elem !== null) or (div_elem !== undefined))
+	if((div_elem !== null) && (status !== null))
+	{
+	
+	//alert(div_elem.src);
+	//alert(httphost+'/images/plus.jpg');
+	  	 
+	
+	     		//div_elem.src = '/images/minus.jpg';
+	     		//changeDisplayState_tree('podmenu_'+ID_CAT);
+		  		togglevis_img_in_div('el_'+ID_CAT);
+	
+			  	//document.getElementById('podmenu_'+ID_CAT).innerHTML ='';
+	
+			   // var com = ID_CAT;
+			   //alert(STATUS);
+				       var today = new Date();
+				       var time  =   today.getTime();
+			    var myAjax = new Ajax.Updater('el_'+ID_CAT, gUrl, {method: 'get', asynchronous: true, parameters: {id_cat: ID_CAT, times:time, status:STATUS}, evalScripts: true});
+	     		
+	
+	     	
+	}
+  }
+{/literal}
+-->
+</script>
+
+
+
+
+{if $smarty.const.CONF_UPDATE_GCV ne 1}
+<form action="admin.php" method=post>
+	<input type=submit name=update_gc_value value="{$smarty.const.ADMIN_UPDATE_GC_VALUE_BUTTON}">
+	<input type=hidden name=dpt value="catalog">
+	<input type=hidden name=sub value="products_categories">
+	<input type=hidden name=categoryID value="{$categoryID}">
+</form>
+{/if}
+
+<p>
+<table border="0" cellspacing="0" cellpadding="10" width="100%">
+
+<tr>
+	<td width=220 bgcolor=#D2D2FF align=center><b>{$smarty.const.ADMIN_CATEGORY_TITLE}</b></td>
+	<td bgcolor=#F5F5B2 align=center><b>{$smarty.const.ADMIN_PRODUCT_TITLE}</b></td>
+</tr>
+
+{* categories *}
+<tr>
+<td valign=top bgcolor=#E2E2FF>
+
+	<table width=100% border=0 class="datatable_admin">
+	<tr>
+		<td>&nbsp;&nbsp;
+			{if $categoryID == 1}
+			<b>{$smarty.const.ADMIN_CATEGORY_ROOT}</b>
+			{else}
+			<a href="admin.php?dpt=catalog&sub=products_categories&categoryID=1">
+				{$smarty.const.ADMIN_CATEGORY_ROOT}
+			</a>
+			{/if}
+			({$products_in_root_category})
+		</td>
+
+		<td align=right>
+			&nbsp;
+		</td>
+	 </tr>
+	 {section name=i loop=$categories}
+	 <tr>
+		<td>
+			<table cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+						{section name=j loop=$categories[i].level max=$categories[i].level}
+							&nbsp;&nbsp;&nbsp;
+						{/section}
+					</td>
+
+					<td>
+						{if !$categories[i].ExpandedCategory}
+							{if $categories[i].ExistSubCategories}
+								<a href='{$urlToCategoryTreeExpand}&expandCat={$categories[i].categoryID}'><img src="./images/plus.gif" border=0></a>
+							{else}
+								<img src="./images/white_rectangle.gif" border=0>
+							{/if}
+						{else}
+							{if $categories[i].ExistSubCategories}
+								<a href='{$urlToCategoryTreeExpand}&shrinkCat={$categories[i].categoryID}'><img src="./images/minus.gif" border=0></a>
+							{else}
+								<img src="./images/white_rectangle.gif" border=0>
+							{/if}
+						{/if}
+					</td>
+
+					<td>
+						&nbsp;
+					</td>
+
+					<td>
+						{if $categoryID == $categories[i].categoryID}
+						<b>{$categories[i].name}</b>
+						{else}
+						<a href="admin.php?dpt=catalog&sub=products_categories&categoryID={$categories[i].categoryID}&expandCat={$categories[i].categoryID}"
+							{if $categories[i].level ne 0}
+								class=standard
+							{/if}
+						>{$categories[i].name}</a>
+						{/if}
+
+						{if !$categories[i].ExpandedCategory}
+							({$categories[i].products_count_admin})
+						{else}
+							({$categories[i].products_count_category})
+						{/if}
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td align=right width="50px;">
+			<font color=red></font>
+				<a class=small href="javascript:open_window('category.php?categoryID={$categories[i].categoryID}',600,500);"><img src="/images/backend/b_edit.png" border="0" title="редактировать {$categories[i].name}"></a>
+				&nbsp;
+				{if $categories[i].enable eq 1}
+					<span id="el_{$categories[i].categoryID}"><img id="img_{$categories[i].categoryID}"  src="/images/backend/enable-yes.jpg" border="0" title="видно {$categories[i].name}" onclick="enable({$categories[i].categoryID}, 0 );">
+				{else}
+					<span id="el_{$categories[i].categoryID}"><img id="img_{$categories[i].categoryID}"  src="/images/backend/enable-no.jpg" border="0" title="не видно {$categories[i].name}" onclick="enable({$categories[i].categoryID}, 1);"></span>
+				{/if}
+
+			<font color=red></font>
+		</td>
+	 </tr>
+	 {/section}
+
+
+
+	</table>
+
+	<br><center>[ <a href="javascript:open_window('category.php?w=-1',600,500);">{$smarty.const.ADD_NEW_CATEGORY_BUTTON}</a> ]</center><br>
+
+</td>
+
+
+{* products *}
+<td valign=top bgcolor=#FFFFE2 align=center>
+
+
+	{if $categoryID ne 1}
+		<br><center><b>{$category_name}:</b></center><br>
+	{else}
+		<br><center><b>{$smarty.const.ADMIN_CATEGORY_ROOT}:</b></center><br>
+	{/if}
+
+	{if $categoryID eq 1}
+		<p>{$smarty.const.ADMIN_ROOT_WARNING}
+	{/if}
+
+	{if not $products && not $searched_done}
+
+		<p><center>{$smarty.const.STRING_EMPTY_CATEGORY}</center>
+
+	{else}
+
+		{if $couldntToDelete eq 1}
+			<font color=red>
+				<b>
+					{$smarty.const.COULD_NOT_DELETE_THIS_PRODUCT}
+				</b>
+			</font>
+		{/if}
+
+		{if $couldntToDeleteThisProducts}
+			<font color=red>
+				<b>
+					{$smarty.const.COULD_NOT_DELETE_THESE_PRODUCT}
+				</b>
+			</font>
+		{/if}
+
+		<form method=POST name="search_form" action='{$urlToSubmit}&search=yes'>
+
+		<table border="0" cellspacing="1" cellpadding="3">
+			<tr>
+				<td colspan=3>
+					{$smarty.const.ADMIN_SEARCH_PRODUCT_IN_CATEGORY}
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<select name="search_criteria">
+						<option value='name'
+						{if $search_criteria == 'name'}
+							selected
+						{/if}
+						>
+							{$smarty.const.TABLE_PRODUCT_NAME}
+						</option>
+						<option value='product_code'
+						{if $search_criteria == 'product_code'}
+							selected
+						{/if}
+						>
+							{$smarty.const.ADMIN_PRODUCT_CODE}
+						</option>
+					</select>
+				</td>
+				<td>
+					<input type="text" name="search_value"
+							value="{$search_value}">
+				</td>
+				<td>
+					<input type="submit" name="search"
+						value="{$smarty.const.ADMIN_SEARCH_BUTTON}">
+				</td>
+			</tr>
+			{if $searched_done}
+			<tr>
+				<td>
+					{$searched_count}
+				</td>
+			</tr>
+			{/if}
+		</table>
+
+		</form>
+
+
+		<form action='{$urlToSubmit}' method=POST name="form">
+
+		{if $products}
+
+		<table border=0 cellspacing=0 cellpadding=3 width=100%>
+
+			{if $smarty.const.CONF_CHECKSTOCK eq 1}
+				{if $navigatorHtml}
+				<tr>
+					<td colspan=13>
+						{$navigatorHtml}
+					</td>
+				</tr>
+				{/if}
+			{else}
+				{if $navigatorHtml}
+				<tr>
+					<td colspan=12>
+						{$navigatorHtml}
+					</td>
+				</tr>
+				{/if}
+			{/if}
+
+			<tr bgcolor=#DAD5A3 align=center>
+				<td width=1%>{$smarty.const.ADMIN_PRODUCT_ENABLED}</td>
+				<td>
+					<table>
+						<tr>
+							<td rowspan=2>
+								{$smarty.const.ADMIN_PRODUCT_CODE}
+							</td>
+							<td>
+								<a href='{$urlToSort}&sort=product_code&sort_dir=ASC'>
+									<img SRC="./images/backend/arrow_up.gif" border=0>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a href='{$urlToSort}&sort=product_code&sort_dir=DESC'>
+									<img SRC="./images/backend/arrow_down.gif" border=0>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<table>
+						<tr>
+							<td rowspan=2>
+								{$smarty.const.ADMIN_PRODUCT_NAME}
+							</td>
+							<td>
+								<a href='{$urlToSort}&sort=name&sort_dir=ASC'>
+									<img SRC="./images/backend/arrow_up.gif" border=0>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a href='{$urlToSort}&sort=name&sort_dir=DESC'>
+									<img SRC="./images/backend/arrow_down.gif" border=0>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<table>
+						<tr>
+							<td rowspan=2>
+								{$smarty.const.ADMIN_PRODUCT_RATING}
+							</td>
+							<td>
+								<a href='{$urlToSort}&sort=customers_rating&sort_dir=ASC'>
+									<img SRC="./images/backend/arrow_up.gif" border=0>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a href='{$urlToSort}&sort=customers_rating&sort_dir=DESC'>
+									<img SRC="./images/backend/arrow_down.gif" border=0>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<table>
+						<tr>
+							<td rowspan=2 align="right">
+								{$smarty.const.ADMIN_PRODUCT_PRICE_UE}
+							</td>
+							<td>
+								&nbsp;&nbsp;
+							</td>
+						</tr>
+						<tr>
+							<td>
+								&nbsp;&nbsp;
+							</td>
+						</tr>
+					</table>
+				</td>
+				</td>
+				<td>
+					<table>
+						<tr>
+							<td rowspan=2 align="right">
+								{$smarty.const.ADMIN_PRODUCT_PRICE}, {$smarty.const.STRING_UNIVERSAL_CURRENCY}
+							</td>
+							<td>
+								<a href='{$urlToSort}&sort=Price&sort_dir=ASC'>
+									<img SRC="./images/backend/arrow_up.gif" border=0>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a href='{$urlToSort}&sort=Price&sort_dir=DESC'>
+									<img SRC="./images/backend/arrow_down.gif" border=0>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+				{if $smarty.const.CONF_CHECKSTOCK eq 1}
+				<td>
+					<table>
+						<tr>
+							<td rowspan=2>
+								{$smarty.const.ADMIN_PRODUCT_INSTOCK}
+							</td>
+							<td>
+								<a href='{$urlToSort}&sort=in_stock&sort_dir=ASC'>
+									<img SRC="./images/backend/arrow_up.gif" border=0>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a href='{$urlToSort}&sort=in_stock&sort_dir=DESC'>
+									<img SRC="./images/backend/arrow_down.gif" border=0>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+				{/if}
+				<td>{$smarty.const.ADMIN_PRODUCT_PICTURE}</td>
+				<td>{$smarty.const.ADMIN_PRODUCT_THUMBNAIL}</td>
+				<td>{$smarty.const.ADMIN_PRODUCT_BIGPICTURE}</td>
+				<td>
+					<table>
+						<tr>
+							<td rowspan=2>
+								{$smarty.const.ADMIN_PRODUCT_SOLD}
+							</td>
+							<td>
+								<a href='{$urlToSort}&sort=items_sold&sort_dir=ASC'>
+									<img SRC="./images/backend/arrow_up.gif" border=0>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a href='{$urlToSort}&sort=items_sold&sort_dir=DESC'>
+									<img SRC="./images/backend/arrow_down.gif" border=0>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td width=1%>{$smarty.const.ADMIN_ADD_PRODUCT_INTO}</td>
+				<td>
+					<table>
+						<tr>
+							<td rowspan=2>
+								{$smarty.const.ADMIN_SORT_ORDER}
+							</td>
+							<td>
+								<a href='{$urlToSort}&sort=sort_order&sort_dir=ASC'>
+									<img SRC="./images/backend/arrow_up.gif" border=0>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a href='{$urlToSort}&sort=sort_order&sort_dir=DESC'>
+									<img SRC="./images/backend/arrow_down.gif" border=0>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td width=1%>&nbsp;</td>
+			</tr>
+		{section name=i loop=$products}
+
+			<tr bgcolor="#{cycle values="FFFFE2,F5F5C5"}">
+				<td align=center>
+					<input type=hidden name=enable_{$products[i].productID}
+						{if $products[i].enabled}value='1'{else}value='0'{/if}
+					>
+					<input type=checkbox name=checkbo_en_{$products[i].productID}
+						{if $products[i].enabled}checked{/if}
+						onclick='JavaScript:CheckBoxHandler_{$products[i].productID}()'
+						>
+
+					<script language='JavaScript'>
+						function CheckBoxHandler_{$products[i].productID}()
+						{literal}
+						{
+						{/literal}
+							if ( document.form.checkbo_en_{$products[i].productID}.checked )
+								document.form.enable_{$products[i].productID}.value = '1';
+							else
+								document.form.enable_{$products[i].productID}.value = '0';
+						{literal}
+						}
+						{/literal}
+					</script>
+				</td>
+
+				<td>
+					<a href="javascript:open_window('products.php?productID={$products[i].productID}',795,500);">{$products[i].product_code}</a>
+					&nbsp;
+				</td>
+
+				<td>
+					<a href="javascript:open_window('products.php?productID={$products[i].productID}',795,500);">{$products[i].name}</a>&nbsp;
+				</td>
+
+				<td align=right>
+					{$products[i].customers_rating}&nbsp;
+				</td>
+
+				<td align=right>
+					<input type=text name=priceUE_{$products[i].productID}
+						size=5
+						value={$products[i].Price_UE}>
+				</td>
+
+				<td align=right>
+					<input type=text name=price_{$products[i].productID}
+						size=5
+						value={$products[i].Price}>
+				</td>
+
+				{if $smarty.const.CONF_CHECKSTOCK eq 1}
+				<td align=right>
+					<input type=text name=left_{$products[i].productID}
+						size=5
+						value="{$products[i].in_stock}">
+					{if $products[i].in_stock < 0}
+						<font color=red>
+							({$smarty.const.ADMIN_INSUFFICIENT_IN_STOCK})
+						</font>
+					{/if}
+				</td>
+				{/if}
+
+				<td align=center>
+					{$products[i].picture_count}
+				</td>
+
+				<td align=center>
+					{$products[i].thumbnail_count}
+				</td>
+				<td align=center>
+					{$products[i].enlarged_count}
+				</td>
+
+
+				<td align=right>
+					{$products[i].items_sold}
+				</td>
+
+				<td align=center>
+					{if $products[i].picture_count ne 0}
+					<a href="admin.php?dpt=catalog&sub=special&new_offer={$products[i].productID}">
+						<img src="images/admin_special_offer.gif" border=0 alt="{$smarty.const.ADMIN_ADD_SPECIAL_OFFERS}">
+					</a>
+					{else}
+						&nbsp;
+					{/if}
+				</td>
+
+				<td>
+					<input type='text' name='sort_order_{$products[i].productID}'
+						value='{$products[i].sort_order}' size='3'>
+				</td>
+
+				<td>
+					<a href="javascript:confirmDelete({$products[i].productID},'{$smarty.const.QUESTION_DELETE_CONFIRMATION}','{$urlToDelete}&terminate=');">
+						<img src="images/backend/button_delete.gif"
+							border=0
+							alt="{$smarty.const.DELETE_BUTTON}">
+					</a>
+				</td>
+
+			</tr>
+
+		{/section}
+
+		</table>
+
+		{/if}
+
+		<input type=hidden name=dpt value="catalog">
+		<input type=hidden name=sub value="products_categories">
+		<input type=hidden name=categoryID value="{$categoryID}">
+		<br>
+
+		{if $searched_done}
+			<a href='admin.php?dpt=catalog&sub=products_categories&categoryID={$categoryID}'>
+				{$smarty.const.ADMIN_SHOW_ALL_PRODUCT_IN_THIS_CATEGORY}
+			</a>
+			&nbsp;
+		{/if}
+
+		{if $products}
+		<input type=submit value="{$smarty.const.SAVE_BUTTON}"
+				name="products_update">
+		{/if}
+
+		{if !$searched_done}
+			<input type=button
+				value="{$smarty.const.ADMIN_DELETE_ALL_PRODUCTS}"
+				onclick="javascript:confirmDelete(0,'{$smarty.const.QUESTION_DELETE_CONFIRMATION}','admin.php?dpt=catalog&sub=products_categories&categoryID={$categoryID}&delete_all_products=1');"
+				>
+		{/if}
+		</form>
+
+	  {/if}
+
+
+	<p><center>[ <a href="javascript:open_window('products.php?categoryID={$categoryID}',550,600);">{$smarty.const.ADD_NEW_PRODUCT_BUTTON}</a> ]</center><br>
+
+</td>
+
+
+</tr>
+</table>

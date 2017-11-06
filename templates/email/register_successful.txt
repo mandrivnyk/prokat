@@ -1,0 +1,30 @@
+{* successful regitration notification *}
+{$smarty.const.EMAIL_HELLO}!
+
+{$smarty.const.EMAIL_YOUVE_BEEN_REGISTERED_AT} {$smarty.const.CONF_SHOP_NAME}
+
+{$smarty.const.EMAIL_YOUR_REGTRATION_INFO}
+
+{if $smarty.const.CONF_ENABLE_REGCONFIRMATION}
+{$smarty.const.CONF_EMAIL_REGCONFIRMATION|replace:"[code]":$ActCode|replace:"[codeurl]":$ActURL}
+
+{/if}
+{$smarty.const.CUSTOMER_LOGIN} {$login}
+{$smarty.const.CUSTOMER_PASSWORD} {$cust_password}
+{$smarty.const.CUSTOMER_FIRST_NAME} {$first_name}
+{$smarty.const.CUSTOMER_LAST_NAME} {$last_name}
+{$smarty.const.CUSTOMER_EMAIL} {$Email}
+{if $additional_field_values}
+{section name=i loop=$additional_field_values}
+{$additional_field_values[i].reg_field_name}: {$additional_field_values[i].reg_field_value}
+{/section}	
+{/if}
+{if $addresses}
+{$smarty.const.STRING_ADDRESSES_HAS_BEEN_ADDED}:
+{section name=i loop=$addresses}
+{$addresses[i].addressStr|replace:"<br>":"\n"}
+{/section}
+{/if}
+
+{$smarty.const.EMAIL_SINCERELY}, {$smarty.const.CONF_SHOP_NAME}
+{$smarty.const.CONF_SHOP_URL}

@@ -1,0 +1,319 @@
+{* product brief view (from a category or search) *}
+
+
+{if $product_info ne NULL}
+
+
+<table width=100% border=0 cellspacing=0 cellpadding=0 class="">
+<tr>
+
+<td width="20px" style="padding:4 4 4 3;" align="center">
+	{if $product_info.allow_products_comparison}  {* removed ' && $categoryID == $product_info.categoryID' *}
+
+				<table class=""><form action="" method=post name="MainForm3_{$product_info.productID}">
+				<tr>							<input type=checkbox value='1' name='ComparisonCheckBox_{$product_info.productID}' onchange='JavaScript:Comparison_{$product_info.productID}()'>
+							<!--{$smarty.const.STRING_SELECT_TO_COMPARISON}-->
+				</td></tr></form></table>
+
+				<script language='JavaScript'>
+
+				function Comparison_{$product_info.productID}()
+				{literal}
+				{
+				{/literal}
+					_checked =
+						document.MainForm3_{$product_info.productID}.ComparisonCheckBox_{$product_info.productID}.checked;
+
+					_index = -1;
+					for(i=0; i<ComparedProducts1.length; i++)
+						if ( ComparedProducts1[i] == {$product_info.productID} )
+						{literal}
+						{
+						{/literal}
+							_index = i;
+							break;
+						{literal}
+						}
+						{/literal}
+
+					if ( _checked )
+					{literal}
+					{
+					{/literal}
+						if ( _index == -1 )
+						{literal}
+						{
+						{/literal}
+							ComparedProducts1.push( {$product_info.productID} );
+							ComparedProducts2.push( {$product_info.productID} );
+						{literal}
+						}
+						{/literal}
+					{literal}
+					}
+					{/literal}
+					else
+					{literal}
+					{
+					{/literal}
+						if ( _index != -1 )
+						{literal}
+						{
+						{/literal}
+							ComparedProducts1.splice( _index, 1 );
+							ComparedProducts2.splice( _index, 1 );
+						{literal}
+						}
+						{/literal}
+					{literal}
+					}
+					{/literal}
+
+				{literal}
+				}
+				{/literal}
+
+				</script>
+
+		{/if}{* $product_info.allow_products_comparison *}
+
+<img src="/images/line30x1px.jpg">
+</td>
+<td {if $product_info.picture || $product_info.thumbnail || $product_info.allow_products_comparison}width="100"{/if} align=center valign="middle" style="padding-right:4px;">
+
+	{if $product_info.thumbnail}
+		<a class="olive" href="/{$product_info.url_name}">
+			<img  src="/products_pictures/{$product_info.picture}" alt="{$product_info.title_one}  {$product_info.producer}  {$product_info.name|escape:'html'}" title="{$product_info.title_one}  {$product_info.producer}  {$product_info.name|escape:'html'}" border=0 ><br>
+			<!--{$smarty.const.MORE_INFO_ON_PRODUCT}-->
+		</a>
+	{else}
+		{if $product_info.picture}
+			<a class="olive" href="index.php?productID={$product_info.productID}">
+				<img src="/{$product_info.url_name}" alt="{$product_info.name|escape:'html'}" border=0 width="65px">
+				<!--{$smarty.const.MORE_INFO_ON_PRODUCT}-->
+			</a>
+		{/if}
+	{/if}
+
+
+
+</td>
+</tr>
+<tr>
+<td valign="top" width="" style="padding-top:0px;margin-top:0px;" colspan="2">
+	<table width=100% border="0" cellpadding=0 cellspacing=0>
+		<tr>
+			<td valign="top" width="100%">
+				<table border="0" cellpadding=0 cellspacing=0>
+					<tr>
+						<td valign="top" width="100%" style="padding-top:4px;padding-left: 10px;">
+							<a class="cat" href="/{$product_info.url_name}"><h2> {$product_info.producer}   {$product_info.name}</h2></a>
+								<br>
+								<span style="color:#525250; font-weight: none;">
+									{if $product_info.brief_description neq ''}
+										{$product_info.brief_description|truncate:200:"..."}
+									{/if}
+								</span>
+							
+						</td>
+						<td align="right" valign=top width="100px" class="cart_td" style="padding-right: 10px;"> {* add to cart *}
+				 
+								<form action="index.php?categoryID={$product_info.categoryID}&prdID={$product_info.productID}" method=post name="HiddenFieldsForm_{$product_info.productID}" >
+								<div class="price_position">
+								<font class="{if $product_info.in_stock > 0}cat_price{else}cat_price_zero{/if}">
+								   {if $product_info.Price <= 0} {else}{$product_info.PriceWithOutUnit} грн{/if}
+								</font>
+				
+								 
+				
+				
+								{if $smarty.const.CONF_OPEN_SHOPPING_CART_IN_NEW_WINDOW eq 0}
+				
+										{* shopping cart page is shown in the same window - in this cart 'add to cart' button is a form submit button *}
+				
+										{if  $product_info.Price>0 && ( $smarty.const.CONF_SHOW_ADD2CART eq 1 ) && ( $smarty.const.CONF_CHECKSTOCK==0 || $product_info.in_stock > 0 ) }
+											<input name="cart_{$product_info.productID}" type="image" src="/images/cart_navy.gif" alt="{$smarty.const.ADD_TO_CART_STRING}">
+										{/if}
+				
+									{else}
+				
+										{* shopping cart page is shown in a popup window *}
+				
+										{if $product_info.Price>0 && ( $smarty.const.CONF_SHOW_ADD2CART eq 1 ) &&
+												( $smarty.const.CONF_CHECKSTOCK==0 || $product_info.in_stock > 0 ) }
+												<a href="javascript:open_window('/cart.php?addproduct={$product_info.productID}{counter name='select_counter_hidden' start=0 skip=1 print=false}{counter name='select_counter_hidden_extra' start=0 skip=1 print=false}{section name=i loop=$product_info.product_extra}{if $product_info.product_extra[i].option_type eq 1}{section name=s loop=$product_info.product_extra[i].option_show_times}&option_select_hidden_{counter name=select_counter_hidden}='+document.HiddenFieldsForm_{$product_info.productID}.option_select_hidden_{counter name=select_counter_hidden_extra}_{$product_info.productID}.value+'{/section}{/if}{/section}',400,300);">
+												<img border=0 src="/images/cart_navy.gif" alt="{$smarty.const.ADD_TO_CART_STRING}" ></a>
+				
+											{else}
+												&nbsp;
+											{/if}
+				
+									{/if}
+									{counter name='select_counter_hidden' start=0 skip=1 print=false}
+									{section name=i loop=$product_info.product_extra}
+										{if $product_info.product_extra[i].option_type eq 1}
+											{section name=s loop=$product_info.product_extra[i].option_show_times}
+												<input type=hidden
+													name='option_select_hidden_{counter name=select_counter_hidden}_{$product_info.productID}'
+													value='1'>
+											{/section}
+										{/if}
+									{/section}
+									</div>
+									<br>
+									<img src="/images/line110x1px.jpg">
+									</form>
+							</td>
+					</tr>
+				</table>
+			</td>
+
+
+			
+
+		</tr>
+		
+
+
+
+		<form action="index.php?productID={$product_info.productID}" method=post name="MainForm1_{$product_info.productID}">
+
+		{counter name='select_counter' start=0 skip=1 print=false assign='select_counter_var'}
+		{section name=i loop=$product_info.product_extra}
+			{if $product_info.product_extra[i].option_type eq 0 }
+				
+			{else}
+				{section name=k loop=$product_info.product_extra[i].option_show_times}
+					<tr>
+						<td>
+							{$product_info.product_extra[i].name}{if $product_info.product_extra[i].option_show_times > 1} ({$smarty.section.k.index+1}):{else}:{/if}
+						</td>
+						<td>
+							{counter name=select_counter}
+							{if $smarty.section.k.index == 0}
+								<select name='option_select_{$select_counter_var}_{$product_info.productID}'
+									onchange='JavaScript:GetCurrentCurrency_{$product_info.productID}();'>
+									{section name=j loop=$product_info.product_extra[i].values_to_select}
+										{if $product_info.product_extra[i].values_to_select[j].variantID eq $product_info.product_extra[i].variantID}
+											<option value='{$product_info.product_extra[i].values_to_select[j].price_surplus}:{$product_info.product_extra[i].values_to_select[j].variantID}' selected>
+										{else}
+											<option value='{$product_info.product_extra[i].values_to_select[j].price_surplus}:{$product_info.product_extra[i].values_to_select[j].variantID}'>
+										{/if}
+											{$product_info.product_extra[i].values_to_select[j].option_value}
+										</option>
+									{/section}
+								</select>
+							{else}
+								<select name='option_select_{$select_counter_var}_{$product_info.productID}'
+									onchange='JavaScript:GetCurrentCurrency_{$product_info.productID}();'>
+									<option value='0:-1'>{$smarty.const.NOT_DEFINED}</option>
+									{section name=j loop=$product_info.product_extra[i].values_to_select}
+										<option value='{$product_info.product_extra[i].values_to_select[j].price_surplus}:{$product_info.product_extra[i].values_to_select[j].variantID}'>
+											{$product_info.product_extra[i].values_to_select[j].option_value}
+										</option>
+									{/section}
+								</select>
+							{/if}
+						</td>
+					</tr>
+				{/section}
+			{/if}
+		{/section}
+
+		</form>
+
+		{if $select_counter_var != 0}
+		<tr>
+			<form action="index.php?productID={$product_info.productID}" method=post
+					name="MainForm2_{$product_info.productID}"><td colspan=2>
+
+
+					{if $product_info.Price > 0}
+					<b>{$smarty.const.CURRENT_PRICE_OPTION}:<br></b>
+					{/if}
+
+					<input type=hidden value="{php}echo(getPriceUnit());{/php}"
+						name="priceUnit_{$product_info.productID}">
+					{if $product_info.Price <= 0}
+						<input type=hidden value=""
+							id="optionPrice_{$product_info.productID}">
+
+					{else}
+						<input type=text value=""
+							class=totalPrice
+							readonly
+							id="optionPrice_{$product_info.productID}">
+					{/if}
+
+			</td></form>
+		</tr>
+		{/if}
+
+
+
+
+	</table>
+
+
+
+	{if $select_counter_var != 0}
+	<script langauge='JavaScript'>
+
+		function GetCurrentCurrency_{$product_info.productID}()
+		{literal}
+		{
+		{/literal}
+			_selectionCount={$select_counter_var};
+			_sum = {$product_info.PriceWithOutUnit};
+
+
+			{counter name='select_counter2' start=1 skip=1 print=false
+						assign='select_counter_var2'}
+			{section name=i loop=$product_info.product_extra}
+				{section name=k loop=$product_info.product_extra[i].option_show_times}
+
+					_value =
+						document.MainForm1_{$product_info.productID}.option_select_{$select_counter_var2}_{$product_info.productID}.value;
+					price_surplus = ( _value.split(":") )[0];
+					_sum += new Number( price_surplus );
+					variantID = ( _value.split(":") )[1];
+					document.HiddenFieldsForm_{$product_info.productID}.option_select_hidden_{$select_counter_var2}_{$product_info.productID}.value =
+						variantID;
+
+					{counter name=select_counter2}
+
+				{/section}
+			{/section}
+
+			_sumStr = new String(_sum);
+			_commaIndex = _sumStr.indexOf(".");
+			if ( _commaIndex == -1 )
+				_sumStr = _sum;
+			else
+				_sumStr = _sumStr.substr(0, _commaIndex + 3);
+			{php}
+				echo("locationPriceUnit=".getLocationPriceUnit().";\n");
+			{/php}
+
+			_sumStr = _formatPrice(_sumStr);
+
+			if ( locationPriceUnit )
+				document.MainForm2_{$product_info.productID}.optionPrice_{$product_info.productID}.value =
+					_sumStr + document.MainForm2_{$product_info.productID}.priceUnit_{$product_info.productID}.value;
+			else
+				document.MainForm2_{$product_info.productID}.optionPrice_{$product_info.productID}.value =
+					document.MainForm2_{$product_info.productID}.priceUnit_{$product_info.productID}.value + _sumStr;
+		{literal}
+		}
+		{/literal}
+
+		GetCurrentCurrency_{$product_info.productID}();
+
+	</script>
+	{/if}
+
+</td>
+</tr>
+</table>
+{/if}
+

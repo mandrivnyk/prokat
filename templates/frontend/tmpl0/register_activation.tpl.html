@@ -1,0 +1,36 @@
+{if !$smarty.get.order2}
+
+<div style="text-align:center;">
+
+{if $ActOk}
+	{$smarty.const.REGCONFIRM_SUCCESS}
+{else}
+{if $ActErr}<div class="error_msg_f">{$smarty.const.REGCONFIRM_WRONG_ACTCODE}</div>{/if}
+{if $NoAct}<div class="error_msg_f">{$smarty.const.REGCONFIRM_NOTACTIVATED}</div>{/if}
+<form method="get">
+	<input type="hidden" name="act_customer" value="1" />
+	{$smarty.const.REGCONFIRM_TYPE_CODE}  <input type="text" name="act_code" value="{$ActCode}" />
+	<br />
+	<br />
+	<input type="submit" value="{$smarty.const.ACTIVATE_BUTTON}" />
+</form>
+{/if}
+</div>
+
+{else}{* !$smarty.get.order2 *}
+<center>
+	{if $smarty.const.CONF_ENABLE_REGCONFIRMATION}
+		<form method="get" action="" style="text-align:center;">
+			<input type="hidden" name="order2" value="{$smarty.get.order2}" />
+			<input type="hidden" name="act_customer" value="1" />
+			{$smarty.const.REGCONFIRM_TYPE_CODE}
+			{if $ActErr}<div class="error_msg_f">{$smarty.const.REGCONFIRM_WRONG_ACTCODE}</div>{/if}
+			{if $NoAct}<div class="error_msg_f">{$smarty.const.REGCONFIRM_NOTACTIVATED}</div>{/if}
+			<br />  <input type="text" name="act_code" value="{$ActCode}" />
+			<br />
+			<br />
+			<input type="submit" value="{$smarty.const.ACTIVATE_BUTTON}" />
+		</form>
+	{/if}
+</center>
+{/if}{* !$smarty.get.order2 *}

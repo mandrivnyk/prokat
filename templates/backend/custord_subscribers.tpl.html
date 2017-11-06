@@ -1,0 +1,72 @@
+{* newsletter subscribers list *}
+<p>{$smarty.const.ADMIN_SUBSCRIPTIONS_STRING_DESC}
+<p>
+{if $Message ne ''}
+	<div class="{if $MessageCode eq '1'}ok_msg_f{else}error_msg_f{/if}">{$Message}</div>
+{/if}
+<table cellpadding="15" cellspacing="0">
+<tr>
+<td valign="top" width="40%">
+<form method="post" action="" enctype="multipart/form-data" name="formsubscrlist" style="padding: 15px; margin:0px;">
+	<input type="radio" name="fACTION" value="fLoadSubscribersListFile" id="subscr_act_upload" />
+	<label for="subscr_act_upload">{$smarty.const.ADMIN_SUBSCRIPTIONS_STRING_UPLOAD}</label>
+	<br />
+	<input type="file" name="fSubscribersListFile" />
+	<hr />
+	<input type="radio" name="fACTION" value="fExportSubscribersList" id="subscr_act_export" />
+	<label for="subscr_act_export">{$smarty.const.ADMIN_SUBSCRIPTIONS_STRING_EXPORT}</label>
+	<hr />
+	<input type="radio" name="fACTION" value="fEraseSubscribersList" id="subscr_act_erase" />
+	<label for="subscr_act_erase">{$smarty.const.ADMIN_SUBSCRIPTIONS_STRING_ERASE}</label>
+	<hr />
+	<input type="submit" onclick="if(document.formsubscrlist.fACTION[2].checked)return window.confirm('{$smarty.const.STRING_LE_CONFIRM}');" value="{$smarty.const.OK_BUTTON}" />
+</form>
+</td>
+<td style="padding:0px;background-color: #666666;width:1px;"><hr style="height:100%; width:1px;" /></td>
+<td valign="top" width="60%">
+	<span class="big"><B>{$smarty.const.ADMIN_NEWS_SUBSCRIBERS}</B></span>			
+{if $smarty.const.CONF_BACKEND_SAFEMODE eq 1}
+<p>{$smarty.const.ADMIN_SAFEMODE_BLOCKED}</p>
+
+{else}
+
+{if $subscribers_count eq 0}
+
+	<p>&lt; {$smarty.const.ANSWER_NO} &gt;</p>
+
+{else}
+
+<table cellspacing=0 cellpadding=5 width=100%>
+
+	{if $navigator}
+	<tr>
+		<td colspan=2>
+			{$navigator}
+		</td>
+	</tr>
+	{/if}
+
+	{section name=i loop=$subscribers}
+
+	<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}">
+		<td valign="top">&nbsp;
+			<a class=standard href="mailto:{$subscribers[i].Email|replace:"<":"&lt;"|replace:">":"&gt;"|replace:"'":"&amp;"|replace:'"':'&quot;'|replace:" ":"20%"}">
+				{$subscribers[i].Email|replace:"<":"&lt;"|replace:">":"&gt;"|replace:"'":"&amp;"|replace:'"':'&quot;'}
+			</a>
+		</td>
+		<td valign="top" width=1%>
+			<a href="{$urlToSubscibe}&unsub={$subscribers[i].Email64}" onclick="if(window.confirm('{$smarty.const.STRING_LE_CONFIRM}'))return true;else return false;">
+				<img src="images/backend/button_delete.gif" border=0 alt="{$smarty.const.DELETE_BUTTON}" border=0>
+			</a>
+		</td>
+	</tr>
+
+	{/section}
+
+</table>
+
+{/if}
+{/if}
+</td>
+</tr>
+</table>

@@ -1,0 +1,144 @@
+{* category view *}
+
+<p>
+
+<table cellpadding=3 border=0>
+
+{if $product_category_path}
+	<tr>
+
+	{if $selected_category.picture}
+	<td rowspan=2 valign=top width=1%>
+		<img src="products_pictures/{$selected_category.picture}" 
+			alt="{$selected_category.name}">
+	</td>
+	{/if}
+
+	<td width=99%>
+		<a href="index.php" rel="nofollow" class="cat">{$smarty.const.LINK_TO_HOMEPAGE}</a>
+				{section name=i loop=$product_category_path}
+					{if $product_category_path[i].categoryID != 1}
+						/ <a class="cat" href="index.php?categoryID={$product_category_path[i].categoryID}">{$product_category_path[i].name}</a>
+					{/if}
+				{/section}
+	</td>
+
+	</tr>
+
+
+	<tr>
+	<td>
+		{* description *}
+		{$selected_category.description}
+
+		<p>
+		{* show subcategories *}
+		{section name=i loop=$subcategories_to_be_shown}
+		 <a class=standard href="index.php?categoryID={$subcategories_to_be_shown[i][0]}">{$subcategories_to_be_shown[i][1]}</a>
+		 ({$subcategories_to_be_shown[i][2]})<br>
+		{/section}
+
+
+	</td>
+	</tr>
+{/if}
+
+
+{if $allow_products_search}
+	<tr>
+		<td colspan="2">
+			{include file="advanced_search_in_category.tpl.html"}
+		</td>
+	</tr>
+{/if}
+
+</table>
+
+{if $products_to_show}
+
+{include file="comparison_products_buttonup.tpl.html"}
+
+<center>{$string_product_sort}</center>
+<br>
+<center>{$catalog_navigator}</center>
+	
+
+	{literal}
+
+	<script language='JavaScript'>
+
+	function _formatPrice( _price )
+	{	
+				
+		_pointIndex = -1;	
+		for( i=0; i< _price.length; i++ )
+			if ( _price.charAt(i) == '.' )
+			{
+				_pointIndex = i;
+				break;
+			}
+
+		if (  _pointIndex == -1 )
+			_price = _price + ".00";
+		else if (  _price.length-1 - _pointIndex == 1  )
+			_price = _price + "0";
+
+		_res = "";
+
+		i=0;
+		for( i=_price.length-1; i >= 0; i-- )
+		{
+			if ( _price.charAt(i) == '.' )
+				break;
+			else
+				_res = _price.charAt(i) + _res;
+		}
+
+		_res = "." + _res;
+
+		i--;
+		_digitCounter = 0;
+		for( ; i>=0; i-- )
+		{
+			_digitCounter ++;
+			_res = _price.charAt(i) + _res;
+			if ( _digitCounter == 3 && i != 0 )
+			{
+				_res = "," + _res;
+				_digitCounter = 0;
+			}
+					
+		}
+
+		return _res;						
+				
+	}
+	
+	</script>
+
+	{/literal}
+
+
+ <table cellpadding=6 border=0 width=95%>
+  {section name=i1 loop=$products_to_show}
+	{if $smarty.section.i1.index is div by $smarty.const.CONF_COLUMNS_PER_PAGE}<tr>{/if}
+	<td valign=top width="{math equation="100 / x" x=$smarty.const.CONF_COLUMNS_PER_PAGE}%" format="%d">
+		{include file="product_brief.tpl.html" product_info=$products_to_show[i1]}
+	</td>
+	{if ($smarty.section.i1.index+1) is div by $smarty.const.CONF_COLUMNS_PER_PAGE}</tr>{/if}
+  {/section}
+ </table>
+ <center>{$catalog_navigator}</center>
+
+{include file="comparison_products_buttondown.tpl.html"}
+
+{else}
+<p>
+
+			{if $search_with_change_category_ability}
+
+				&lt; {$smarty.const.STRING_EMPTY_SEARCH_RESULT} &gt; 
+
+			{/if}
+
+{/if}

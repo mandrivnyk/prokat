@@ -1,0 +1,154 @@
+{* smsmail modules managment*}
+
+
+{if $constant_managment}
+
+	<h1>{$smarty.const.STRING_TITLE_SMSMAIL_MODULE_SETTING} : {$ModuleObject->title}</h1>
+
+	<a href="{'setting_up='|set_query:$xREQUEST_URI}">
+		&lt;&lt;{$smarty.const.STRING_SMSMAIL_MODULES}
+	</a>
+
+<form method=POST>
+
+	{if $settings}
+
+	<table width="100%" cellspacing=0 cellpadding=5 border=0>
+		
+		<tr class="mainmenu_selected_{$current_dpt}">
+			<td align=middle>
+				{$smarty.const.ADMIN_SETTING_NAME}
+			</td>
+			<td align=middle>
+				{$smarty.const.ADMIN_VALUE}
+			</td>
+		</tr>
+
+		{section name=i loop=$settings}
+		<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}"> 
+			<td width="50%" align="right" valign="top">
+				<strong>
+					{$settings[i].settings_title}
+				</strong>:
+				<br>
+				<font size="-2">
+					{$settings[i].settings_description}
+				</font>
+			</td>
+			<td width="50%" align="left" valign="top">
+				{$controls[i]}
+			</td>
+		</tr>
+
+		{/section}
+
+	</table>
+	<br />
+	<input type=submit name='save' value='{$smarty.const.SAVE_BUTTON}'>
+
+	{else}
+		&lt; {$smarty.const.ADMIN_NO_SETTINGS} &gt;	
+	{/if}
+
+</form>
+{else}
+	<h1>{$smarty.const.STRING_SMSMAIL}</h1>
+	{$smarty.const.STRING_SMS_GATEWAYS_DSCR}
+	<p>
+<fieldset class="admin_fieldset">
+<legend id="affp_enabled" style="color: black;">
+	<input type="checkbox"{if $SMSNotifyEnabled} checked="checked"{/if} onclick="document.endis_form.submit();" />{$smarty.const.STRING_ENABLE_SMS_NOTIFY}
+</legend>
+
+	{if !$SMSNotifyEnabled}
+		<form method="post" action="{'&enableSMSNotify=1'|set_query:$xREQUEST_URI}" name="endis_form">
+		</form>
+	{else}
+		<form method="post" action="{'disableSMSNotify=1'|set_query:$xREQUEST_URI}" name="endis_form">
+		</form>
+		<form method="post" style="display:inline;">
+		{if $MSGInfo.status}
+			<div class="{if $MSGInfo.status==1}ok_msg_f{else}error_msg_f{/if}">{$MSGInfo.message}</div>
+		{/if}
+		<input type="hidden" name="SAVE_NOTIFY_SETTINGS" value="1" />
+		<table>
+			<tr>
+				<td align="right" valign="top">{$smarty.const.STRING_SMS_MAIL_CHOOSE_SMSSENDER}</td>
+				<td valign="top">{$ConfigIDHTML}</td>
+			</tr>
+			<tr><td colspan="2">&nbsp;</td></tr>
+			<tr>
+				<td align="right" valign="top">{$smarty.const.STRING_SMS_MAIL_SEND_PERIOD}</td>
+				<td valign="top">{$SendPeriodHTML}</td>
+			</tr>
+			<tr><td colspan="2">&nbsp;</td></tr>
+			<tr>
+				<td align="right" valign="top">{$smarty.const.STRING_SMS_MAIL_PHONELIST}</td>
+				<td valign="top">{$PhoneNumbersHTML}</td>
+			</tr>
+			<tr><td colspan="2">&nbsp;</td></tr>
+			<tr><td colspan="2" align="right"><input type=submit name='save' value='{$smarty.const.SAVE_BUTTON}'></td></tr>
+		</table>
+		</form>
+	<hr />
+	{/if}{* if !$SMSNotifyEnabled *}
+	
+	<p>
+	<div class="header2">{$smarty.const.STRING_SMSMAIL_MODULES}</div>
+	<p>
+<table width="100%">
+	<tr>
+		<td width="50%" valign="top">
+			<table cellspacing=0 cellpadding=5 border=0 width="100%">
+				<tr class="mainmenu_selected_{$current_dpt}">
+					<td align=middle>{$smarty.const.STRING_MODULE_NAME}</td>
+					<td align=middle>{$smarty.const.STRING_MODULE_DESCRIPTION}</td>
+					<td align=middle>{$smarty.const.STRING_MODULE_ACTIONS}</td>
+				</tr>
+			
+				{section name=i loop=$ModuleObjects}
+				<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}"> 
+					<td valign="top">
+						{$ModuleObjects[i]->title}
+					</td>
+					<td valign="top">
+						{$ModuleObjects[i]->description}
+					</td>
+					<td align=center>
+						{if !$ModuleObjects[i]->is_installed()}
+						<a href={'&install='|cat:$smarty.section.i.index|set_query:$xREQUEST_URI}>
+							{$smarty.const.STRING_MODULE_INSTALL}
+						</a>
+						{/if}
+					</td>
+			    </tr>
+				{/section}
+			</table>
+		</td>
+		<td width="50%" valign="top">
+			<table cellspacing=0 cellpadding=5 border=0 width="100%">
+				<tr class="mainmenu_selected_{$current_dpt}">
+					<td colspan="3">
+						{$smarty.const.SHMODULES_INSTALLED_CONFIGS}
+					</td>
+				</tr>
+				{section name=i loop=$ModuleConfigs}
+				{assign var="InstalledModuleConfigs" value=1}
+				<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}">
+					<td width="100%">{$ModuleConfigs[i].ConfigName}</td>
+					<td><a href="{'&setting_up='|cat:$ModuleConfigs[i].ConfigID|set_query:$xREQUEST_URI}">{$smarty.const.EDIT_BUTTON}</a></td>
+					<td><a href="{'&uninstall='|cat:$ModuleConfigs[i].ConfigID|set_query:$xREQUEST_URI}">{$smarty.const.DELETE_BUTTON}</a></td>
+				</tr>
+				{/section}
+				{if !$InstalledModuleConfigs}
+				<tr bgcolor="white">
+					<td width="100%" align="center" colspan="3">{$smarty.const.ADMIN_NO_INSTALLED_MODULE_CONFS}</td>
+				</tr>
+				{/if}
+			</table>
+		</td>
+	</tr>
+</table>
+</fieldset>
+
+{/if}

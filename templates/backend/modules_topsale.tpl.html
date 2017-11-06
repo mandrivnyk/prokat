@@ -1,0 +1,17 @@
+{section name=i loop=$imgs_topsale}
+<hr>
+
+	{$imgs_topsale[i].num_topsale} <img width="100px;" src="/images/topsale/{$imgs_topsale[i].filename}"> {$imgs_topsale[i].filename}
+					<a href="javascript:confirmDelete({$imgs_topsale[i].top_saleID},'Удалить {$imgs_topsale[i].filename}?','admin.php?dpt=modules&amp;sub=topsale&amp;top_saleID=');">
+						<img border="0" alt="Удалить" src="images/backend/button_delete.gif">
+					</a><br>
+{/section}
+<br>
+<hr>
+<form enctype="multipart/form-data" action="admin.php?dpt=modules&sub=topsale" method="post" name="TOPSALEform">
+Номер TOPSALE <input type="text" name="num_topsale"  size="10" value="">
+ <input type="file" name="new_filename1" width=15><br>
+  <input type=submit name="save_pictures" value="submit">
+
+
+</form>

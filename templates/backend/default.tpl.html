@@ -1,0 +1,132 @@
+{* default admin page*}
+<div style="margin: 10px">
+
+<p>{$smarty.const.ADMIN_WELCOME}
+</p>
+
+{if $totals}
+
+<table border="0" style="border: 1px solid #CCC; background-color: #EEE" cellpadding="10">
+
+ <tr>
+
+	<td valign="top">
+
+		<table cellpadding="3">
+		<tr>
+		 <td><img src="images/backend/custord_new_orders_32.gif"></td>
+		 <td class="big"><b><u>Заказы</u></b></td>
+		</tr>
+		<tr>
+		 <td>&nbsp;</td>
+		 <td>
+
+			{if $totals.orders_pending}
+			<div style="color: blue;font-weight:bold"><a href="admin.php?order_search_type=SearchByStatusID&checkbox_order_status_{$smarty.const.CONF_NEW_ORDER_STATUS}=1&search=Show&dpt=custord&sub=new_orders" style="color: blue;font-weight:bold">Новых заказов</a>: {$totals.orders_pending}</div>
+			<br />
+			{/if}
+
+			<b>Статистика заказов:</b><br />
+			<table style="margin-left: 5px;" cellpadding="0">
+			<tr><td>Сегодня:</td><td>{$totals.orders_today} заказ(ов) ({$totals.revenue_today})</td></tr>
+			<tr><td>Вчера:</td><td>{$totals.orders_yesterday} заказ(ов) ({$totals.revenue_yesterday})</td></tr>
+			<tr><td>Этот месяц:</td><td>{$totals.orders_thismonth} заказ(ов) ({$totals.revenue_thismonth})</td></tr>
+			<tr><td>За все время:</td><td>{$totals.orders} заказ(ов) ({$totals.revenue})</td></tr>
+			</table>
+
+		 </td>
+		</tr>
+		</table>
+
+	</td>
+
+	<td valign="top">
+
+		<table cellpadding="3">
+		<tr>
+		 <td><img src="images/backend/conf_setting_32.gif"></td>
+		 <td class="big"><b><u>Общая информация</u></b></td>
+		</tr>
+		<tr>
+		 <td>&nbsp;</td>
+		 <td>
+
+			<p>Название магазина: <b>{$smarty.const.CONF_SHOP_NAME}</b><br />
+			URL: <b>{$smarty.const.CONF_SHOP_URL}</b>
+			</p>
+
+			 Количество <a href="admin.php?dpt=conf&sub=payment">способов оплаты</a>: <B>{$totals.payment_types}</B><br />
+			 Количество <a href="admin.php?dpt=conf&sub=shipping">способов доставки</a>: <B>{$totals.shipping_types}</B><br />
+			 Количество <a href="admin.php?dpt=conf&sub=payment">типов валют</a>: <B>{$totals.currency_types}</B><br /><br />
+			 Количество <a href="admin.php?dpt=conf&sub=aux_pages">информационных страниц</a>: <B>{$totals.aux_pages}</B><br /><br />
+
+		 </td>
+		</tr>
+		</table>
+
+	</td>
+
+ </tr>
+
+ <tr>
+
+	<td valign="top">
+
+		<table cellpadding="3">
+		<tr>
+		 <td><img src="images/backend/custord_custlist_32.gif"></td>
+		 <td class="big"><b><u>Покупатели</u></b></td>
+		</tr>
+		<tr>
+		 <td>&nbsp;</td>
+		 <td>
+		 
+			Количество <a href="admin.php?login=&first_name=&last_name=&email=&groupID=0&fActState=-1&dpt=custord&sub=custlist&search=Find">зарегистрированных пользователей</a>: <b>{$totals.customers}</b><br />
+			Количество <a href="admin.php?dpt=custord&sub=custgroup">групп пользователей</a>: <b>{$totals.customer_groups}</b><br />
+			Количество <a href="admin.php?dpt=custord&sub=subscribers">подписчиков на новости</a>: <b>{$totals.newsletter_subscribers}</b><br /><br />
+
+			<a href="admin.php?dpt=custord&sub=affiliate">Партнерская программа</a>: <b>{if $smarty.const.CONF_AFFILIATE_PROGRAM_ENABLED}включена{else}выключена{/if}</b>
+
+
+		 </td>
+		</tr>
+		</table>
+
+	</td>
+
+	<td valign="top">
+
+		<table cellpadding="3">
+		<tr>
+		 <td><img src="images/backend/catalog_products_categories_32.gif"></td>
+		 <td class="big"><b><u>Продукты</u></b></td>
+		</tr>
+		<tr>
+		 <td>&nbsp;</td>
+		 <td>
+
+			Общее количество продуктов: <b>{$totals.products}</b><br />
+			Продуктов, выставленных на продажу: <b>{$totals.products_enabled}</b><br />
+			Количество категорий продуктов: <b>{$totals.categories}</b><br /><br />
+
+			Количество <a href="admin.php?dpt=catalog&sub=discuss&productID=0">обсуждений продуктов</a>: <b>{$totals.discussion_posts}</b>
+
+			{* if $smarty.const.CONF_CHECKSTOCK && $totals.products_outofstock > 0}
+			Out of stock: <a>{$totals.products_outofstock} product(s)</a>
+			{/if *}
+
+
+		 </td>
+		</tr>
+		</table>
+
+	</td>
+
+ </tr>
+
+</table>
+
+
+{/if}
+
+</div>

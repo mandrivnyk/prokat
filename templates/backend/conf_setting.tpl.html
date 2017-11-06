@@ -1,0 +1,47 @@
+{* web shop setting *}
+
+
+<form action='admin.php?dpt=conf&sub=setting&settings_groupID={$settings_groupID}' 
+	name='MainForm' method=post>
+
+<table cellPadding="0" border="0" cellspacing="0" width="100%">
+
+	<tr class="mainmenu_selected_{$current_dpt}">
+		{section name=i loop=$setting_groups}
+			{if $settings_groupID == $setting_groups[i].settings_groupID}
+			<td width="16%">
+				<div style="padding:10px; background-color: black"><b>{$setting_groups[i].settings_group_name}</b></div>
+			{else}
+			<td width="16%">
+				<div style="padding:10px"><a href='admin.php?dpt=conf&sub=setting&settings_groupID={$setting_groups[i].settings_groupID}' class="light">
+					{$setting_groups[i].settings_group_name}
+				</a></div>
+			{/if}
+		</td>
+		{/section}
+	</tr>
+
+	<tr>
+		<td colspan='{$smarty.section.i.index}'>
+			<table border="0" cellspacing="0" cellpadding="5" width="100%">
+				{section name=i loop=$settings}
+				<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}"> 
+					<td align="right" valign="top" width="60%">
+						<strong>{$settings[i].settings_title}</strong>:
+						<br>{$settings[i].settings_description}
+					</td>
+					<td align="left" valign="top" width="40%">{$controls[i]}</td>
+				</tr>
+				{/section}
+			</table>
+			<br>
+		</td>
+	</tr>
+
+
+</table>
+<p>
+<input type=submit name='save' value='{$smarty.const.SAVE_BUTTON}'>
+
+
+</form>

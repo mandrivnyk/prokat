@@ -1,0 +1,63 @@
+{literal}
+<style type="text/css">
+.newsdiv{
+	border:0 dashed black;
+	border-width: 1 0 0 0;
+	margin:3px;
+}
+.newsblock{
+	float:left;
+	width:100%;
+}
+</style>
+{/literal}
+<h1>{$smarty.const.ADMIN_NEWS}</h1>
+
+<table cellpadding="4" width="100%"><tr><td>
+
+{if $LastPage>1}
+	{if $CurrentPage>1}
+		&nbsp; <a class="no_underline" href ="{"news_page=`$CurrentPage-1`"|set_query:$xRequestURI}">&lt;&lt; {$smarty.const.STRING_PREVIOUS}</a>
+	{/if}
+	{foreach from=$ListerRange item=_page}
+		&nbsp; {if $_page!=$CurrentPage}<a class="no_underline" href="{"news_page=`$_page`"|set_query:$xRequestURI}">{$_page}</a> {else}{$_page}{/if}
+	{/foreach}
+	{if $CurrentPage<$LastPage}
+		&nbsp; <a class="no_underline" href ="{"news_page=`$CurrentPage+1`"|set_query:$xRequestURI}">{$smarty.const.STRING_NEXT} &gt;&gt;</a>
+	{/if}
+<div class="newsdiv">&nbsp;</div>
+{/if}{* $LastPage>1 *}
+
+{section name=i loop=$news_posts}
+
+<div class="newsblock">
+<h3>{$news_posts[i].title}</h3>
+<p>{$news_posts[i].add_date}
+<p>
+{if $news_posts[i].picture_exists}
+	<img src="./products_pictures/{$news_posts[i].picture}" hspace="10" align="left" />
+{/if}
+{$news_posts[i].textToPublication}
+</p>
+</div>
+<div class="newsblock"><br><br>
+<div class="newsdiv"></div>
+<br><br>
+</div>
+{sectionelse}
+
+{$smarty.const.STRING_EMPTY_LIST}
+
+{/section}
+{if $LastPage>1}
+	{if $CurrentPage>1}
+		&nbsp; <a class="no_underline" href ="{"news_page=`$CurrentPage-1`"|set_query:$xRequestURI}">&lt;&lt; {$smarty.const.STRING_PREVIOUS}</a>
+	{/if}
+	{foreach from=$ListerRange item=_page}
+		&nbsp; {if $_page!=$CurrentPage}<a class="no_underline" href="{"news_page=`$_page`"|set_query:$xRequestURI}">{$_page}</a> {else}{$_page}{/if}
+	{/foreach}
+	{if $CurrentPage<$LastPage}
+		&nbsp; <a class="no_underline" href ="{"news_page=`$CurrentPage+1`"|set_query:$xRequestURI}">{$smarty.const.STRING_NEXT} &gt;&gt;</a>
+	{/if}
+{/if}{* $LastPage>1 *}
+</td></tr></table>

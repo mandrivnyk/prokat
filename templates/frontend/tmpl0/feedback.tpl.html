@@ -1,0 +1,41 @@
+{* feedback form *}
+
+<h1>{$smarty.const.STRING_FEEDBACK}</h1>
+
+{if $sent eq NULL}
+
+{if $error ne NULL}
+<p><b><font color=red>{$smarty.const.FEEDBACK_ERROR_FILL_IN_FORM}</font></b>
+{/if}
+
+<p>
+{$smarty.const.STRING_FEEDBACK_DESCRIPTION}
+
+<p>
+<form name="form1" method="post" action="index.php">
+{$smarty.const.FEEDBACK_CUSTOMER_NAME}:<br>
+<input name="customer_name" type="text" size="40" value="{$customer_name|replace:"\"":"&quot;"}"><br>
+
+{$smarty.const.CUSTOMER_EMAIL}<br>
+<input name="customer_email" type="text" size="40" value="{$customer_email|replace:"\"":"&quot;"}"><br>
+
+{$smarty.const.FEEDBACK_CUSTOMER_MESSAGE_SUBJ}:<br>
+<input name="message_subject" type="text" size="50" value="{$message_subject|replace:"\"":"&quot;"}"><br>
+
+{$smarty.const.FEEDBACK_CUSTOMER_MESSAGE_TEXT}:<br>
+<textarea name="message_text" cols="60" rows="14">{$message_text|replace:"<":"&lt;"}</textarea>
+
+<p>
+<input type="submit" value="OK">
+<input type="hidden" name="send" value="yes">
+<input type="hidden" name="feedback" value="yes">
+</p>
+
+</form>
+
+{else}
+
+<p>
+<b><font class=faq color=blue>{$smarty.const.FEEDBACK_SENT_SUCCESSFULLY}</font></b>
+
+{/if}

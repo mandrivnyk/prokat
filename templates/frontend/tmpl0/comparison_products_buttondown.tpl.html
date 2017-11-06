@@ -1,0 +1,28 @@
+{* down button comparison *}
+{if $show_comparison > 0}
+<form action='/index.php' name='ComparisonForm2' method=post  target="_blank">
+	<input type=hidden value='' name='ComparisonHidden2'>
+	<input type=hidden value='1' name='comparison_products'>
+	<script language='JavaScript'>
+		var ComparedProducts2 = new Array();
+
+		function PacketIntoHiddenValue2()
+		{literal}
+		{
+		{/literal}
+			str = '';
+			for(i=0; i<ComparedProducts2.length; i++)
+				str += ComparedProducts2[i] + ' ';
+			document.ComparisonForm2.ComparisonHidden2.value = str;
+
+			if ( str != '' )
+				document.ComparisonForm2.submit();
+		{literal}
+		}
+		{/literal}
+	</script>
+	{if $products_to_show}
+	<input type=button value='{$smarty.const.STRING_COMPARE_SELECTED_PRODUCT}' name='Comparison2' onClick='JavaScript:PacketIntoHiddenValue2();' class="comparison_button">
+	{/if}
+</form>
+{/if}

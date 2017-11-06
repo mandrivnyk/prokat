@@ -1,0 +1,63 @@
+{* customer groups *}
+
+<form action="admin.php" method=post>
+
+<p>
+{$smarty.const.ADMIN_CUSTGROUP_DESCRIPTION}
+
+<p>
+<table cellspacing="0" cellpadding="5" border="0">
+
+	<tr class="mainmenu_selected_{$current_dpt}"> 
+		<td>{$smarty.const.ADMIN_GROUP}</td>
+		<td>{$smarty.const.ADMIN_DISCOUNT}</td>
+		<td>{$smarty.const.ADMIN_SORT_ORDER}</td>
+		<td>&nbsp;</td>
+	</tr>
+
+	{section name=i loop=$custgroups}
+	<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}">
+		<td>
+			<input type=text name='custgroup_name_{$custgroups[i].custgroupID}' 
+				value='{$custgroups[i].custgroup_name}'>
+		</td>
+		<td>
+			<input type=text name='custgroup_discount_{$custgroups[i].custgroupID}' 
+				value='{$custgroups[i].custgroup_discount}'>
+		</td>
+		<td>
+			<input type=text name='sort_order_{$custgroups[i].custgroupID}'
+				value='{$custgroups[i].sort_order}'>	
+		</td>
+		<td>
+			<a href="javascript:confirmDelete({$custgroups[i].custgroupID},'{$smarty.const.QUESTION_DELETE_CONFIRMATION}','admin.php?dpt=custord&sub=custgroup&delete=');">
+				<img src="images/backend/button_delete.gif" border=0 alt="{$smarty.const.DELETE_BUTTON}">
+			</a>
+		</td>
+	</tr>
+	{/section}
+
+	<tr class="mainmenu_selected_{$current_dpt}"> 
+		<td colspan=4>{$smarty.const.ADD_BUTTON}:</td>
+	</tr>
+	<tr> 
+		<td>
+			<input name='new_custgroup_name' type=text>
+		</td>
+		<td>
+			<input name='new_custgroup_discount' type=text>
+		</td>
+		<td>
+			<input name='new_sort_order' type=text>
+		</td>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+<p> 
+	<input type=hidden name=dpt value=custord>
+	<input type=hidden name=sub value=custgroup>
+	<input type=hidden name=save_custgroups value=yes>
+	<input name="submit" type=submit value='{$smarty.const.SAVE_BUTTON}'>
+</p>
+
+</form>

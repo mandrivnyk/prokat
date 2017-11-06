@@ -1,0 +1,105 @@
+{* zones configuration *}
+
+<p>
+{if $configuration_saved eq 1}
+	{$smarty.const.ADMIN_UPDATE_SUCCESSFUL}
+{/if}
+
+
+
+{literal}
+<script language='JavaScript'>
+	function open_window(link,w,h) //opens new window
+	{
+		var win = "width="+w+",height="+h+",menubar=no,location=no,resizable=yes,scrollbars=yes";
+		wishWin = window.open(link,'wishWin',win);
+	}
+</script>
+{/literal}
+
+
+<form action="admin.php?dpt=conf&sub=zones&countryID={$countryID}" 
+	method=post 
+	enctype="multipart/form-data" 
+	name="MainForm" >
+
+{if $countries}
+<table cellpadding=5 cellspacing=0>
+
+	<tr class="mainmenu_selected_{$current_dpt}">
+		<td colspan=3>
+			{$smarty.const.CUSTOMER_COUNTRY} <select name='countryID_Select' 
+				onchange="JavaScript:window.location=document.MainForm.countryID_Select.value"> 
+				{section name=i loop=$countries}
+				<option value='admin.php?dpt=conf&sub=zones&countryID={$countries[i].countryID}'
+					{if $countryID == $countries[i].countryID}
+						selected
+					{/if}
+				>
+					{$countries[i].country_name}
+				</option>
+				{/section}
+			</select>
+		</td>
+	</tr>
+
+	<tr class="bg_{$current_dpt}">
+		<td colspan="3" align="center">
+			<b>{$smarty.const.ADMIN_ZONES} ({$zones_count})</b>
+		</td>
+	</tr>
+
+	<tr style="background-color: #C0BFCF">
+		<td>{$smarty.const.ADMIN_ZONE_NAME}</td>
+		<td>{$smarty.const.ADMIN_ZONE_CODE}</td>
+		<td>&nbsp;</td>
+	</tr>
+
+	{section name=i loop=$zones}
+
+		<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}">
+			<td>
+				<input type=text name=zone_name_{$zones[i].zoneID} 
+						value="{$zones[i].zone_name}">
+			</td>
+			<td>
+				<input type=text name=zone_code_{$zones[i].zoneID} 
+						value="{$zones[i].zone_code}">
+			</td>
+			<td>
+				<a href="javascript:confirmDelete({$zones[i].zoneID},'{$smarty.const.QUESTION_DELETE_CONFIRMATION}','admin.php?dpt=conf&sub=zones&countryID={$countryID}&delete=');">
+					<img src="images/backend/button_delete.gif" border=0 alt="{$smarty.const.DELETE_BUTTON}">
+				</a>
+			</td>
+		</tr>
+
+	{/section}
+
+	<tr style="background-color: #C0BFCF">
+		<td colspan=4 align=center>{$smarty.const.ADD_BUTTON}:</td>
+	</tr>
+
+	<tr bgcolor=white>
+		<td>
+			<input type="text" name="new_zone_name">
+		</td>
+		<td>
+			<input type="text" name="new_zone_code">
+		</td>
+		<td>
+			&nbsp;
+		</td>
+	</tr>
+
+</table>
+
+<p>
+<input type=hidden name=dpt value=conf>
+<input type=hidden name=sub value=zones>
+<input type=hidden name=save_zones value=yes>
+<input type=submit value="{$smarty.const.SAVE_BUTTON}">
+{else}
+	<b>{$smarty.const.ADMIN_NO_COUNTRIES_PROMPT}<b>
+{/if}
+
+</form>

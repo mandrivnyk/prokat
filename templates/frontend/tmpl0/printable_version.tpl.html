@@ -1,0 +1,20 @@
+{* printable version template *}
+<html>
+
+{include file="head.tpl.html"}
+
+<script>
+function position_this_window()
+{literal}{{/literal}
+	var x = (screen.availWidth - 600) / 2;
+	window.resizeTo(600, screen.availHeight - 100);
+	window.moveTo(Math.floor(x),50);
+{literal}}{/literal}
+</script>
+
+<body onLoad="position_this_window();window.print();">
+
+{include file="$main_content_template"}
+
+</body>
+</html>

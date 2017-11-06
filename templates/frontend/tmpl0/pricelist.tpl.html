@@ -1,0 +1,60 @@
+{* show pricelist *}
+
+<center>
+	<h1>{$smarty.const.STRING_PRICELIST} {$smarty.const.CONF_SHOP_NAME}</h1>
+
+	{if !$printable_version}
+
+		<table border=0>
+			  <tr><td><a href="javascript:open_printable_version('printable.php?show_price=yes');"><img src="images/printer-icon.gif" border=0 alt="{$smarty.const.STRING_PRINTABLE_VERSION}"></a></td>
+			  <td><a href="javascript:open_printable_version('printable.php?show_price=yes');">{$smarty.const.STRING_PRINTABLE_VERSION}</a></td>
+			  </tr>
+		 </table>
+
+		{if $string_product_sort}
+			<p>{$string_product_sort}
+			<br>
+			<br>
+		{/if}
+
+	{/if}
+
+	<p><table border=0 cellspacing=1 bgcolor=#444444 cellpadding=3 width=95%>
+
+	{section name=i loop=$pricelist_elements}
+		<tr bgcolor=white>
+			<td 
+				{if $pricelist_elements[i][4] ne 1}
+					colspan=3
+				{/if} 
+				bgcolor=#{$pricelist_elements[i][3]} 
+				width=100%>
+
+				{section name=j loop=$pricelist_elements max=($pricelist_elements[i][2]-2)}
+					&nbsp;&nbsp;&nbsp;
+				{/section}
+
+				{if !$printable_version}
+				<a href="{if $pricelist_elements[i][4] eq 1}{$pricelist_elements[i][7]}{elseif $pricelist_elements[i][4] eq 0}{$pricelist_elements[i][5]}{else}index.php?={$pricelist_elements[i][0]}{/if}">
+					{if $pricelist_elements[i][4] eq 1}{$pricelist_elements[i][8]} {$pricelist_elements[i][9]}{/if} {$pricelist_elements[i][1]}
+				</a>
+				{else}
+					<b>{$pricelist_elements[i][1]}</b>
+				{/if}
+			</td>
+
+			{if ($pricelist_elements[i][4] eq 1) && ($smarty.const.CONF_CHECKSTOCK eq 1)}
+			<td width=1% align=center>
+				<nobr>{if $pricelist_elements[i][6] > 0}{$smarty.const.ADMIN_PRODUCT_INSTOCK}{else}{$smarty.const.ADMIN_INSUFFICIENT_IN_STOCK}{/if}</nobr>
+			</td>
+			{/if}
+
+			{if ($pricelist_elements[i][4] eq 1) && ($currencies_count ne 0)}
+			<td width=1% align=center>
+				<nobr><B>{$pricelist_elements[i][5]}</B></nobr>
+			</td>
+			{/if}
+		</tr>
+	{/section}
+	</table>
+</center>

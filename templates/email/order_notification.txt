@@ -1,0 +1,48 @@
+{* order notification for customer *}
+{$smarty.const.EMAIL_HELLO}, {$customer_firstname}
+{$smarty.const.EMAIL_THANK_YOU_FOR_SHOPPING_AT} 
+{$smarty.const.CONF_SHOP_NAME}!
+
+{$smarty.const.STRING_ORDER_ID}: {$orderID}
+
+{$smarty.const.STRING_ORDER_CONTENT}:
+{section name=i loop=$content}
+{$content[i].name} (x{$content[i].Quantity}): {$content[i].Price}
+{if $content[i].eproduct_filename}
+{$smarty.const.ADMIN_DOWN_LOAD} : {$smarty.const.CONF_FULL_SHOP_URL}get_file.php?getFileParam={$content[i].getFileParam} ({$content[i].file_size} b)
+{if $content[i].eproduct_available_days}
+- {$smarty.const.ADMIN_EPRODUCT_AVAILABLE_DAYS} {$content[i].eproduct_available_days} {$smarty.const.ADMIN_DAYS}
+{/if}
+{if $content[i].eproduct_download_times}
+- {$smarty.const.ADMIN_REMANDER_EPRODUCT_DOWNLOAD_TIMES} {$content[i].eproduct_download_times} {$smarty.const.ADMIN_DOWNLOAD_TIMES}
+{/if}
+{/if}
+{/section}
+{if $discount > 0}{$smarty.const.STRING_DISCOUNT}: {$discount}%{/if}
+{$smarty.const.TABLE_TOTAL} {$order_amount}
+
+{section name=i loop=$customer_add_fields}
+{$customer_add_fields[i].reg_field_name}: {$customer_add_fields[i].reg_field_value}
+{/section}
+{if $shipping_type ne ""}
+{$smarty.const.STRING_SHIPPING_INFORMATION}:
+{$smarty.const.STRING_SHIPPING_TYPE}: {$shipping_type}
+{$smarty.const.STRING_RECEIVER}: {$shipping_firstname} {$shipping_lastname}
+{$smarty.const.ADMIN_ORDER_DELIVERY_ADDRESS}: {if $shipping_address ne ""}{$shipping_address},{/if} {if $shipping_city ne ""}{$shipping_city},{/if} {if $shipping_state ne ""}{$shipping_state}{/if} {if $shipping_zip ne ""}{$shipping_zip}{/if} {if $shipping_country ne ""}{$shipping_country}{/if}
+
+{$smarty.const.ADMIN_SHIPPING_COST}: 
+{$smarty.const.DELIVERY_DEFINITION|strip_tags} 
+{if $shipping_comments ne ""}{$smarty.const.STRING_SHIPPING_COMMENTS}: {$shipping_comments}{/if}
+{/if}
+
+{if $payment_type ne ""}
+{$smarty.const.STRING_PAYMENT_INFORMATION}:{$payment_type}
+
+{if $payment_comments ne ""}{$smarty.const.STRING_PAYMENT_COMMENTS}: {$payment_comments}{/if}
+{/if}
+
+{$smarty.const.STRING_CUSTOMER_COMMENTS}: {$customer_comments}
+
+{$smarty.const.EMAIL_OUR_MANAGER_WILL_CONTACT_YOU}
+{$smarty.const.EMAIL_SINCERELY}, {$smarty.const.CONF_SHOP_NAME}
+{$smarty.const.CONF_SHOP_URL}

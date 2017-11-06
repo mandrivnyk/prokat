@@ -1,0 +1,25 @@
+{* reports:  reports category viewed times *}
+
+<p><b>{$smarty.const.ADMIN_CATEGORY_VIEWED_TIMES}</b></p>
+
+
+{if $categories}
+<table cellspacing=0 cellpadding=5>
+
+	<tr class="mainmenu_selected_{$current_dpt}">
+		<td>{$smarty.const.ADMIN_CATEGORY_TITLE}</td>
+		<td><b>{$smarty.const.ADMIN_VIEW_COUNT}</b></td>
+	</tr>
+
+
+	{section name=i loop=$categories}
+	<tr class="{cycle values="bg_white, bg_$current_dpt"}">
+		<td>{$categories[i].name}</td>		
+		<td align=right><b>{$categories[i].viewed_times}</b></td>
+	</tr>
+	{/section}
+
+</table>
+{else}
+	{$smarty.const.STRING_EMPTY_LIST}
+{/if}

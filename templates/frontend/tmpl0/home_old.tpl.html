@@ -1,0 +1,64 @@
+{* front-end homepage*}
+
+{$smarty.const.STRING_GREETINGS}
+
+<p>
+<table width="100%" border="0" cellpadding="5">
+{section name=i loop=$root_categories}
+{if $smarty.section.i.index is div by 2}<tr>{/if}
+<td width="1%" align="center" valign="top">
+	{if $root_categories[i][3] ne ""}<a href="index.php?categoryID={$root_categories[i][0]}"><img border=0 src="products_pictures/{$root_categories[i][3]}" alt="{$root_categories[i][1]|replace:'"':'&quot;'}">{/if}
+</td>
+<td width="49%" valign="top">
+		<a href="index.php?categoryID={$root_categories[i][0]}" class="cat">{$root_categories[i][1]}</a> <font class="olive">({$root_categories[i][2]})</font><br>
+
+		{* show sub categories *}
+		{assign var="tmp" value=0}
+		{section name=j loop=$root_categories_subs}
+		  {if $root_categories_subs[j][3] == $root_categories[i][0]}
+		    
+			{if $tmp == 1}<font class="olive">|</font>
+			{else}
+				{assign var="tmp" value=1}
+			{/if}
+			
+			<a href="index.php?categoryID={$root_categories_subs[j][0]}" class=standard>{$root_categories_subs[j][1]}</a>
+		  {/if}
+		{/section}
+</td>
+
+{if ($smarty.section.i.index+1) is div by 2}</tr>{/if}
+{/section}
+</table>
+
+
+
+{* now show special offers *}
+<p>
+<center>
+<table border=0 cellspacing=1 cellpadding=5>
+{section name=i loop=$special_offers}
+{if $smarty.section.i.index is div by 2}<tr>{/if}
+<td valign=top>
+
+ <table border=0 width=100% bgcolor=#{$smarty.const.CONF_MIDDLE_COLOR} cellpadding=0 cellspacing=1>
+ <tr><td>
+
+  <table border=0 bgcolor=white width=100%>
+   <tr>
+   <td colspan=2><a href="index.php?productID={$special_offers[i][0]}"><img src="products_pictures/{$special_offers[i][2]}" border=0></a></td>
+   </tr>
+   <tr>
+   <td align=center><a href="index.php?productID={$special_offers[i][0]}">{$special_offers[i][1]}</a></td>
+   <td align=right><font color=red><b>{$special_offers[i][3]}</b></font></td>
+   </tr>
+  </table>
+
+ </td></tr>
+ </table>
+
+</td>
+{if ($smarty.section.i.index+1) is div by 2}</tr>{/if}
+{/section}
+</table>
+</center>

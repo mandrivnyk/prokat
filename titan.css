@@ -1,0 +1,410 @@
+body {
+margin: 0;
+padding: 0;
+background-color: #FFFFFF;
+color: #000000;
+font-family: Arial, Helvetica, sans-serif;
+border-top: 2px solid #2A4F6F;
+}
+#header {
+height:8em;
+}
+#header .slogan {
+font: 40px Georgia, "Times New Roman", Times, serif;
+color: #778899;
+background-color: transparent;
+float: right; 
+width: 300px;
+text-align:left;
+margin-right: 2em;
+border:0px solid red;
+margin-top: 1.5em;
+padding-left: 20px;
+}
+
+#header .backlogo {
+text-align: left;
+float: left;
+
+}
+
+.kum {
+font: 100% Georgia, "Times New Roman", Times, serif;
+color: #778899;
+background-color: transparent;
+}
+
+#header .tel {
+text-align:left;
+text-color: RED;
+}
+#header .logo {
+float: right;
+/* width: 187px; */
+height: 115px;
+
+margin-left: 1.5em;
+margin-top: 0.5em;
+}
+#nav {
+position: absolute;
+top: 10em;
+left: 1em;
+width: 14em;
+}
+#nav ul {
+list-style: none;
+margin-left: 1em;
+padding-left: 0;
+}
+#nav li {
+font-size: 80%;
+border-bottom: 1px dotted #B2BCC6;
+margin-bottom: 0.3em;
+padding-top: 5px;
+}
+#nav a:link{
+text-decoration: none;
+color: #2A4F6F;
+background-color: transparent;
+}
+#nav a:visited {
+text-decoration: none;
+color: #063E6F;
+background-color: transparent;
+}
+
+
+
+#nav a:active {
+text-decoration: underline;
+color: #063E6F;
+background-color: transparent;
+}
+#nav a:hover {
+color: #778899;
+}
+#nav h2 {
+font: 110% Georgia, "Times New Roman", Times, serif;
+color: #2A4F6F;
+background-color: transparent;
+border-bottom: 1px dotted #cccccc;
+}
+#content {
+margin-left: 16em;
+margin-right: 2em;
+width: 700px;
+}
+h1 {
+font: 150% Arial, Verdana,  Helvetica, sans-serif;
+}
+h5 {
+font: 100% Georgia, "Times New Roman", Times, serif;
+}
+
+#content p {
+font-size: 12px;
+
+padding-left: 1.2em;
+font-family: Arial, Helvetica, sans-serif;
+}
+
+html { 
+        margin: 0px;
+        padding: 0;
+        min-height: 100%;
+        font-family: Arial, Helvetica, sans-serif;
+       /*  background-color: #D6DFBF;   */
+     }
+
+
+
+
+.datatable {
+        border: 1px solid #D6DDE6;
+        border-collapse: collapse; 
+	    width: 700px;	
+        font-family: Arial, Verdana,  Helvetica, sans-serif;
+	    font-size: 11px;
+}
+
+.datatable td{
+        border: 1px solid #D6DDE6;
+	text-align: center;
+        padding: 0.2em;
+        height: 45px;
+}
+
+.datatable th {
+        border: 1px solid #828282;
+        background-color: #BCBCBC;
+        font-weight: bold;
+        text-align: center;
+        
+        
+}
+.datatable caption {
+        font: bold 180%  Tahoma, Verdana, Arial, Helvetica, sans-serif;
+        background-color: #B0C4DE;
+        color: #33517A;
+        padding: 0.4em 0 0.3em 0;
+        border: 1px solid #789AC6;
+}
+
+
+.datatable tr.altrow {
+        background-color: #FFF7EA;
+        color: #000000;
+         
+}
+
+.datatable tr:hover {
+        background-color:  #DFE7F2;
+        color: #000000;
+}
+
+
+
+
+
+.datatable1 {
+        border: 1px solid #D6DDE6;
+        border-collapse: collapse; 
+	    width: 100%;	
+        font-family: Arial, Verdana,  Helvetica, sans-serif;
+	    font-size: 14px;
+}
+
+.datatable1 td{
+        border: 1px solid #D6DDE6;
+	text-align: left;
+        padding: 0.2em;
+        padding-left: 20px;
+        height: 45px;
+        font-size: 14px;
+}
+
+.datatable1 th {
+        border: 1px solid #828282;
+        background-color: #BCBCBC;
+        font-weight: bold;
+        text-align: center;
+        padding: 0.2em;
+        
+}
+.datatable1 caption {
+        font: bold 180%  Tahoma, Verdana, Arial, Helvetica, sans-serif;
+        background-color: #B0C4DE;
+        color: #33517A;
+        padding: 0.4em 0 0.3em 0;
+        border: 1px solid #789AC6;
+}
+
+
+.datatable1 tr.altrow {
+        background-color: #FFF7EA;
+        color: #000000;
+         
+}
+
+.datatable1 tr:hover {
+        background-color:  #DFE7F2;
+        color: #000000;
+}
+
+
+.datatable2 {
+        border: 1px solid #D6DDE6;
+        border-collapse: collapse; 
+	    width: 100%;	
+        font-family: Arial, Verdana,  Helvetica, sans-serif;
+	    font-size: 14px;
+}
+
+.datatable2 td{
+        border: 1px solid #D6DDE6;
+	text-align: left;
+        padding: 0.2em;
+        padding-left: 20px;
+        height: 45px;
+        font-size: 14px;
+}
+
+.datatable2 th {
+        border: 1px solid #828282;
+        background-color: #BCBCBC;
+        font-weight: bold;
+        text-align: center;
+        padding: 0.2em;
+        
+}
+.datatable2 caption {
+        font: bold 180%  Tahoma, Verdana, Arial, Helvetica, sans-serif;
+        background-color: #B0C4DE;
+        color: #33517A;
+        padding: 0.4em 0 0.3em 0;
+        border: 1px solid #789AC6;
+}
+
+
+.datatable2 tr.altrow {
+        background-color: #FFF7EA;
+        color: #000000;
+         
+}
+
+
+
+
+.datatable3 {
+        border: 0px solid #D6DDE6;
+        border-collapse: collapse; 
+	    width: 100%;	
+        font-family: Arial, Verdana,  Helvetica, sans-serif;
+	    font-size: 14px;
+}
+
+.datatable3 td{
+        border: 0px solid #D6DDE6;
+		text-align: left;
+        padding: 0.2em;
+        padding-left: 10px;
+        height: 45px;
+        font-size: 14px;
+}
+
+.datatable3 th {
+        border: 0px solid #828282;
+        background-color: #BCBCBC;
+        font-weight: bold;
+        text-align: center;
+        padding: 0.2em;
+        
+}
+.datatable3 caption {
+        font: bold 180%  Tahoma, Verdana, Arial, Helvetica, sans-serif;
+        background-color: #B0C4DE;
+        color: #33517A;
+        padding: 0.4em 0 0.3em 0;
+        border: 0px solid #789AC6;
+}
+
+
+.datatable3 tr.altrow {
+        background-color: #FFF7EA;
+        color: #000000;
+         
+}
+
+.layer6 {
+        font-family:  Arial, Verdana,  Tahoma,  Helvetica, sans-serif;
+		font-size: 90%;
+        width: 98%; /* Ширина первого слоя */
+        background: #FFFFFF; /* Цвет фона */
+        float: right; /* Обтекание по правому краю */
+        padding: 7px; /* Поля вокруг текста */
+        margin-bottom: 1em; /* Отступ снизу */
+        text-align: justify;
+        border:1px #000000 solid;
+}
+
+.fon{
+height: 400px;
+	background-image: url(/images/shev3.jpg);
+	background-repeat: no-repeat;
+}
+
+
+
+
+.highslide {
+	cursor: url(highslide/graphics/zoomin.cur), pointer;
+    outline: none;
+}
+.highslide-active-anchor img {
+	visibility: hidden;
+}
+.highslide img {
+	border: 0px solid gray;
+}
+.highslide:hover img {
+	border: 0px solid silver;
+}
+
+.highslide-wrapper {
+	background: white;
+}
+.highslide-image {
+    border-bottom: 1px solid white;
+}
+.highslide-image-blur {
+}
+.highslide-caption {
+    display: none;
+    
+    border-bottom: 1px solid white;
+    font-family: Verdana, Helvetica;
+    font-size: 10pt;
+    padding: 5px;
+    background-color: silver;
+}
+.highslide-loading {
+    display: block;
+	color: black;
+	font-size: 8pt;
+	font-family: sans-serif;
+	font-weight: bold;
+    text-decoration: none;
+	padding: 2px;
+	border: 1px solid black;
+    background-color: white;
+    
+    padding-left: 22px;
+    background-image: url(highslide/graphics/loader.white.gif);
+    background-repeat: no-repeat;
+    background-position: 3px 1px;
+}
+
+a.highslide-credits,
+a.highslide-credits i {
+    padding: 2px;
+    color: silver;
+    text-decoration: none;
+	font-size: 10px;
+}
+a.highslide-credits:hover,
+a.highslide-credits:hover i {
+    color: white;
+    background-color: gray;
+}
+a.highslide-full-expand {
+	background: url(highslide/graphics/fullexpand.gif) no-repeat;
+	display: block;
+	margin: 0 10px 10px 0;
+	width: 34px;
+	height: 34px;
+}
+
+/* These must always be last */
+.highslide-display-block {
+    display: block;
+}
+.highslide-display-none {
+    display: none;
+}
+
+
+
+div.hr {background: #fff url(myhrimg.gif) no-repeat scroll center; height: 5px}
+div.hr hr {display: none}
+
+
+
+#screenshot{
+	position:absolute;
+	border:1px solid #ccc;
+	background:#333;
+	padding:5px;
+	display:none;
+	color:#fff;
+	}

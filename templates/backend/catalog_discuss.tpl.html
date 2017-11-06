@@ -1,0 +1,269 @@
+{* discussions *}
+
+{if $answer}
+
+<form action='{$return_url}&answer={$discussion.DID}' method=post>
+
+	<p><b>{$smarty.const.ADMIN_DISCUSSIONS} {$discussion.product_name}:{$smarty.const.ADMIN_ANSWER_TO_DISCUSSION}</b></p>
+
+	<center>
+		<a href='{$return_url}'>
+			{$smarty.const.ADMIN_RETURN_TO_MESSAGES}...
+		</a>
+	</center>
+
+	<br>
+
+	<center>
+		<table border=1 cellspacing=0 cellpadding=5>
+			<tr>
+				<td>
+					{$smarty.const.DISCUSSION_NICKNAME}:
+				</td>
+				<td>
+					{$discussion.Author}
+				</td>
+			</tr>
+			<tr>
+				<td>
+					{$smarty.const.ADMIN_DISCUSSION_ADDITION_TIME}:
+				</td>
+				<td>
+					{$discussion.add_time}
+				</td>
+			</tr>
+			<tr>
+				<td>
+					{$smarty.const.DISCUSSION_SUBJECT}:
+				</td>
+				<td>
+					{$discussion.Topic}
+				</td>
+			</tr>
+			<tr>
+				<td>
+					{$smarty.const.DISCUSSION_BODY}:
+				</td>
+				<td>
+					{$discussion.Body}
+				</td>
+			</tr>
+		</table>
+	</center>
+	<br>
+
+	<table>
+		<tr>
+			<td>
+				{$smarty.const.DISCUSSION_NICKNAME}:
+			</td>
+			<td>
+				<input type=text name='newAuthor'>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				{$smarty.const.DISCUSSION_SUBJECT}:
+			</td>
+			<td>
+				<input type=text name='newTopic' 
+					value='Re: {$discussion.Topic}'>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				{$smarty.const.DISCUSSION_BODY}:
+			</td>
+			<td>
+				<textarea name='newBody' cols=50 rows=10></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td colspan=2>
+				<table>
+					<tr>
+						<td>
+							<input type=submit value='OK' name='add'>
+						</td>
+						<td>
+							<input type=reset value='{$smarty.const.ADMIN_CLEAR}'>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</form>	
+
+{else}
+
+<form action='admin.php' method=post name=MainForm>
+
+	<p>
+		<b>{$smarty.const.ADMIN_DISCUSSIONS}</b>
+	</p>
+
+
+	{if $products}
+	<table cellspacing=0 cellpadding=5>
+
+		<tr>
+			<td colspan=7 class="mainmenu_selected_{$current_dpt}" style="text-align:left">
+				<select name='productID_Select' 
+					onchange="JavaScript:if (document.MainForm.productID_Select.value!=-1) window.location=document.MainForm.productID_Select.value">
+
+					{if !$discussions}
+						<option value='-1'
+						{if !$productID}
+							selected
+						{/if}
+						>
+							{$smarty.const.ADMIN_PROMPT_TO_SELECT}
+						</option>
+					{/if}
+
+					<option value='{$urlToFind}&productID=0'>{$smarty.const.ADMIN_ALL_PRODUCTS}</option>
+
+					{section name=i loop=$products}
+						<option value='{$urlToFind}&productID={$products[i].productID}'
+						{if $products[i].productID == $productID}
+							selected
+						{/if}
+						>
+							{$products[i].product_name}
+						</option>
+					{/section}
+
+				</select>
+			</td>
+		</tr>
+
+		{if $navigator}
+		<tr>
+			<td colspan=7>
+				{$navigator}
+			</td>
+		</tr>
+		{/if}
+
+
+		{if $discussions}
+		<tr style="background-color: #C0C5CD">		
+			<td>
+				<table>
+					<tr>
+						<td rowspan=2>
+							<b>{$smarty.const.ADMIN_DISCUSSION_ADDITION_TIME}</b>
+						</td>
+						<td>
+							<a href='{$urlToSort}&sort=add_time&direction=ASC'>
+								<img SRC="./images/backend/arrow_up.gif" border=0>
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td>	
+							<a href='{$urlToSort}&sort=add_time&direction=DESC'>
+								<img SRC="./images/backend/arrow_down.gif" border=0>
+							</a>						
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<td rowspan=2>
+							<b>{$smarty.const.TABLE_PRODUCT_NAME}</b>
+						</td>
+						<td>
+							<a href='{$urlToSort}&sort=product_name&direction=ASC'>
+								<img SRC="./images/backend/arrow_up.gif" border=0>
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td>	
+							<a href='{$urlToSort}&sort=product_name&direction=DESC'>
+								<img SRC="./images/backend/arrow_down.gif" border=0>
+							</a>						
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<td rowspan=2>
+							<b>{$smarty.const.DISCUSSION_NICKNAME}</b>
+						</td>
+						<td>
+							<a href='{$urlToSort}&sort=Author&direction=ASC'>
+								<img SRC="./images/backend/arrow_up.gif" border=0>
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td>	
+							<a href='{$urlToSort}&sort=Author&direction=DESC'>
+								<img SRC="./images/backend/arrow_down.gif" border=0>
+							</a>						
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<td rowspan=2>
+							<b>{$smarty.const.DISCUSSION_SUBJECT}</b>
+						</td>
+						<td>
+							<a href='{$urlToSort}&sort=Topic&direction=ASC'>
+								<img SRC="./images/backend/arrow_up.gif" border=0>
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td>	
+							<a href='{$urlToSort}&sort=Topic&direction=DESC'>
+								<img SRC="./images/backend/arrow_down.gif" border=0>
+							</a>						
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<b>{$smarty.const.DISCUSSION_BODY}</b>
+			</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		{/if}
+
+		{section name=i loop=$discussions}
+		<tr class="{cycle values="bg_white, bg_$current_dpt"}">
+			<td>{$discussions[i].add_time}</td>
+			<td align=left>{$discussions[i].product_name}</td>
+			<td align=left>{$discussions[i].Author}</td>
+			<td align=left>{$discussions[i].Topic}</td>
+			<td align=left><b>{$discussions[i].Body}</b></td>
+			<td><a href='{$fullUrl}&answer={$discussions[i].DID}'>{$smarty.const.ADMIN_ANSWER_TO_DISCUSSION}</a></td>
+			<td>
+				<a href="javascript:confirmDelete({$discussions[i].DID},'{$smarty.const.QUESTION_DELETE_CONFIRMATION}', '{$fullUrl}&delete=');">
+					<img src="images/backend/button_delete.gif" 
+						border=0 
+						alt="{$smarty.const.DELETE_BUTTON}">
+				</a>
+			</td>
+		</tr>
+		{/section}
+
+	</table>
+	{else}
+		{$smarty.const.STRING_EMPTY_LIST}
+	{/if}
+
+</form>
+
+{/if}

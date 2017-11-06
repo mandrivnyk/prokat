@@ -1,0 +1,132 @@
+<form action="admin.php" method=post>
+
+<p>
+{$smarty.const.ADMIN_CUSTOMER_REG_FIELDS_DESCRIPTION}
+
+<p>
+<table cellspacing=0 cellpadding=5 border=0>
+
+	<tr class="mainmenu_selected_{$current_dpt}"> 
+		<td align=middle colspan=4>
+			<b>
+				{$smarty.const.ADMIN_CUSTOMER_ADDITIONAL_REG_FIELDS}
+			</b>
+		</td>
+	</tr>
+
+	<tr style="background-color: #DDC0C5"> 
+		<td align=middle>{$smarty.const.ADMIN_FIELD_NAME}</td>
+		<td align=middle>{$smarty.const.ADMIN_REQUIRED_TO_SET}</td>
+		<td align=middle>{$smarty.const.ADMIN_SORT_ORDER}</td>
+		<td align=middle>&nbsp;</td>
+	</tr>
+
+	{section name=i loop=$fields}
+	<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}"> 
+		<td valign="top"> 
+			<input name='reg_field_name_{$fields[i].reg_field_ID}'
+				value='{$fields[i].reg_field_name}'> 
+		</td>
+		<td align="center" valign="middle"> 
+			<input name='reg_field_required_{$fields[i].reg_field_ID}' type="checkbox" 
+				value='1'
+			{if $fields[i].reg_field_required eq 1}
+				checked
+			{/if}
+				>
+		</td>
+		<td valign="top">
+			<input name='sort_order_{$fields[i].reg_field_ID}'  type=text 
+				value='{$fields[i].sort_order}'>
+		</td>
+		<td valign="top">
+			<a href="javascript:confirmDelete({$fields[i].reg_field_ID},'{$smarty.const.QUESTION_DELETE_CONFIRMATION}','admin.php?dpt=custord&sub=reg_fields&delete=');">
+				<img src="images/backend/button_delete.gif" border=0 alt="{$smarty.const.DELETE_BUTTON}">
+			</a>
+		</td>
+	</tr>
+	{/section}
+
+	<tr style="background-color: #DDC0C5"> 
+		<td align=middle colspan=4><b>{$smarty.const.ADD_BUTTON}:</b></td>
+	</tr>
+
+	<tr bgcolor=white> 
+		<td>
+			<input name='new_reg_field_name' type='text'>
+		</td>
+		<td align="center" valign="middle"> 
+			<input name='new_reg_field_required' type='checkbox' 
+				value='1'>
+		</td>
+		<td colspan=2>
+			<input  type=text name='new_sort_order'>
+		</td>
+	</tr>
+</table>
+<p> 
+	<input type=hidden name=dpt value=custord>
+	<input type=hidden name=sub value=reg_fields>
+	<input type=hidden name=save_fields value=yes>
+	<input name="submit" type=submit value='{$smarty.const.SAVE_BUTTON}'>
+</p>
+
+</form>
+
+<hr size=1 width=50% align=left>
+
+<form action="admin.php" method=post>
+
+<h5>{$smarty.const.ADMIN_ADDRESS_FORM_CONFIGURATOR}</h5>
+
+<p><table cellspacing=0 cellpadding=5 border=0>
+
+	<tr class="mainmenu_selected_{$current_dpt}"> 
+		<td ><b>{$smarty.const.ADMIN_FIELD_NAME}</b></td>
+		<td align=middle>{$smarty.const.ADMIN_REQUIRED_TO_SET}</td>
+		<td align=middle>{$smarty.const.ADMIN_NOTREQUIRED_TO_SET}</td>
+		<td align=middle>{$smarty.const.ADMIN_NOT_REQUESTED}</td>
+	</tr>
+
+	<tr> 
+		<td style="background-color: #DDC0C5"><b>{$smarty.const.CUSTOMER_ADDRESS}</b></td>
+		<td bgcolor=white align=middle><input type=radio name=addr_address value=0{if $smarty.const.CONF_ADDRESSFORM_ADDRESS==0} checked{/if}></td>
+		<td bgcolor=white align=middle><input type=radio name=addr_address value=1{if $smarty.const.CONF_ADDRESSFORM_ADDRESS==1} checked{/if}></td>
+		<td bgcolor=white align=middle><input type=radio name=addr_address value=2{if $smarty.const.CONF_ADDRESSFORM_ADDRESS==2} checked{/if}></td>
+	</tr>
+
+	<tr class="bg_{$current_dpt}"> 
+		<td style="background-color: #DDC0C5"><b>{$smarty.const.CUSTOMER_CITY}</b></td>
+		<td align=middle><input type=radio name=addr_city value=0{if $smarty.const.CONF_ADDRESSFORM_CITY==0} checked{/if}></td>
+		<td align=middle><input type=radio name=addr_city value=1{if $smarty.const.CONF_ADDRESSFORM_CITY==1} checked{/if}></td>
+		<td align=middle><input type=radio name=addr_city value=2{if $smarty.const.CONF_ADDRESSFORM_CITY==2} checked{/if}></td>
+	</tr>
+
+	<tr> 
+		<td style="background-color: #DDC0C5"><b>{$smarty.const.CUSTOMER_STATE}</b></td>
+		<td bgcolor=white align=middle><input type=radio name=addr_state value=0{if $smarty.const.CONF_ADDRESSFORM_STATE==0} checked{/if}></td>
+		<td bgcolor=white align=middle><input type=radio name=addr_state value=1{if $smarty.const.CONF_ADDRESSFORM_STATE==1} checked{/if}></td>
+		<td bgcolor=white align=middle><input type=radio name=addr_state value=2{if $smarty.const.CONF_ADDRESSFORM_STATE==2} checked{/if}></td>
+	</tr>
+
+	<tr class="bg_{$current_dpt}"> 
+		<td style="background-color: #DDC0C5"><b>{$smarty.const.CUSTOMER_ZIP}</b></td>
+		<td align=middle><input type=radio name=addr_zip value=0{if $smarty.const.CONF_ADDRESSFORM_ZIP==0} checked{/if}></td>
+		<td align=middle><input type=radio name=addr_zip value=1{if $smarty.const.CONF_ADDRESSFORM_ZIP==1} checked{/if}></td>
+		<td align=middle><input type=radio name=addr_zip value=2{if $smarty.const.CONF_ADDRESSFORM_ZIP==2} checked{/if}></td>
+	</tr>
+
+	<tr> 
+		<td style="background-color: #DDC0C5"><b>{$smarty.const.CUSTOMER_COUNTRY}</b></td>
+		<td bgcolor=white align=middle colspan=3>{$smarty.const.ADMIN_ADDRESS_FORM_CONFIGURATOR_COUNTRY_DESC}</td>
+	</tr>
+
+</table>
+
+<p>
+	<input type=hidden name=dpt value=custord>
+	<input type=hidden name=sub value=reg_fields>
+	<input type=hidden name=save_address_form value=yes>
+	<input name="submit" type=submit value='{$smarty.const.SAVE_BUTTON}'>
+
+</form>

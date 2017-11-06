@@ -1,0 +1,178 @@
+{* order history *}
+<table border="0" cellspacing="0" cellpadding="5">
+
+	{if $navigator}
+	<tr>
+		<td colspan=7>{$navigator}</td>
+	</tr>
+	{/if}
+
+	<tr class="mainmenu_selected_{$current_dpt}">
+
+		<td>
+			<table>
+				<tr>
+					<td rowspan=2 class="light">
+						<b>{$smarty.const.STRING_ORDER_ID}</b>
+					</td>
+					<td>
+						<a href='{$urlToSort}&sort=orderID&direction=ASC'>
+							<img SRC="./images/backend/arrow_up.gif" border=0>
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href='{$urlToSort}&sort=orderID&direction=DESC'>
+							<img SRC="./images/backend/arrow_down.gif" border=0>
+						</a>
+					</td>
+				</tr>
+			</table>
+		</td>
+
+		<td>
+			<table>
+				<tr>
+					<td rowspan=2 class="light">
+						<b>{$smarty.const.TABLE_ORDER_TIME}</b>
+					</td>
+					<td>
+						<a href='{$urlToSort}&sort=order_time&direction=ASC'>
+							<img SRC="./images/backend/arrow_up.gif" border=0>
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href='{$urlToSort}&sort=order_time&direction=DESC'>
+							<img SRC="./images/backend/arrow_down.gif" border=0>
+						</a>
+					</td>
+				</tr>
+			</table>
+		</td>
+
+<!--
+		<td>
+			<table>
+				<tr>
+					<td rowspan=2>
+						<b>{$smarty.const.TABLE_CUSTOMER}</b>
+					</td>
+					<td>
+						<a href='{$urlToSort}&sort=billing_firstname&direction=ASC'>
+							<img SRC="./images/backend/arrow_up.gif" border=0>
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href='{$urlToSort}&sort=billing_firstname&direction=DESC'>
+							<img SRC="./images/backend/arrow_down.gif" border=0>
+						</a>
+					</td>
+				</tr>
+			</table>
+		</td>
+-->
+
+		<td>
+			<table>
+				<tr>
+					<td rowspan=2 class="light">
+						<b>{$smarty.const.STRING_PAYMENT_TYPE}</b>
+					</td>
+					<td>
+						<a href='{$urlToSort}&sort=payment_type&direction=ASC'>
+							<img SRC="./images/backend/arrow_up.gif" border=0>
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href='{$urlToSort}&sort=payment_type&direction=DESC'>
+							<img SRC="./images/backend/arrow_down.gif" border=0>
+						</a>
+					</td>
+				</tr>
+			</table>
+		</td>
+
+		<td>
+			<table>
+				<tr>
+					<td rowspan=2 class="light">
+						<b>{$smarty.const.STRING_SHIPPING_TYPE}</b>
+					</td>
+					<td>
+						<a href='{$urlToSort}&sort=shipping_type&direction=ASC'>
+							<img SRC="./images/backend/arrow_up.gif" border=0>
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href='{$urlToSort}&sort=shipping_type&direction=DESC'>
+							<img SRC="./images/backend/arrow_down.gif" border=0>
+						</a>
+					</td>
+				</tr>
+			</table>
+		</td>
+
+		<td align=center>
+			<table>
+				<tr>
+					<td rowspan=2 class="light">
+						<b>{$smarty.const.TABLE_ORDER_TOTAL}</b>
+					</td>
+					<td>
+						<a href='{$urlToSort}&sort=order_amount&direction=ASC'>
+							<img SRC="./images/backend/arrow_up.gif" border=0>
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href='{$urlToSort}&sort=order_amount&direction=DESC'>
+							<img SRC="./images/backend/arrow_down.gif" border=0>
+						</a>
+					</td>
+				</tr>
+			</table>
+		</td>
+
+		<td>
+			<b>{$smarty.const.ADMIN_ORDER_STATUS_NAME}<b>
+		</td>
+	</tr>
+
+	{section name=i loop=$orders}
+	<tr style="{if $smarty.section.i.index is div by 2}background-color: white{else}background-color: #DDC0C5{/if}">
+		<td>
+			<a href='admin.php?dpt=custord&sub=new_orders&orders_detailed=yes&orderID={$orders[i].orderID}&urlToReturn={$urlToReturn}'>
+				{$orders[i].orderID}
+			</a>
+		</td>
+		<td>
+			{$orders[i].order_time}
+		</td>
+<!--
+		<td>
+			{$orders[i].billing_firstname}
+			<br>
+			{$orders[i].billing_lastname}
+			<br>
+			( <a href=''>{$smarty.const.ADMIN_ABOUT_CUSTOMER}</a> )
+		</td>
+-->
+		<td>{$orders[i].payment_type}</td>
+		<td>{$orders[i].shipping_type}</td>
+		<td>{$orders[i].order_amount}</td>
+		<td>{$orders[i].OrderStatus}</td>
+	</tr>
+	{/section}
+
+
+</table>

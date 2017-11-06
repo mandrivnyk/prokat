@@ -1,0 +1,226 @@
+{* advanced search in category *}
+<TABLE BGCOLOR="{$smarty.const.CONF_LIGHT_COLOR}" CELLPADDING="0" cellspacing="0" border="0">
+<form name='AdvancedSearchInCategory' method=GET action="/index.php">
+
+<TR><TD align="center">
+
+	{if $categories_to_select}
+		<b>{$smarty.const.STRING_ADVANCED_SEARCH_IN_CATEGORY}</b>
+	{else}
+		<b>{$smarty.const.STRING_SELECT_PRODUCT_BY_PARAMS}</b>
+	</strong>		
+	{/if}
+
+
+
+
+	<input type=hidden name='categoryID' value='{$categoryID}'>
+	{if $categories_to_select}
+		<input type=hidden name='search_with_change_category_ability' value='yes'>
+	{else}
+		<input type=hidden name='search' id="search" value='1'>
+	{/if}
+
+<table border="0" cellspacing="0" cellpadding="0"  style="margin-top:10px;">
+<tr>
+	{if $categories_to_select}
+	
+		<td align="left">
+			{$smarty.const.STRING_CATEGORY}:&nbsp;&nbsp;
+		</td>
+		<td align="left">
+			<select name='categorySelect' onchange='JavaScript:_categoryChangedHandler()'>
+			{if !$categoryID}<option value='0'>{$smarty.const.ADMIN_PROMPT_TO_SELECT}</option>{/if}
+			{section name=i loop=$categories_to_select}
+				<option value='{$categories_to_select[i].categoryID}'
+				{if $categories_to_select[i].categoryID == $categoryID}
+					selected
+				{/if}
+				>
+					{section name=j max=$categories_to_select[i].level}
+						&nbsp;&nbsp;&nbsp;
+					{/section}
+						{$categories_to_select[i].name}
+				</option>
+			{/section}
+			</select>
+
+			{literal}
+			<script language='JavaScript'>
+				function _categoryChangedHandler()
+				{
+					if (document.AdvancedSearchInCategory.categorySelect.value != 0)
+					window.location = 'index.php?categoryID=' + 
+						document.AdvancedSearchInCategory.categorySelect.value +
+						'&search_with_change_category_ability=yes';
+				}
+			</script>
+			{/literal}
+		</td>
+	
+	{/if}
+
+
+	{if $categoryID}
+	
+		<td align="left">
+			&nbsp;&nbsp;{$smarty.const.STRING_NAME}:&nbsp;&nbsp;
+		</td>
+		<td align="left">
+			<input type="text" name="search_name" id="search_name"  size="30" value="{$search_name|replace:'"':'&quot;'|replace:"\'":"'"|replace:"<":"&lt;"|replace:">":"&gt;"|default:""}">
+		</td>
+	 
+		<td align="left">
+			&nbsp;{$smarty.const.STRING_PRODUCT_PRICE}:&nbsp;&nbsp;
+		</td>
+		<td align="left">
+			{$smarty.const.STRING_PRICE_FROM}
+			<input name="search_price_from"  id="search_price_from" type="text" size="10"
+					value="{$search_price_from|replace:'"':'&quot;'|replace:"\'":"'"|replace:"<":"&lt;"|replace:">":"&gt;"|default:""}" > {$priceUnit}&nbsp;
+		</td>
+		<td>
+				{$smarty.const.STRING_PRICE_TO}
+			<input name="search_price_to"  id="search_price_to" type="text" size="10" 
+					value="{$search_price_to|replace:'"':'&quot;'|replace:"\'":"'"|replace:"<":"&lt;"|replace:">":"&gt;"|default:""}" > {$priceUnit}
+
+		</td>
+	
+	{/if}
+	{if $params}
+		<table border="0" cellspacing="0" cellpadding="0"> 
+	{/if}
+				{section name=i loop=$params}
+					<tr>
+
+						<td>
+							{$params[i].name}:
+						</td>
+						<td>
+							{if $params[i].controlIsTextField eq 1}
+								<input type=text name='param_{$params[i].optionID}' 
+									value='{$params[i].value|replace:'"':'&quot;'|replace:"\'":"'"|replace:"<":"&lt;"|replace:">":"&gt;"|default:""}'>
+							{else}
+								<select name='param_{$params[i].optionID}'>
+									<option value='0'>{$smarty.const.STRING_UNIMPORTANT}</option>
+									{section name=j loop=$params[i].variants}
+									<option value='{$params[i].variants[j].variantID}'
+										{if $params[i].value == $params[i].variants[j].variantID}
+											selected
+										{/if}
+									>
+										{$params[i].variants[j].value|replace:'"':'&quot;'|replace:"\'":"'"|replace:"<":"&lt;"|replace:">":"&gt;"|default:""}
+									</option>
+									{/section}
+								</select>
+							{/if}
+						</td>
+					</tr>
+				{/section}
+
+	{if $params}
+		</table> 
+	{/if}
+	
+	
+	{if $show_subcategory_checkbox}
+	
+		<td colspan=1>
+
+			{if $show_subcategories_products}
+				<input type=hidden value='1' name='search_in_subcategory'>
+			{else}
+				<input type=checkbox value='1' name='search_in_subcategory'
+				{if $search_in_subcategory}
+					checked
+				{/if}
+				> 
+				{$smarty.const.STRING_SEARCH_IN_SUBCATEGORIES}
+			{/if}
+
+		</td>
+	
+	{/if}
+
+	{if $categoryID}
+	
+		<td colspan=1 align="right">
+			&nbsp;&nbsp;<!--<input type=submit 	value='Найти' 
+				name='advanced_search_in_category'>
+				
+				index.php?categoryID=386
+				&search=1
+				&search_name=
+				&search_price_from=
+				&search_price_to=150
+				&search_in_subcategory=1
+				&advanced_search_in_category=find
+				-->
+			<input type=hidden name='advanced_search_in_category' value='find'>
+			{literal}
+				<script type='text/javascript'>
+				var imgRequest = null;
+				function callRPCfind()
+				{
+					/*for(var i=0; i<document.AdvancedSearchInCategory.length; i++)
+					{
+						document.write("element["+i+"].type="+document.AdvancedSearchInCategory.elements[i].value+"<br>");
+						
+					}*/
+					var CATEGORY_ID = {/literal}{$categoryID}{literal};
+					var getSearch=document.getElementById("search");
+					var SEARCH = getSearch.value;
+					//alert(SEARCH);
+					
+					var getSearch_name=document.getElementById("search_name");
+					var SEARCH_NAME = getSearch_name.value;
+					//alert(SEARCH_NAME);
+					
+					var getSearch_price_from=document.getElementById("search_price_from");
+					var SEARCH_PRICE_FROM = getSearch_price_from.value;
+					//alert(SEARCH_PRICE_FROM);
+					
+					var getSearch_price_to=document.getElementById("search_price_to");
+					var SEARCH_PRICE_TO = getSearch_price_to.value;
+					//alert(SEARCH_PRICE_TO);
+					//var SEARCH_IN_SUBCATEGORY = document.AdvancedSearchInCategory.elements[5].value;
+					
+					var VURL = encodeURIComponent('/index.php?categoryID='+CATEGORY_ID+'&search=1&search_name='+SEARCH_NAME+'&search_price_from='+SEARCH_PRICE_FROM+'&search_price_to='+SEARCH_PRICE_TO+'&search_in_subcategory=1&advanced_search_in_category=find');
+					var params = 'vurl='+VURL; 
+					//alert(params);
+					imgRequest= new Image(); 
+					imgRequest.src = 'http://zooland.in.ua/cache-find.php?'+params; 
+					//while(!img.complete);
+					setTimeout(SendForm, 2000);	
+					//SendForm();
+					//document.AdvancedSearchInCategory.submit();
+					
+				}
+				function SendForm()
+				{
+					document.AdvancedSearchInCategory.submit();
+					/*if(!imgRequest.complete)
+					{	
+						timer = setTimeout(SendForm, 500);	
+						return;
+					}
+					else
+					{	
+						
+						imgRequest = null;
+					}*/
+				}
+					
+				</script>
+			{/literal}
+			<img src="/images/find.jpg" onclick="window.onload = callRPCfind(); ">
+		</td>
+	
+	{/if}
+</tr>
+</table>
+
+</TD></TR>
+</form>
+</TABLE>
+</center>
+<br>

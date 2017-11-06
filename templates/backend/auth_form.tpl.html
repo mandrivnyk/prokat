@@ -1,0 +1,34 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset={$smarty.const.DEFAULT_CHARSET}" />
+		<title>{$smarty.const.ADMIN_TITLE}</title>
+		<link rel="stylesheet" href="images/backend/style-backend.css" type="text/css" />
+	</head>
+	<body>
+		<br />
+		<br />
+		<form action="" method="post">
+		<table align="center">
+			{if $Error}
+			<tr>
+				<td colspan="2"><div style="color:red">{$smarty.const.ERROR_WRONG_PASSWORD}</div></td>
+			</tr>
+			{/if}
+			<tr>
+				<td>{$smarty.const.CUSTOMER_LOGIN}</td>
+				<td><input type="text" name="fLogin" value="{$Login}" /></td>
+			</tr>
+			<tr>
+				<td>{$smarty.const.CUSTOMER_PASSWORD}</td>
+				<td><input type="password" name="fPassword" value="{$Password}" /></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center"><input type="submit" value="{$smarty.const.OK_BUTTON}" /></td>
+			</tr>
+			<tr>
+				<td colspan="2"><a href="index.php">{$smarty.const.ADMIN_BACK_TO_SHOP}</a></td>
+			</tr>
+		</table>
+		</form>
+	</body>
+</html>

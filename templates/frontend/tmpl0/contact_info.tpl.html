@@ -1,0 +1,190 @@
+{* contact info *}
+
+<p><a class="faq" href="index.php?user_details=yes">{$smarty.const.MY_ACCOUNT_LINK}</a>
+
+<form action='index.php?contact_info=yes' method=post>
+<TABLE BGCOLOR="#{$smarty.const.CONF_DARK_COLOR}" CELLSPACING="1" CELLPADDING="0" WIDTH=100%><TR><TD><table width=100% border=0 cellspacing="0" cellpadding="7">
+	<tr>
+		<td bgcolor="white" align="center" width="25%">
+			<b><font class="faq">{$smarty.const.STRING_CONTACT_INFORMATION_DOWN_CASE}</font></b>
+		</td>
+		<td rowspan="{if $smarty.const.CONF_AFFILIATE_PROGRAM_ENABLED}5{else}4{/if}" bgcolor=white width="75%" align="center">
+
+
+
+		<table border=0>
+
+		{if $error ne ""}
+		<tr>
+			<td colspan=3 align=center><b><font color=red>{$error}<br><br></font></b></td>
+		</tr>
+		{/if}
+
+		<!-- STRING AUTHORIZATION FIELDS (LOGIN, PASSWORD) -->
+		<tr>
+			<td colspan=3 align=center>
+				<table bgcolor=#{$smarty.const.CONF_MIDDLE_COLOR} width=80% border=0>
+					<tr>
+						<td>
+							<font color=black class=small>
+								{$smarty.const.STRING_AUTHORIZATION_FIELDS}
+							</font>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan=2 width=50% align=right>
+				<font color=red>*</font> 
+				{$smarty.const.CUSTOMER_LOGIN}
+			</td>
+			<td width=50%><input type="text" name="login" 
+				value="{$login}">
+			</td>
+		</tr>
+		<tr>
+			<td colspan=2 align=right>
+				<font color=red>*</font> 
+				{$smarty.const.CUSTOMER_PASSWORD}
+			</td>
+			<td>
+				<input type="password" name="cust_password1" value="{$cust_password1}">
+			</td>
+		</tr>
+		<tr>
+			<td colspan=2 align=right>
+				<font color=red>*</font> 
+				{$smarty.const.CUSTOMER_CONFIRM_PASSWORD}
+			</td>
+			<td>
+				<input type="password" name="cust_password2" value="{$cust_password2}">
+			</td>
+		</tr>
+
+
+		<!-- GENERAL INFORMATION (FIRST NAME, LAST NAME, EMAIL ) -->
+		<tr>
+			<td colspan=3 align=center>
+				<table bgcolor=#{$smarty.const.CONF_MIDDLE_COLOR} width=80%>
+					<tr>
+						<td>
+							<font color=black class=small>
+								{$smarty.const.STRING_GENERAL_INFORMATION}
+							</font>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan=2 align=right>
+				<font color=red>*</font> 
+				{$smarty.const.CUSTOMER_FIRST_NAME}
+			</td>
+			<td>
+				<input type="text" name="first_name" 
+					value="{$first_name}">
+			</td>
+		</tr>
+		<tr>
+			<td colspan=2 align=right>
+				<font color=red>*</font> 
+				{$smarty.const.CUSTOMER_LAST_NAME}
+			</td>
+			<td>
+				<input type="text" name="last_name" 
+					value="{$last_name}">
+			</td>
+		</tr>
+		<tr>
+			<td colspan=2 align=right>
+				<font color=red>*</font> 
+				{$smarty.const.CUSTOMER_EMAIL}
+			</td>
+			<td>
+				<input type="text" name="email" 
+					value="{$email}">
+			</td>
+		</tr>
+		<tr>
+			<td colspan=2 align=right>
+				<input type=checkbox name='subscribed4news'
+				{if $subscribed4news}
+					checked
+				{/if}
+				>
+			</td>
+			<td>
+				{$smarty.const.CUSTOMER_SUBSCRIBE_FOR_NEWS}
+			</td>
+		</tr>
+
+		<!-- ADDITIONAL FIELDS (SEE  admin.php?dpt=custord&sub=reg_fields URL) -->
+		{section name=i loop=$additional_fields}
+
+		<tr>
+			<td colspan=2 align=right>
+				{if $additional_fields[i].reg_field_required}
+					<font color=red>*</font> 
+				{/if}
+				{$additional_fields[i].reg_field_name}:
+			</td>
+			<td>
+				<input type='text' name='additional_field_{$additional_fields[i].reg_field_ID}' 
+					value='{section name=j loop=$additional_field_values}{if $additional_field_values[j].reg_field_ID == $additional_fields[i].reg_field_ID}{$additional_field_values[j].reg_field_value}{/if}{/section}'>
+			</td>
+		</tr>
+		{/section}
+
+
+		<tr>
+			<td colspan=3 align=center>
+				<input type=submit value='{$smarty.const.SAVE_BUTTON}' name='save'>
+			</td>
+		</tr>
+
+		</table>
+		
+
+
+		
+
+
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="#{$smarty.const.CONF_LIGHT_COLOR}" class="myaccount_tab_top">
+			<a href='index.php?address_book=yes'>
+				{$smarty.const.STRING_ADDRESS_BOOK}
+			</a>
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="#{$smarty.const.CONF_LIGHT_COLOR}" class="myaccount_tab_top">
+			<a href='index.php?order_history=yes'>
+				{$smarty.const.STRING_ORDER_HISTORY}
+			</a>
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="#{$smarty.const.CONF_LIGHT_COLOR}" class="myaccount_tab_top">
+			<a href='index.php?visit_history=yes'>
+				{$smarty.const.STRING_VISIT_HISTORY}
+			</a>
+		</td>
+	</tr>
+	{if $smarty.const.CONF_AFFILIATE_PROGRAM_ENABLED}
+	<tr>
+		<td bgcolor="#{$smarty.const.CONF_LIGHT_COLOR}" class="myaccount_tab_top">
+			
+			<a href='?affiliate=yes&sub=balance'>
+				{$smarty.const.STRING_AFFILIATE_PROGRAM}
+			</a>
+		</td>
+	</tr>
+	{/if}
+</table></TD></TR></TABLE>
+
+</form>
+<p>&nbsp;

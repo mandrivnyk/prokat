@@ -1,0 +1,126 @@
+{* shipping types configuration *}
+
+<p>
+{if $configuration_saved eq 1}
+	{$smarty.const.ADMIN_UPDATE_SUCCESSFUL}
+{/if}
+
+
+<form action="admin.php" method=post>
+
+	<table cellpadding="5" cellspacing="0" border="0" width="100%">
+
+		<tr class="mainmenu_selected_{$current_dpt}">
+			<td>{$smarty.const.ADMIN_ON_OFF}</td>
+			<td>{$smarty.const.STRING_NAME}</td>
+			<td>{$smarty.const.STRING_DESCRIPTION}</td>
+			<td>{$smarty.const.STRING_SHIPPING_MODULE_EMAIL_COMMENTS_TEXT}</td>
+			<td>{$smarty.const.STRING_MODULE_NAME}</td>
+			<td>{$smarty.const.ADMIN_SORT_ORDER}</td>
+			<td>&nbsp;</td>
+		</tr>
+
+		{section name=i loop=$shipping_types}
+		<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}" align="center">
+			<td>
+				<input type=checkbox 
+					name=Enabled_{$shipping_types[i].SID}
+						{if $shipping_types[i].Enabled} 
+							checked
+						{/if}
+				>
+			</td>
+			<td>
+				<input type=text name=name_{$shipping_types[i].SID} 
+					value="{$shipping_types[i].Name|replace:'"':'&quot;'}">
+			</td>
+
+			<td>
+				<textarea name="description_{$shipping_types[i].SID}" cols="30" 
+							rows="4">{$shipping_types[i].description|replace:'"':'&quot;'}</textarea>
+			</td>
+
+			<td>
+				<textarea name="email_comments_text_{$shipping_types[i].SID}" cols="30" 
+							rows="4">{$shipping_types[i].email_comments_text|replace:'"':'&quot;'}</textarea>
+			</td>
+
+			<td>
+				<select name='module_{$shipping_types[i].SID}'>
+					<option value='null'>
+						--
+					</option>
+					{section name=j loop=$shipping_modules}
+					<option value='{$shipping_modules[j]->get_id()}'
+					{if $shipping_modules[j]->get_id() == $shipping_types[i].module_id}
+						selected
+					{/if}
+					>
+						{$shipping_modules[j]->title}
+					</option>
+					{/section}
+				</select>
+			</td>
+			<td>
+				<input type=text name=sort_order_{$shipping_types[i].SID} 
+					value="{$shipping_types[i].sort_order|replace:'"':'&quot;'}">
+			</td>
+			<td>
+				<a href="javascript:confirmDelete({$shipping_types[i].SID},'{$smarty.const.QUESTION_DELETE_CONFIRMATION}','admin.php?dpt=conf&sub=shipping&delete=');">
+					<img src="images/backend/button_delete.gif" border=0 alt="{$smarty.const.DELETE_BUTTON}">
+				</a>
+			</td>
+		</tr>
+		{/section}
+
+		<tr class="mainmenu_selected_{$current_dpt}">
+			<td colspan=7 align=center>
+				{$smarty.const.ADD_BUTTON}:
+			</td>
+		</tr>
+
+		<tr class="bg_white" align="center">
+			<td>
+				<input type=checkbox name=new_Enabled checked>
+			</td>
+			<td>
+				<input type=text name=new_name>
+			</td>
+			<td>
+				<textarea name="new_description" cols="30" 
+							rows="4"></textarea>
+			</td>
+			<td>
+				<textarea name="new_email_comments_text" cols="30" 
+							rows="4"></textarea>
+			</td>
+			<td>
+				<select name='new_module'>
+					<option value='null'>
+						--
+					</option>
+					{section name=j loop=$shipping_modules}
+					<option value='{$shipping_modules[j]->get_id()}'>
+						{$shipping_modules[j]->title}
+					</option>
+					{/section}
+				</select>
+			</td>
+			<td>
+				<input type=text name=new_sort_order>
+			</td>
+			<td>
+				&nbsp;
+			</td>
+		</tr>
+
+
+</table>
+
+<p>
+<input type=hidden name=dpt value=conf>
+<input type=hidden name=sub value=shipping>
+<input type=hidden name=save_shipping value=yes>
+<input type=submit value="{$smarty.const.SAVE_BUTTON}">
+
+</form>

@@ -1,0 +1,114 @@
+{* payment modules managment*}
+
+
+{if $constant_managment}
+
+	<h1>{$smarty.const.STRING_TITLE_PAYMENT_MODULE_SETTING} : {$payment_module->title}</h1>
+
+	<a href='admin.php?dpt=modules&sub=payment'>
+		&lt;&lt;{$smarty.const.STRING_PAYMENT_MODULES}
+	</a>
+
+<form method=POST enctype="multipart/form-data">
+
+	{if $settings}
+
+	<table width="100%" cellspacing=0 cellpadding=5 border=0>
+		
+		<tr class="mainmenu_selected_{$current_dpt}">
+			<td align=middle>
+				{$smarty.const.ADMIN_SETTING_NAME}
+			</td>
+			<td align=middle>
+				{$smarty.const.ADMIN_VALUE}
+			</td>
+		</tr>
+
+		{section name=i loop=$settings}
+		<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}"> 
+			<td width="50%" align="right" valign="top">
+				<strong>
+					{$settings[i].settings_title}
+				</strong>:
+				<br>
+				<font size="-2">
+					{$settings[i].settings_description}
+				</font>
+			</td>
+			<td width="50%" align="left" valign="top">
+				{$controls[i]}
+			</td>
+		</tr>
+
+		{/section}
+
+	</table>
+
+	<br>
+	<input type=submit name='save' value='{$smarty.const.SAVE_BUTTON}'>
+
+	{else}
+		&lt; {$smarty.const.ADMIN_NO_SETTINGS} &gt;	
+	{/if}
+
+</form>
+{else}
+
+	<h1>{$smarty.const.STRING_PAYMENT_MODULES}</h1>
+	{$smarty.const.STRING_PAYMENT_MODULES_DSCR}
+	<p>
+<table width="100%">
+	<tr>
+		<td width="50%" valign="top">
+			<table cellspacing=0 cellpadding=5 border=0>
+				<tr class="mainmenu_selected_{$current_dpt}">
+					<td>{$smarty.const.STRING_MODULE_NAME}</td>
+					<td>{$smarty.const.STRING_MODULE_DESCRIPTION}</td>
+					<td>{$smarty.const.STRING_MODULE_ACTIONS}</td>
+				</tr>
+			
+				{section name=i loop=$payment_modules}
+				<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}"> 
+					<td valign="top">
+						{$payment_modules[i]->title}
+					</td>
+					<td valign="top">
+						{$payment_modules[i]->description}
+					</td>
+					<td align=center>
+						{if $payment_modules[i]->ModuleType || !$payment_modules[i]->is_installed()}
+						<a href='admin.php?dpt=modules&sub=payment&install={$smarty.section.i.index}'>
+							{$smarty.const.STRING_MODULE_INSTALL}
+						</a>
+						{/if}
+					</td>
+			    </tr>
+				{/section}
+			</table>
+		</td>
+		<td width="50%" valign="top">
+			<table cellspacing=0 cellpadding=5 border=0 width="100%">
+				<tr class="mainmenu_selected_{$current_dpt}">
+					<td colspan="3">
+						{$smarty.const.SHMODULES_INSTALLED_CONFIGS}
+					</td>
+				</tr>
+				{section name=i loop=$payment_configs}
+				{assign var="InstalledModuleConfigs" value=1}
+				<tr class="{cycle values="bg_white, bg_modules"}">
+					<td width="100%">{$payment_configs[i].ConfigName}</td>
+					<td><a href="admin.php?dpt=modules&sub=payment&setting_up={$payment_configs[i].ConfigID}">{$smarty.const.EDIT_BUTTON}</a></td>
+					<td><a href="admin.php?dpt=modules&sub=payment&uninstall={$payment_configs[i].ConfigID}">{$smarty.const.DELETE_BUTTON}</a></td>
+				</tr>
+				{/section}
+				{if !$InstalledModuleConfigs}
+				<tr bgcolor="white">
+					<td width="100%" align="center" colspan="3">{$smarty.const.ADMIN_NO_INSTALLED_MODULE_CONFS}</td>
+				</tr>
+				{/if}
+			</table>
+		</td>
+	</tr>
+</table>
+
+{/if}

@@ -1,0 +1,65 @@
+{* Froogle module *}
+
+{if $froogle_export_successful eq 1}
+<p>
+<font color=blue class=cat><b>{$smarty.const.ADMIN_FROOGLE_EXPORT_SUCCESSFUL}</b></font><br>
+
+<p>
+<a href="get_file.php?getFileParam={$getFileParam}">{$smarty.const.ADMIN_DOWN_LOAD}</a> ({$froogle_filesize} Kb)
+
+{else}
+
+<p>
+{if $froogle_errormsg ne NULL}
+<font color=red><b>{$froogle_errormsg}</b></font>
+{/if}
+
+<form action="" method=post name="form_export">
+
+	<p>
+	<font class=cat><b><u>{$smarty.const.STRING_MODULES_FROOGLE}</u></b></font><br>
+
+	<ol type="1">
+		<li>
+			<b class="header2">{$smarty.const.STRING_CHOOSE_PRODUCTS}</b>
+			{include file="backend/product_tree.tpl.html"}
+		</li>
+		<li>
+			<b class="header2">{$smarty.const.ADMIN_SELECT_PARAMETRS}</b>
+			<p>{$smarty.const.STRING_MODULES_FROOGLE_PRICING_DESCRIPTION}
+			<br>
+			{$smarty.const.STRING_MODULES_FROOGLE_USD_CURRENCY_TYPE}:
+			<select name='froogle_currency' onchange='JavaScript:_changeCurrency()'>
+				{section name=i loop=$currencies}
+					<option value='{$currencies[i].CID}'
+						{if $currencies[i].CID eq $smarty.const.CONF_DEFAULT_CURRENCY}
+							selected
+						{/if}
+					>
+						{$currencies[i].Name}
+					</option>
+				{/section}
+			</select>
+		
+			<p>
+			{$smarty.const.STRING_MODULES_FROOGLE_DESCRIPTION_HINT1}
+		
+			<select name=froogle_export_description>
+				<option value=2 selected>{$smarty.const.ADMIN_PRODUCT_BRIEF_DESC}</option>
+				<option value=0>{$smarty.const.ADMIN_META_DESCRIPTION}</option>
+				<option value=1>{$smarty.const.ADMIN_PRODUCT_DESC}</option>
+			</select>
+			<br>
+			<B>{$smarty.const.STRING_MODULES_FROOGLE_DESCRIPTION_HINT2}</B>
+		</li>
+	</ol>
+
+	<p>
+	<input type="button" onclick="document.form_export.elements['froogle_export'].value='froogle_export'; document.form_export.submit(); return false;" value="{$smarty.const.STRING_MODULES_FROOGLE_CREATE_FEED}">
+	<input type=hidden name=dpt value=modules>
+	<input type=hidden name=sub value=froogle>
+	<input type=hidden name=froogle_export value=''>
+
+</form>
+
+{/if}

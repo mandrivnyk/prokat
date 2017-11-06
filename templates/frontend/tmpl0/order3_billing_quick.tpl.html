@@ -1,0 +1,58 @@
+{*  order stage 3 *}
+
+<h1><u>{$smarty.const.STRING_ORDERING}</u></h1>
+
+<h3>{$smarty.const.STRING_ORDER_PAYMENT}</h3>
+
+<table border="0" cellspacing="1" cellpadding="5">
+	<tr>
+		<td>
+			{$smarty.const.STRING_BILLING_ADDRESS}
+			<br>
+			<b>{$strAddress}</b>
+		</td>
+	</tr>
+</table>
+
+
+
+{if  $smarty.const.CONF_ORDERING_REQUEST_BILLING_ADDRESS == '1'}
+	<p>{$smarty.const.STRING_SELECT_ORDER_PAYMENT_METHOD_PROMPT}:</p>
+{/if}
+
+	<form method=POST name='MainForm'>
+
+	<table border="0" cellspacing="1" cellpadding="4">
+
+		{section name=i loop=i loop=$payment_methods}
+		<tr>
+			<td>
+				<input type="radio" name="select_payment_method"
+				{if $smarty.section.i.index == 0}
+					checked
+				{/if}
+
+				value="{$payment_methods[i].PID}"
+				>
+			</td>
+
+			<td>
+				<b>{$payment_methods[i].Name}</b>
+				<br>
+				{$payment_methods[i].description}
+			</td>
+
+		</tr>
+		{/section}
+	
+	</table>
+
+	{if !$payment_methods}
+		<font color=red><b>{$smarty.const.STRING_NO_PAYMENT_METHODS_TO_SELECT}...</b></font>
+	{else}
+		<br>
+		<input type="submit" name="continue_button" 
+				value="{$smarty.const.CONTINUE_BUTTON} &gt;&gt;">
+	{/if}
+
+	</form>

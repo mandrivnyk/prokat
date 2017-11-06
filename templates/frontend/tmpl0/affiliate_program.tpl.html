@@ -1,0 +1,197 @@
+<p><a class="faq" href="index.php?user_details=yes">{$smarty.const.MY_ACCOUNT_LINK}</a>
+
+<p><TABLE BGCOLOR="#{$smarty.const.CONF_DARK_COLOR}" CELLSPACING="1" CELLPADDING="0" WIDTH=100%><TR><TD><table width=100% border=0 cellspacing="0" cellpadding="7">
+	<tr>
+		<td bgcolor="#{$smarty.const.CONF_LIGHT_COLOR}" class="myaccount_tab_bottom" width="25%">
+			<a href='index.php?contact_info=yes'>
+				{$smarty.const.STRING_CONTACT_INFORMATION_DOWN_CASE}
+			</a>
+		</td>
+		<td rowspan=5 width="75%" bgcolor="white">
+{if $SubPage=='balance'}
+
+	<h1>{$smarty.const.STRING_AFFILIATE_PROGRAM}</h1>
+	<h3><u>{$smarty.const.AFFP_USER_BALANCE}</u></h3>
+	{$smarty.const.STRING_AFFILIATE_CUSTOMERS}: <b>{$affiliate_customers}</b>
+	<br />
+	<br />
+	{if $CommissionsNumber}
+		<table border=0 cellspacing=1 bgcolor=#444444 cellpadding=3 width=50%>
+			<tr bgcolor="#F0B5B5" align=center>
+				<td>
+					&nbsp;
+				</td>
+				<td>
+				{$smarty.const.AFFP_STRING_TOTAL_EARNINGS}
+				</td>
+				<td>
+				{$smarty.const.AFFP_STRING_TOTAL_PAYMENTS}
+				</td>
+				<td>
+				{$smarty.const.AFFP_USER_BALANCE}
+				</td>
+			</tr>
+		{foreach from=$CurrencyISO3 item=_CurrencyISO}
+			{if $CommissionsAmount[$_CurrencyISO.currency_iso_3] or $PaymentsAmount[$_CurrencyISO.currency_iso_3]}
+			<tr bgcolor="#FFFFFF" align=center>
+				<td align="center"><B>{$_CurrencyISO.currency_iso_3}</B>
+				</td>
+				<td>
+				{$CommissionsAmount[$_CurrencyISO.currency_iso_3]|string_format:"%.2f"}
+				</td>
+				<td>
+				{$PaymentsAmount[$_CurrencyISO.currency_iso_3]|string_format:"%.2f"}
+				</td>
+				<td>
+				{"`$CommissionsAmount[$_CurrencyISO.currency_iso_3]-$PaymentsAmount[$_CurrencyISO.currency_iso_3]`"|string_format:"%.2f"}
+				</td>
+			</tr>
+			{/if}
+		{/foreach}
+		</table>
+	{else}
+		{$smarty.const.AFFP_MSG_NO_BALANCE}
+		{/if}
+
+{/if}{* if $SubPage=='balance' *}
+
+{if $SubPage=='payments_history'}
+
+	<h1>{$smarty.const.STRING_AFFILIATE_PROGRAM}</h1>
+	<h3><u>{$smarty.const.AFFP_PAYMENTS_HISTORY}</u></h3>
+	
+	{if $PaymentsNumber}
+		<table border=0 cellspacing=1 bgcolor=#444444 cellpadding=3>
+			<tr bgcolor="#F0B5B5" width="100%">
+				<td>{$smarty.const.AFFP_PAYMENT_NUMBER}
+				</td>
+				<td align="center">{$smarty.const.ADMIN_CURRENT_DATE}
+				</td>
+				<td align="center">{$smarty.const.STRING_ADMIN_COMMENT}
+				</td>
+				<td align="right">{$smarty.const.STRING_SUM}
+				</td>
+			</tr>
+		{foreach from=$Payments item=_Payment}
+			<tr bgcolor="#FFFFFF">
+				<td>
+				P-{$_Payment.pID}
+				</td>
+				<td align="center">
+				{$_Payment.xDate}
+				</td>
+				<td>
+				{$_Payment.Description}
+				</td>
+				<td align="right">
+				{$_Payment.Amount} {$_Payment.CurrencyISO3}
+				</td>
+			</tr>
+		{/foreach}
+		</table>
+	{else}
+		{$smarty.const.AFFP_MSG_NO_PAYMENTS}
+		{/if}{* if $PaymentsNumber *}
+
+
+{/if}{* if $SubPage=='payments_history' *}
+
+{if $SubPage=='settings'}
+
+	<h1>{$smarty.const.STRING_AFFILIATE_PROGRAM}</h1>
+	<h3><u>{$smarty.const.STRING_MODULE_SETTING}</u></h3>
+	{if $SettingsSaved}
+		<div class="ok_msg_f">{$smarty.const.MSG_INFORMATION_SAVED}</div>
+		{/if}
+	{if $CONF_AFFILIATE_EMAIL_NEW_COMMISSION or $CONF_AFFILIATE_EMAIL_NEW_PAYMENT}
+		<form name="form_settings" action="{$REQUEST_URI}" method="POST">
+		<input name="fACTION" value="SAVE_SETTINGS" type="hidden" >
+		<input name="fREDIRECT" value="{$REQUEST_URI}" type="hidden" >
+		{if $CONF_AFFILIATE_EMAIL_NEW_COMMISSION}
+			<input name="EmailOrders" 
+				{if $Settings.EmailOrders}
+					checked="checked"
+				{/if}
+				class="checknomarging" value="1" type="checkbox" id="id_emailorders" /> &nbsp;<label for="id_emailorders">{$smarty.const.AFFP_EMAILORDERS}</label>
+			<br />
+			<br />
+			{/if}{* if $CONF_AFFILIATE_EMAIL_NEW_COMMISSION *}
+		
+		{if $CONF_AFFILIATE_EMAIL_NEW_PAYMENT}
+			<input name="EmailPayments" 
+				{if $Settings.EmailPayments}
+					checked="checked"
+				{/if}
+				class="checknomarging" value="1" type="checkbox" id="id_emailpayments" /> &nbsp;<label for="id_emailpayments">{$smarty.const.AFFP_EMAILPAYMENTS}</label>
+			{/if}{* if $CONF_AFFILIATE_EMAIL_NEW_PAYMENT *}
+		<br />
+		<br />
+		<input value="{$smarty.const.SAVE_BUTTON}" type="submit" />
+		</form>
+		{/if} {* if $CONF_AFFILIATE_EMAIL_NEW_COMMISSION or $CONF_AFFILIATE_EMAIL_NEW_PAYMENT *}
+
+{/if}{* if $SubPage=='settings' *}
+
+{if $SubPage=='attract_guide'}
+	<h1>{$smarty.const.STRING_AFFILIATE_PROGRAM}</h1>
+	<h3><u>{$smarty.const.AFFP_ATTRACT_GUIDE}</u></h3>
+	{$_AFFP_STRING_ATTRACT_GUIDE}
+{/if}{* if $SubPage=='attract_guide' *}
+
+{if  $SubPage!='balance'}
+	<p>
+		<a href="?affiliate=yes&sub=balance">{$smarty.const.AFFP_USER_BALANCE}</a>
+	</p>
+	{/if}
+
+{if  $SubPage!='payments_history'}
+	<p>
+		<a href="?affiliate=yes&sub=payments_history">{$smarty.const.AFFP_PAYMENTS_HISTORY}</a>
+	</p>
+	{/if}
+{if  $SubPage!='attract_guide'}
+	<p>
+		<a href="?affiliate=yes&sub=attract_guide">{$smarty.const.AFFP_ATTRACT_GUIDE}</a>
+	</p>
+	{/if}
+
+{if $smarty.const.CONF_AFFILIATE_EMAIL_NEW_COMMISSION or $smarty.const.CONF_AFFILIATE_EMAIL_NEW_PAYMENT}
+	{if  $SubPage!='settings'}
+		<p>
+			<a href="?affiliate=yes&sub=settings">{$smarty.const.STRING_MODULE_SETTING}</a>
+		</p>
+		{/if}
+	{/if}
+
+	<P>&nbsp;
+	
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="#{$smarty.const.CONF_LIGHT_COLOR}" class="myaccount_tab_bottom">
+			<a href='index.php?address_book=yes'>
+				{$smarty.const.STRING_ADDRESS_BOOK}
+			</a>
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="#{$smarty.const.CONF_LIGHT_COLOR}" class="myaccount_tab_bottom">
+			<a href='index.php?order_history=yes'>
+				{$smarty.const.STRING_ORDER_HISTORY}
+			</a>
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="#{$smarty.const.CONF_LIGHT_COLOR}" class="myaccount_tab_bottom">
+			<a href='index.php?visit_history=yes'>
+				{$smarty.const.STRING_VISIT_HISTORY}
+			</a>
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="white" align="center">
+			<b><font class="faq">{$smarty.const.STRING_AFFILIATE_PROGRAM}</font></b>
+		</td>
+	</tr>
+</table></TD></TR></TABLE>
+<P>&nbsp;

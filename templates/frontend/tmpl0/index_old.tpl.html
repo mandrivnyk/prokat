@@ -1,0 +1,261 @@
+<html>
+
+{include file="head.tpl.html"}
+
+<body marginwidth=0 marginheight=0 leftmargin=0 topmargin=0>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr> 
+    <td width="200" style="background: white url(images/companyname_background.gif) repeat-x; background-position: bottom;"><img src="images/companyname.gif" alt="{$page_title|escape:'html'}" width="200" height="121"></td>
+    <td valign="top" style="background: #496BAB url(images/blue_grad_background.gif) repeat-x; background-position: top;" width="*"> 
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr> 
+          <td valign="top"><br>
+            <table border="0" cellspacing="0" cellpadding="1">
+              <tr> 
+                <td rowspan="8">&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td rowspan="8" bgcolor="white" width="1"></td>
+                <td {if $main_content_template == "home.tpl.html"}bgcolor="#203560"{/if}><table width="100%" border="0" cellpadding="0" cellspacing="0">
+                    <tr> 
+                      <td width="200">&nbsp;&nbsp;&nbsp;<strong><a class=lightmenu href="index.php"> 
+                        {$smarty.const.LINK_TO_HOMEPAGE}
+                        </a></strong></td>
+                    </tr>
+                  </table></td>
+              </tr>
+              <tr> 
+                <td {if $main_content_template == "user_account.tpl.html"}bgcolor="#203560"{/if}><table width="100%" border="0" cellpadding="0" cellspacing="0">
+                    <tr> 
+                      <td>&nbsp;&nbsp;&nbsp; 
+                        {* register/my_account link *}
+                        {if ($log ne "")}
+                        <a class=lightmenu 
+											href="index.php?user_details=yes"> 
+                        {$smarty.const.MY_ACCOUNT_LINK}
+                        </a> 
+                        {else}
+                        <a class=lightmenu 
+											href="index.php?register=yes"> 
+                        {$smarty.const.REGISTER_LINK}
+                        </a> 
+                        {/if}
+                      </td>
+                    </tr>
+                  </table></td>
+              </tr>
+              <tr> 
+                <td {if $main_content_template == "pricelist.tpl.html"}bgcolor="#203560"{/if}><table width="100%" border="0" cellpadding="0" cellspacing="0">
+                    <tr> 
+                      <td>&nbsp;&nbsp;&nbsp;<a class=lightmenu href="index.php?show_price=yes"> 
+                        {$smarty.const.STRING_PRICELIST}
+                        </a></td>
+                    </tr>
+                  </table></td>
+              </tr>
+              <tr>
+                <td {if $main_content_template == "feedback.tpl.html"}bgcolor="#203560"{/if}><table width="100%" border="0" cellpadding="0" cellspacing="0">
+                    <tr> 
+                      <td>&nbsp;&nbsp;&nbsp;<a href="index.php?feedback=yes"
+										   class=lightmenu> 
+                        {$smarty.const.STRING_FEEDBACK}
+                        </a></td>
+                    </tr>
+                  </table></td>
+              </tr>
+              <tr>
+                <td {if $main_content_template == "show_aux_page.tpl.html" && $show_aux_page == 1}bgcolor="#203560"{/if}><table width="100%" border="0" cellpadding="0" cellspacing="0">
+                    <tr> 
+                      <td>&nbsp;&nbsp;&nbsp;<a href="index.php?show_aux_page={$aux_page1.aux_page_ID}"
+										   class=lightmenu  > 
+                        {$aux_page1.aux_page_name}
+                        </a></td>
+                    </tr>
+                  </table></td>
+              </tr>
+              <tr>
+                <td {if $main_content_template == "show_aux_page.tpl.html" && $show_aux_page == 2}bgcolor="#203560"{/if}><table width="100%" border="0" cellpadding="0" cellspacing="0">
+                    <tr> 
+                      <td>&nbsp;&nbsp;&nbsp;<a href="index.php?show_aux_page={$aux_page2.aux_page_ID}"
+										   class=lightmenu  > 
+                        {$aux_page2.aux_page_name}
+                        </a></td>
+                    </tr>
+                  </table></td>
+              </tr>
+            </table>
+          </td>
+		  <td valign="top"> <br>
+          </td>
+          <td align="right" valign="top" style="background: url(images/blue_grad_right.gif) no-repeat; background-position: top right;" width="140" height="121">
+            <table cellpadding="0"><tr><td>{include file="language.tpl.html"}</td><td>&nbsp;</td></tr></table>
+          </td>
+        </tr>
+      </table></td>
+    <td width="200" bgcolor="#3E65B4"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr> 
+          <td align="center"> 
+            {include file="change_currency.tpl.html"}
+          </td>
+        </tr>
+        <tr> 
+          <td valign="bottom"> <br>
+            <br>
+            {include file="search_form.tpl.html"}
+          </td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr> 
+    <td width="200" valign="top">
+<table width="100%" border="0" cellspacing="0" cellpadding="3">
+        <tr> 
+          <td style="background: white url(images/companyname_background.gif) repeat-x; background-position: bottom;"> 
+            <table width="100%" border="0" cellspacing="0" cellpadding="3">
+              <tr> 
+                <td><table border="0" cellspacing="0" cellpadding="2">
+                    <tr> 
+                      <td class="faq_gray"><b>
+                        {$smarty.const.ADMIN_CATALOG}
+                        </b></td>
+                      <td><img src="images/arrow_olive.gif" width="15" height="15"></td>
+                    </tr>
+                  </table></td>
+              </tr>
+              <tr> 
+                <td> 
+                  <table border="0" cellspacing="1" cellpadding="4" width="100%">
+              <tr>
+                <td>
+                  {include file="category_tree.tpl.html"}
+                </td>
+              </tr>
+            </table>
+                </td>
+              </tr>
+            </table>
+            
+          </td>
+        </tr>
+        <tr> 
+          <td style="background: #B5C175 url(images/olive_gradient_vert.gif) repeat-x; background-position: bottom;">
+            {include file="authorization.tpl.html"}
+          </td>
+        </tr>
+        <tr> 
+          <td align="center"><a href="index.php?links_exchange=yes"
+										   class="small"> 
+            {$smarty.const.STRING_MODULES_LINKEXCHANGE}
+            </a>
+			
+		  </td>
+        </tr>
+      </table></td>
+    <td valign="top"> <table width="100%" border="0" cellspacing="0" cellpadding="5">
+        <tr> 
+          <td> 
+            {include file="$main_content_template"}
+          </td>
+        </tr>
+      </table></td>
+    <td valign="top" width="200"><table width="100%" border="0" cellspacing="0" cellpadding="3">
+        {if $smarty.const.CONF_SHOW_ADD2CART eq 1}
+		<tr>
+          <td style="background: white url(images/grey_gradient_hor.gif) repeat-y; background-position: left top;"><table border="0" cellspacing="0" cellpadding="2">
+              <tr> 
+                <td><a class="faq_gray" href="{if $smarty.const.CONF_OPEN_SHOPPING_CART_IN_NEW_WINDOW eq 1}javascript:open_window('cart.php',400,300);{else}index.php?shopping_cart=yes{/if}">{$smarty.const.CART_TITLE}</a></td>
+                <td><img src="images/arrow_olive.gif" width="15" height="15"></td>
+              </tr>
+            </table></td>
+        </tr>
+        <tr>
+          <td bgcolor="#D94342"> 
+            {include file="shopping_cart_info.tpl.html"}
+          </td>
+        </tr>
+        <tr>
+          <td bgcolor="#D94342" align="right"> 
+			<a class=cartsmall href="index.php?shopping_cart=yes">{$smarty.const.CART_PROCEED_TO_CHECKOUT}</a>
+          </td>
+        </tr>
+		{/if}
+        <tr>
+          <td style="background: white url(images/companyname_background.gif) repeat-x; background-position: bottom;"><table width="100%" border="0" cellspacing="0" cellpadding="3">
+              <tr> 
+                <td><table border="0" cellspacing="0" cellpadding="2">
+                    <tr> 
+                      <td><b><font class="faq_gray">{$smarty.const.ADMIN_NEWS}</font></b></td>
+                      <td><img src="images/arrow_olive.gif" width="15" height="15"></td>
+                    </tr>
+                  </table></td>
+              </tr>
+              <tr> 
+                <td> 
+                  {if $NewsShortListTpl}
+                  {include file=$NewsShortListTpl}
+                  <br> <br> 
+                  {/if}
+                </td>
+              </tr>
+            </table></td>
+        </tr>
+        <tr>
+          <td style="background: #B5C175 url(images/olive_gradient_vert.gif) repeat-x; background-position: bottom;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><table border="0" cellspacing="0" cellpadding="2">
+                    <tr> 
+                      <td><b>
+                        <font class="faq_olive">{$smarty.const.ADMIN_VOTING}</font>
+                        </b></td>
+                      <td><img src="images/arrow_olive_dark.gif" width="15" height="15"></td>
+                    </tr>
+                  </table></td>
+              </tr>
+              <tr>
+                <td>
+                  {include file="customer_survey.tpl.html"}
+                </td>
+              </tr>
+            </table>
+            
+          </td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr align="center" height="20"> 
+    <td colspan="3" bgcolor="#B4B4B4" height="20"><font color=white>[ <a class=lightstandard href="index.php">{$smarty.const.LINK_TO_HOMEPAGE}</a>
+      
+       
+      {if $smarty.const.CONF_SHOW_ADD2CART eq 1}
+      | <a class=lightstandard href="{if $smarty.const.CONF_OPEN_SHOPPING_CART_IN_NEW_WINDOW eq 1}javascript:open_window('cart.php',400,300);{else}index.php?shopping_cart=yes{/if}">{$smarty.const.CART_TITLE}</a> 
+      {/if}
+      | <a href="index.php?show_aux_page={$aux_page1.aux_page_ID}"
+										   class=lightstandard  >{$aux_page1.aux_page_name}</a> |
+										   <a href="index.php?show_aux_page={$aux_page2.aux_page_ID}"
+										   class=lightstandard  >{$aux_page2.aux_page_name}</a> |
+										   <a class=lightstandard href="index.php?show_price=yes">{$smarty.const.STRING_PRICELIST}</a> | 
+      {* register/my_account link *}
+      {if ($log ne "")}
+      <a class=lightstandard href="index.php?user_details=yes">{$smarty.const.MY_ACCOUNT_LINK}</a> 
+      {else}
+      <a class=lightstandard href="index.php?register=yes">{$smarty.const.REGISTER_LINK}</a>
+       
+      {/if}
+      ] </font></td>
+  </tr>
+  <tr align="center"> 
+    <td colspan="3" class="small"><i><br>
+      Copyright &copy; <a href="{$smarty.const.CONF_FULL_SHOP_URL}"><u> 
+      {$smarty.const.CONF_SHOP_NAME}
+      </u></a>. All rights reserved.</i> <br><br>
+		Powered by Shop-Script - <a class="standard" href="http://www.shop-script.ru">создание интернет-магазинов</a>
+		  
+    </td>
+  </tr>
+</table>
+
+
+</body>
+</html>

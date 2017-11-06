@@ -1,0 +1,25 @@
+{* category navigation tree *}
+{section name=i loop=$product_category_path}
+			{if $smarty.section.i.iteration eq $smarty.section.i.total}
+				{assign var="cur" value=$product_category_path[i].name}
+			{/if}
+{/section}
+{section name=i loop=$categories_tree}
+	{if $categories_tree[i].categoryID != 1  && $categories_tree[i].categoryID != 283 && $categories_tree[i].parent !=283 && $categories_tree[i].categoryID != 343 && $categories_tree[i].parent !=343}
+		{section name=j loop=$categories_tree max=$categories_tree[i].level-1}
+			&nbsp;&nbsp;&nbsp;
+		{/section}
+		{if $categories_tree[i].level > 1}			
+				<li style="padding-left: {$categories_tree[i].level*5}px;"><img src="/images/point{if $categoryID == $categories_tree[i].categoryID}_v{/if}.gif" width="8px" height="8px">			
+		{else}
+			<li>
+		{/if}
+		{assign var="k" value=$categories_tree[i].level}
+		{* selected node => point category and don't make a link *}
+		{* not selected node => make a link to a category *}
+			<A alt="{$categories_tree[i].name}" title="{$categories_tree[i].name}"  href="/{$categories_tree[i].url_name}" style="{if $categories_tree[i].name eq $cur}font-weight:bold;{/if}">{$categories_tree[i].name}</A>
+		</li>
+  	{/if}
+{/section}
+
+

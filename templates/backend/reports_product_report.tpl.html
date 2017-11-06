@@ -1,0 +1,336 @@
+{* products and categories view *}
+
+<p>
+<table border="0" cellspacing="0" cellpadding="10" width="100%">
+
+<tr>
+	<td width=20% bgcolor=#D2D2FF align=center><b>{$smarty.const.ADMIN_CATEGORY_TITLE}</b></td>
+	<td width=80% bgcolor=#F5F5B2 align=center><b>{$smarty.const.ADMIN_PRODUCT_TITLE}</b></td>
+</tr>
+
+{* categories *}
+<tr>
+<td valign=top bgcolor=#E2E2FF>
+
+	<table width=100%>
+
+		<tr>
+			<td>
+				&nbsp;&nbsp;
+				{if $category.categoryID == 1}
+					<b>{$smarty.const.ADMIN_CATEGORY_ROOT}</b>
+				{else}
+					<a href="admin.php?dpt=reports&sub=product_report&categoryID=1">{$smarty.const.ADMIN_CATEGORY_ROOT}</a>
+				{/if}
+					<!-- ({$products_in_root_category}) -->
+			</td>
+			<td align=right>
+				&nbsp;
+			</td>
+		</tr>
+
+		{section name=i loop=$categories}
+		<tr>
+		  <td>
+			<table cellspacing="0" cellpadding="0">
+			<tr>
+				<td>
+
+				{section name=j loop=$categories[i].level max=$categories[i].level}
+					&nbsp;&nbsp;&nbsp;
+				{/section}
+				</td>
+
+				<td>
+				{if !$categories[i].ExpandedCategory}
+					{if $categories[i].ExistSubCategories}
+						<a href='{$urlToCategoryTreeExpand}&expandCat={$categories[i].categoryID}'>
+							<img src="./images/plus.gif" border=0>
+						</a>
+					{else}
+						<img src="./images/white_rectangle.gif" border=0>
+					{/if}
+				{else}
+					{if $categories[i].ExistSubCategories}
+						<a href='{$urlToCategoryTreeExpand}&shrinkCat={$categories[i].categoryID}'>
+							<img src="./images/minus.gif" border=0>
+						</a>
+					{else}
+						<img src="./images/white_rectangle.gif" border=0>
+					{/if}
+				{/if}
+
+				</td>
+
+				<td>
+					&nbsp;
+				</td>
+
+				<td>
+
+					{if $category.categoryID == $categories[i].categoryID}
+					
+					<b>{$categories[i].name}</b>
+					
+					{else}
+						<a {if $categories[i].level ne 0} 
+								class=standard
+					   {/if} href="admin.php?dpt=reports&sub=product_report&categoryID={$categories[i].categoryID}&expandCat={$categories[i].categoryID}">{$categories[i].name}</a>
+					{/if}
+
+				{if !$categories[i].ExpandedCategory}
+					({$categories[i].products_count_admin})
+				{else}
+					({$categories[i].products_count_category})
+				{/if}
+
+				</td>
+				</tr></table>
+			</td>
+
+		</tr>
+		{/section}
+
+	</table>
+
+</td>
+
+
+{* products *}
+<td valign=top bgcolor=#FFFFE2 align=center>
+
+
+		<form action='{$urlToSubmit}' method=POST name="form">
+
+		{if $product_report}
+
+		{if $category.name ne ""}
+		<br>
+		<b>{$category.name}:</b>
+		{/if}
+
+		<br>
+		<br>
+
+		<table border="0" cellspacing=0 cellpadding=3 width=100%>
+
+			{if $navigator}
+			<tr>
+				<td colspan=7>
+					{$navigator}
+				</td>				
+			</tr>
+			{/if}
+				
+			<tr bgcolor=#DAD5A3 align="right">
+
+				<td align="left">
+					<table>
+						<tr>
+							<td rowspan=2>
+								{$smarty.const.ADMIN_PRODUCT_NAME}
+							</td>
+							<td>
+								<a href='{$urlToSort}&sort=name&sort_dir=ASC'>
+									<img SRC="./images/backend/arrow_up.gif" border=0>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a href='{$urlToSort}&sort=name&sort_dir=DESC'>
+									<img SRC="./images/backend/arrow_down.gif" border=0>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+			
+				<td>
+					<table>
+						<tr>
+							<td rowspan=2>
+								{$smarty.const.ADMIN_PRODUCT_RATING}
+							</td>
+							<td>
+								<a href='{$urlToSort}&sort=customers_rating&sort_dir=ASC'>
+									<img SRC="./images/backend/arrow_up.gif" border=0>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a href='{$urlToSort}&sort=customers_rating&sort_dir=DESC'>
+									<img SRC="./images/backend/arrow_down.gif" border=0>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+
+				<td>
+					<table>
+						<tr>
+							<td rowspan=2>
+								{$smarty.const.ADMIN_PRODUCT_VOTES}
+							</td>
+							<td>
+								<a href='{$urlToSort}&sort=customer_votes&sort_dir=ASC'>
+									<img SRC="./images/backend/arrow_up.gif" border=0>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a href='{$urlToSort}&sort=customer_votes&sort_dir=DESC'>
+									<img SRC="./images/backend/arrow_down.gif" border=0>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+
+				<td>
+					<table>
+						<tr>
+							<td rowspan=2>
+								{$smarty.const.ADMIN_PRODUCT_SOLD}
+							</td>
+							<td>
+								<a href='{$urlToSort}&sort=items_sold&sort_dir=ASC'>
+									<img SRC="./images/backend/arrow_up.gif" border=0>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a href='{$urlToSort}&sort=items_sold&sort_dir=DESC'>
+									<img SRC="./images/backend/arrow_down.gif" border=0>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+
+				<td>
+					<table>
+						<tr>
+							<td rowspan=2>
+								{$smarty.const.ADMIN_VIEW_COUNT}
+							</td>
+							<td>
+								<a href='{$urlToSort}&sort=viewed_times&sort_dir=ASC'>
+									<img SRC="./images/backend/arrow_up.gif" border=0>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a href='{$urlToSort}&sort=viewed_times&sort_dir=DESC'>
+									<img SRC="./images/backend/arrow_down.gif" border=0>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+
+				<td>
+					<table>
+						<tr>
+							<td rowspan=2>
+								{$smarty.const.IN_STOCK}
+							</td>
+							<td>
+								<a href='{$urlToSort}&sort=in_stock&sort_dir=ASC'>
+									<img SRC="./images/backend/arrow_up.gif" border=0>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a href='{$urlToSort}&sort=in_stock&sort_dir=DESC'>
+									<img SRC="./images/backend/arrow_down.gif" border=0>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+
+				<td>
+					<table>
+						<tr>
+							<td rowspan=2>
+								{$smarty.const.ADMIN_SORT_ORDER}
+							</td>
+							<td>
+								<a href='{$urlToSort}&sort=sort_order&sort_dir=ASC'>
+									<img SRC="./images/backend/arrow_up.gif" border=0>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a href='{$urlToSort}&sort=sort_order&sort_dir=DESC'>
+									<img SRC="./images/backend/arrow_down.gif" border=0>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+
+			</tr>
+				
+			{section name=i loop=$product_report}
+			<tr bgcolor="#{cycle values="FFFFE2,F5F5C5"}" align="center">
+				<td align="left">
+					{$product_report[i].name}
+				</td>
+
+				<td align=right>
+					{$product_report[i].customers_rating}
+				</td>
+
+				<td align=right>
+					{$product_report[i].customer_votes}
+				</td>
+
+				<td align=right>
+					{$product_report[i].items_sold}
+				</td>
+
+				<td align=right>
+					{$product_report[i].viewed_times}
+				</td>
+				<td align=right>
+					{$product_report[i].in_stock}
+				</td>
+				<td align=right>
+					{$product_report[i].sort_order}
+				</td>
+
+			</tr>
+
+			{/section}
+
+		</table>
+
+		{else}
+
+		<br>
+
+		{if $category.name}
+		<b>{$category.name}:</b><br /><br />
+		{/if}
+
+		{$smarty.const.STRING_EMPTY_CATEGORY}
+
+		{/if}
+
+		</form>
+
+
+</td>
+
+
+</tr>
+</table>

@@ -1,0 +1,586 @@
+{if !$order_detailed}
+
+{* new orders list *}
+
+<p>{$smarty.const.ADMIN_ABOUT_PRICES}
+
+
+<form method="get" action="admin.php" name="MainForm">
+
+	<input class="inlradio" type="radio" name="order_search_type" value="SearchByOrderID"
+		{if $order_search_type == 'SearchByOrderID'}
+			checked="checked"
+		{/if}	onclick="order_search_typeClickHandler()" id="id_order_search_type1" /><label for="id_order_search_type1"> {$smarty.const.ADMIN_ORDER_SEARCH_BY_NUMBER}</label>: 
+		<div style="margin-left:40px;margin-top:3px;margin-bottom:3px;">
+		<input type="text" name="orderID_textbox" value="{$orderID}" />
+		</div>
+	
+	{if $order_statuses}
+	<br />
+	<input class="inlradio" type="radio" name="order_search_type" value="SearchByStatusID"
+		{if $order_search_type == 'SearchByStatusID' || $order_search_type == null}checked="checked"{/if}
+		onclick="order_search_typeClickHandler()" id="id_order_search_type2" /><label for="id_order_search_type2"> {$smarty.const.ADMIN_SHOW_ORDER_IN_STATUS}</label>:
+
+		{section name=i loop=$order_statuses}
+		<div style="margin-left:40px;margin-top:3px;margin-bottom:3px;">
+		<input class="checknomarging" type="checkbox" name="checkbox_order_status_{$order_statuses[i].statusID}" id="id_checkbox_order_status_{$order_statuses[i].statusID}"
+		{if $order_statuses[i].selected == 1} checked{else}{if $order_statuses[i].statusID == $smarty.const.CONF_NEW_ORDER_STATUS} checked{/if}{/if} value="1" /><label for="id_checkbox_order_status_{$order_statuses[i].statusID}"> {$order_statuses[i].status_name}</label>
+		</div>
+		{/section}
+		<br />
+	{/if}
+	<input type="submit" value="{$smarty.const.ADMIN_SHOW}" name="search" />
+
+	<script language="JavaScript" type="text/javascript">
+	function order_search_typeClickHandler()
+	{literal}{{/literal}
+		
+		if ( document.MainForm.order_search_type[0].checked )
+		{literal}{{/literal}
+			{section name=i loop=$order_statuses}
+				document.MainForm.checkbox_order_status_{$order_statuses[i].statusID}.disabled = true;
+			{/section}
+			document.MainForm.orderID_textbox.disabled = false;
+		{literal}}{/literal}
+		else if ( document.MainForm.order_search_type[1].checked )
+		{literal}{{/literal}
+			{section name=i loop=$order_statuses}
+				document.MainForm.checkbox_order_status_{$order_statuses[i].statusID}.disabled = false;
+			{/section}
+			document.MainForm.orderID_textbox.disabled = true;						
+		{literal}}{/literal}
+	{literal}}{/literal}
+
+	order_search_typeClickHandler();
+	</script>
+	
+	<p>
+	{if $orders}
+
+	{if $offset}
+		<input type='hidden' name='offset' value='{$offset}'>
+	{/if}
+
+	{if $show_all}
+		<input type='hidden' name='show_all' value='{$show_all}'>
+	{/if}
+	
+	<table style="width:100%;" border="0" cellspacing="0" cellpadding="5">
+
+		{if $navigator}
+		<tr>
+			<td style="width:100%" colspan="7">{$navigator}</td>
+		</tr>
+		{/if}
+
+		<tr class="mainmenu_selected_{$current_dpt}">
+
+			<td>
+				<table>
+					<tr>
+						<td rowspan=2 class="light">
+							{$smarty.const.STRING_ORDER_ID}
+						</td>
+						<td>
+							<a href='{$urlToSort}&sort=orderID&direction=ASC'>
+								<img SRC="./images/backend/arrow_up.gif" border=0>
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href='{$urlToSort}&sort=orderID&direction=DESC'>
+								<img SRC="./images/backend/arrow_down.gif" border=0>
+							</a>
+						</td>
+					</tr>
+				</table>
+			</td>
+
+			<td>
+				<table>
+					<tr>
+						<td rowspan=2 class="light">
+							{$smarty.const.TABLE_ORDER_TIME}
+						</td>
+						<td>
+							<a href='{$urlToSort}&sort=order_time&direction=ASC'>
+								<img SRC="./images/backend/arrow_up.gif" border=0>
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href='{$urlToSort}&sort=order_time&direction=DESC'>
+								<img SRC="./images/backend/arrow_down.gif" border=0>
+							</a>
+						</td>
+					</tr>
+				</table>
+			</td>
+
+			<td>
+				<table>
+					<tr>
+						<td rowspan=2 class="light">
+							{$smarty.const.TABLE_CUSTOMER}
+						</td>
+						<td>
+							<a href='{$urlToSort}&sort=billing_firstname&direction=ASC'>
+								<img SRC="./images/backend/arrow_up.gif" border=0>
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href='{$urlToSort}&sort=billing_firstname&direction=DESC'>
+								<img SRC="./images/backend/arrow_down.gif" border=0>
+							</a>
+						</td>
+					</tr>
+				</table>
+			</td>
+
+			<td>
+				<table>
+					<tr>
+						<td rowspan=2 class="light">
+							{$smarty.const.STRING_PAYMENT_TYPE}
+						</td>
+						<td>
+							<a href='{$urlToSort}&sort=payment_type&direction=ASC'>
+								<img SRC="./images/backend/arrow_up.gif" border=0>
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href='{$urlToSort}&sort=payment_type&direction=DESC'>
+								<img SRC="./images/backend/arrow_down.gif" border=0>
+							</a>
+						</td>
+					</tr>
+				</table>
+			</td>
+
+			<td>
+				<table>
+					<tr>
+						<td rowspan=2 class="light">
+							{$smarty.const.STRING_SHIPPING_TYPE}
+						</td>
+						<td>
+							<a href='{$urlToSort}&sort=shipping_type&direction=ASC'>
+								<img SRC="./images/backend/arrow_up.gif" border=0>
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href='{$urlToSort}&sort=shipping_type&direction=DESC'>
+								<img SRC="./images/backend/arrow_down.gif" border=0>
+							</a>
+						</td>
+					</tr>
+				</table>
+			</td>
+
+			<td align=center>
+				<table>
+					<tr>
+						<td rowspan=2 class="light">
+							{$smarty.const.TABLE_ORDER_TOTAL}
+						</td>
+						<td>
+							<a href='{$urlToSort}&sort=order_amount&direction=ASC'>
+								<img SRC="./images/backend/arrow_up.gif" border=0>
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href='{$urlToSort}&sort=order_amount&direction=DESC'>
+								<img SRC="./images/backend/arrow_down.gif" border=0>
+							</a>
+						</td>
+					</tr>
+				</table>
+			</td>
+
+			<td>
+				{$smarty.const.ADMIN_ORDER_STATUS_NAME}
+			</td>
+		</tr>
+
+		{section name=i loop=$orders}
+		<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}" align="center">
+			<td>
+				<a href='admin.php?dpt=custord&sub=new_orders&orders_detailed=yes&orderID={$orders[i].orderID}&urlToReturn={$urlToReturn}'>
+					{$orders[i].orderID}
+				</a>
+			</td>
+			<td>
+				{$orders[i].order_time}
+			</td>
+			<td>
+				{$orders[i].billing_firstname}
+				<br>
+				{$orders[i].billing_lastname}
+				<br>
+				{if $orders[i].customerID}
+					( <a href='admin.php?dpt=custord&sub=custlist&customer_details=contact_info&customerID={$orders[i].customerID}'>
+						{$smarty.const.ADMIN_ABOUT_CUSTOMER}
+					  </a> )
+				{/if}
+			</td>
+			<td>{$orders[i].payment_type}</td>
+			<td>{$orders[i].shipping_type}{if $orders[i].shippingServiceInfo} ({$orders[i].shippingServiceInfo}){/if}</td>
+			<td>{$orders[i].order_amount}</td>
+			<td>
+				<b>{$orders[i].OrderStatus}</b>
+			</td>
+		</tr>
+		{/section}
+
+
+	</table>
+	<input type=hidden name=dpt value=custord>
+	<input type=hidden name=sub value=new_orders>
+ </form>
+
+{else}
+
+ {if $order_search_type != null}
+	<p>{$smarty.const.STRING_ORDERS_ARE_NOT_SEARCHED}
+ {/if}
+
+	<input type=hidden name=dpt value=custord>
+	<input type=hidden name=sub value=new_orders>
+ </form>
+
+{/if}
+
+
+{else}
+
+	<form name='MainForm' method=POST>
+
+	{if $urlToReturn}
+		<a href='{$urlToReturn}'>&lt;&lt; {$smarty.const.ADMIN_ORDER_LIST_GO_BACK}</a>
+	{/if}
+
+	<p>
+	<h1>{$smarty.const.STRING_ORDER} #{$order.orderID}</h1>
+
+	<p>
+			<input type=button value="{$smarty.const.STRING_INVOICE_OPEN}" onClick="open_window('invoice.php?orderID={$order.orderID}',700,500);">
+	<table border="0" cellspacing="1" cellpadding="10">
+
+		<tr>
+			<td>
+				<h3><u>{$smarty.const.STRING_ORDER}</u></h3>
+			</td>
+			<td>
+				<h3><u>{$smarty.const.STRING_PAYMENT_TYPE}</u></h3>
+			</td>
+			<td>
+				<h3><u>{$smarty.const.STRING_SHIPPING_TYPE}</u></h3>
+			</td>
+		</tr>
+
+		<tr valign="top">
+			<td>
+				<table>
+					<tr>
+						<td>{$smarty.const.ADMIN_ORDER_NUMBER}: <b>{$order.orderID}</b></td>
+					</tr>
+					<tr>
+						<td>{$smarty.const.TABLE_ORDER_TIME}: <b>{$order.order_time}</b></td>
+					</tr>
+					<tr>
+						<td>{$smarty.const.TABLE_CUSTOMER}: <b>{$order.customer_firstname|replace:"<":"&lt;"} {$order.customer_lastname|replace:"<":"&lt;"}</b></td>
+					</tr>
+					<tr>
+						<td>{$smarty.const.CUSTOMER_EMAIL} {if $smarty.const.CONF_BACKEND_SAFEMODE eq 0}<a href="mailto:{$order.customer_email|replace:"<":"&lt;"}">{$order.customer_email|replace:"<":"&lt;"}</a>{else}<b>{$smarty.const.ADMIN_SAFEMODE_BLOCKED}</b>{/if}</td>
+					</tr>
+
+					{section name=i loop=$order.reg_fields_values}
+					<tr>
+						<td>
+							{$order.reg_fields_values[i].reg_field_name}: <b>{$order.reg_fields_values[i].reg_field_value|replace:"<":"&lt;"}</b>
+						</td>
+					</tr>
+					{/section}
+
+					<tr>
+						<td>{$smarty.const.ADMIN_IP_ADDRESS}: <b>{$order.customer_ip}</b></td>
+					</tr>
+					<tr>
+						<td>{$smarty.const.STRING_ORDER_STATUS}: <b>{$order.status_name}</b></td>
+					</tr>
+
+					{if $order.customers_comment}
+					<tr>
+						<td>{$smarty.const.TABLE_ORDER_COMMENTS}: <b>{$order.customers_comment|replace:"<":"&lt;"}</b></td>
+					</tr>
+					{/if}
+
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<td>{$smarty.const.STRING_PAYMENT_TYPE}: <b>{$order.payment_type}</b></td>
+					</tr>
+					<tr>
+						<td>{$smarty.const.ADMIN_PAYER}: <b>{$order.billing_firstname|replace:"<":"&lt;"} {$order.billing_lastname|replace:"<":"&lt;"}</b></td>
+					</tr>
+					<tr>
+						<td>{$smarty.const.STRING_BILLING_ADDRESS}:<br>
+							<b>{if $order.billing_address ne ""}{$order.billing_address|replace:"<":"&lt;"}<br>{/if}
+							{if $order.billing_city ne ""}{$order.billing_city|replace:"<":"&lt;"}{/if}
+							{if $order.billing_state ne ""}{$order.billing_state|replace:"<":"&lt;"}{/if}
+							{if $order.billing_zip ne ""}{$order.billing_zip|replace:"<":"&lt;"}<br>{/if}{if $order.billing_country ne ""}{$order.billing_country|replace:"<":"&lt;"}{/if}</b>
+						</td>
+					</tr>
+					{if $order.cc_number || $order.cc_holdername || $order.cc_expires || $order.cc_expires}
+						
+						<tr>
+							<td>{$smarty.const.ADMIN_CC_INFO}</td>
+						</tr>
+
+						{if $https_connection_flag}
+
+							<tr>
+								<td>{$smarty.const.ADMIN_CC_NUMBER}: <b>{$order.cc_number|replace:"<":"&lt;"}</b></td>
+							</tr>
+							<tr>
+								<td>{$smarty.const.ADMIN_CC_HOLDER_NAME}: <b>{$order.cc_holdername|replace:"<":"&lt;"}</b></td>
+							</tr>
+							<tr>
+								<td>{$smarty.const.ADMIN_CC_EXPIRES}: <b>{$order.cc_expires|replace:"<":"&lt;"}</b></td>
+							</tr>
+							<tr>
+								<td>{$smarty.const.ADMIN_CC_CVV}: <b>{$order.cc_cvv|replace:"<":"&lt;"}</b></td>
+							</tr>
+
+						{else}
+
+							<tr>
+								<td>{$smarty.const.ADMIN_INFO_CAN_BE_SHOWN_WHEN_HTTPS_IS_USED}</td>
+							</tr>
+
+						{/if}
+					{/if}
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<td>{$smarty.const.STRING_SHIPPING_TYPE}: <b>{$order.shipping_type}</b> {if $order.shippingServiceInfo}({$order.shippingServiceInfo}){/if}</td>
+					</tr>
+					<tr>
+						<td>{$smarty.const.STRING_RECEIVER}: <b>{$order.shipping_firstname|replace:"<":"&lt;"} {$order.shipping_lastname|replace:"<":"&lt;"}</b></td>
+					</tr>
+					<tr>
+						<td>{$smarty.const.STRING_SHIPPING_ADDRESS}:<br>
+							<b>{if $order.shipping_address ne ""}{$order.shipping_address|replace:"<":"&lt;"}<br>{/if}
+							{if $order.shipping_city ne ""}{$order.shipping_city|replace:"<":"&lt;"}{/if}
+							{if $order.shipping_state ne ""}{$order.shipping_state|replace:"<":"&lt;"}{/if}
+							{if $order.shipping_zip ne ""}{$order.shipping_zip|replace:"<":"&lt;"}<br>{/if}{if $order.shipping_country ne ""}{$order.shipping_country|replace:"<":"&lt;"}{/if}</b>
+						</td>
+					</tr>
+				</table>
+			</td>
+		<tr>
+
+		<tr valign="top"> 
+          	<td colspan="3">
+				<h3><u>{$smarty.const.ADMIN_ORDERED_PRODUCTS}</u></h3>
+			</td>
+       </tr>
+
+		{if  $orderContent}
+		<tr>
+			<td colspan="3">
+
+				<table width="100%" border="0" cellpadding="5" cellspacing="0">
+
+					<tr class="mainmenu_selected_{$current_dpt}"> 
+                		<td align="left"><strong>{$smarty.const.ADMIN_PRODUCT_NAME}</strong></td>
+                		<td align="center"><strong>{$smarty.const.TABLE_PRODUCT_QUANTITY}</strong></td>
+                		<td align="center"><strong>{$smarty.const.STRING_TAX}</strong></td>
+                		<td align="right"><strong>{$smarty.const.TABLE_PRODUCT_COST_WITHOUT_TAX}</strong></td>
+              		</tr>
+
+					{section name=i loop=$orderContent}
+					<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}"> 
+                		<td>{$orderContent[i].name}</td>
+                		<td align="center">{$orderContent[i].Quantity}</td>
+                		<td align="center">
+							{if $orderContent[i].tax != null}
+								{$orderContent[i].tax} %
+							{/if}
+						</td>
+                		<td align="right">{$orderContent[i].PriceToShow}</td>
+              		</tr>
+					{/section}
+				</table>
+
+			</td>
+		</tr>
+		{else}
+		<tr>
+			<td colspan=3>
+				&lt; {$smarty.const.ADMIN_NO_RECORD_FOUND} &gt;
+			</td>
+		</tr>
+		{/if}
+
+		<tr>
+
+			<td colspan="3">
+
+			<table width="100%" border="0">
+
+				<tr>
+					<td width="80%" align="right">{$smarty.const.STRING_PRED_TOTAL}:</td>
+					<td width="20%" align="right">{$order.clear_total_priceToShow}</td>
+				</tr>
+				<tr>
+					<td width="80%" align="right">{$smarty.const.ADMIN_DISCOUNT}:</td>
+					<td width="20%" align="right">{$order.order_discount}</td>
+				</tr>
+				<tr>
+					<td width="80%" align="right">{$smarty.const.ADMIN_SHIPPING_COST}:</td>
+					<td width="20%" align="right">{$order.shipping_costToShow}</td>
+				</tr>
+				<tr>
+					<td width="80%" align="right" class="big"><b>{$smarty.const.TABLE_TOTAL}</b></td>
+					<td width="20%" align="right" class="big"><b>{$order.order_amountToShow}</b></td>
+				</tr>
+			</table>
+
+			</td>
+			
+		</tr>
+
+
+		{if $order_status_report}
+		<tr>
+			<td colspan="3">
+				<h3><u>{$smarty.const.ADMIN_ORDER_EXECUTING}</u></h3>
+			</td>
+		</tr>
+
+		<tr>
+			<td colspan="3">
+	
+				<table width="100%" border="0" cellpadding="5" cellspacing="0">
+
+					<tr class="mainmenu_selected_{$current_dpt}">
+						<td>
+							<b>{$smarty.const.ADMIN_TIME}</b>
+						</td>
+						<td>
+							<b>{$smarty.const.STRING_ADMIN_COMMENT}</b>
+						</td>
+						<td>
+							<b>{$smarty.const.ADMIN_ORDER_STATUS_NAME}</b>
+						</td>
+					</tr>
+
+					{section name=i loop=$order_status_report}
+					<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}">
+						<td align="center">
+							{$order_status_report[i].status_change_time}
+						</td>
+						<td align="center">
+							{$order_status_report[i].status_comment}
+						</td>
+						<td align="center">
+							{if  $order_status_report[i].status_name != 'STRING_CANCELED_ORDER_STATUS'}
+								{$order_status_report[i].status_name}
+							{else}
+								{$smarty.const.STRING_CANCELED_ORDER_STATUS}
+							{/if}
+						</td>
+					</tr>
+					{/section}
+
+				</table>
+
+			</td>
+		</tr>
+		{/if}
+
+		<tr>
+			<td colspan="3">
+				
+				<table>
+					<tr>
+						<td>
+						<b>{$smarty.const.ADMIN_CHANGE_STATUS}</b>:
+		
+						<select name='status'>
+		
+							<option value='-1'>{$smarty.const.ADMIN_PROMPT_TO_SELECT}</option>
+		
+							{section name=i loop=$order_statuses}
+								<option value='{$order_statuses[i].statusID}'>
+									{$order_statuses[i].status_name}
+								</option>					
+							{/section}
+		
+						</select>
+						&nbsp;
+						<input type=hidden name='orders_detailed' value='yes'>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<br />
+							<input name="notify_customer" value="1" type="checkbox" class="checknomarging" id="id_notify_customer" /><label for="id_notify_customer"> &nbsp;{$smarty.const.ADMIN_STRING_NOTIFY_CUSTOMER}</label>
+							<div>
+							<br />
+							{$smarty.const.STRING_ADMIN_COMMENT}:
+							<br />
+							&nbsp; <textarea name="status_comment" rows="7" cols="40" /></textarea>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input name="set_status" value="{$smarty.const.ADMIN_CHANGE_STATUS}" type="hidden" />
+							<input type="button" value='{$smarty.const.ADMIN_CHANGE_STATUS}'
+								onclick="if(document.MainForm.elements['status'][0].selected)return false;
+									document.MainForm.submit();
+									return false;" />
+						</td>
+					</tr>
+				</table>
+				
+			</td>
+		</tr>
+
+
+		{if $order.statusID == $cancledOrderStatus}
+		<tr>
+			<td colspan="3">
+
+				<input 
+						type=button 
+						name='delete_order' 
+						value='{$smarty.const.DELETE_BUTTON}'
+						onclick="JavaScript:confirmDelete( '{$order.orderID}', '{$smarty.const.QUESTION_DELETE_CONFIRMATION}', 'admin.php?dpt=custord&sub=new_orders&orders_detailed=yes&urlToReturn={$encodedUrlToReturn}&delete=yes&orderID=');"
+					>
+
+			</td>
+		</tr>
+		{/if}
+
+	</table>
+
+	</form>
+	
+{/if}

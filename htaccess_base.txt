@@ -1,0 +1,56 @@
+#Order deny,allow
+#deny from all
+# Список IP через пробел, с которых доступ разрешен
+#Allow from 95.158.48.206
+#Allow from 109.108.74.194
+
+RewriteEngine on
+
+RewriteBase /
+
+
+RewriteRule ^([A-Za-z0-9_]+)-([0-9]+).html/?$ index.php?$1=$2
+RewriteRule ^([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([0-9]+).html/?$ index.php?$1=$2&$3=$4
+RewriteRule ^([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/?$ index.php?$1=$2&$3=$4
+RewriteRule ^([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/?$ index.php?$1=$2&$3=$4&$5=$6
+RewriteRule ^([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/?$ index.php?$1=$2&$3=$4&$5=$6&$7=$8
+RewriteRule ^([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/?$ index.php?$1=$2&$3=$4&$5=$6&$7=$8&$9=$10
+RewriteRule ^([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/?$ index.php?$1=$2&$3=$4&$5=$6&$7=$8&$9=$10&$11=$12
+RewriteRule ^([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/?$ index.php?$1=$2&$3=$4&$5=$6&$7=$8&$9=$10&$11=$12&$13=$14
+RewriteRule ^([A-Za-z0-9_]+)-([A-Za-z0-9_]+)-([A-Za-z0-9_]+)-([A-Za-z0-9_]+).html/?$ index.php?$1=$2&$3=$4
+RewriteRule ^([A-Za-z0-9_]+)-([A-Za-z0-9_]+).html/?$ index.php?$1=$2
+RewriteRule ^([A-Za-z0-9_]+)-([A-Za-z0-9_]+)-([A-Za-z0-9_]+).html/?$ index.php?$1=$2&$3
+
+RewriteCond %{http_host} ^www.tatonka.in.ua$
+RewriteRule ^(.*)$ http://tatonka.in.ua/$1 [R=301]
+ErrorDocument 404 http://tatonka.in.ua/index.php?error=404
+
+RewriteRule     ^sale_bu\.php$        bu-snarjagenie [R=permanent]
+RewriteRule     ^bu-snarjagenie1$        bu-snarjagenie [R=permanent]
+
+RewriteRule     ^prokat-region\.php$  prokat-regions [R=permanent]
+RewriteRule     ^conditions\.php$     prokat-rules [R=permanent]
+RewriteRule     ^sale_palatka\.php$   palatki [R=permanent]
+RewriteRule     ^sale_ruksak\.php$    bu-snarjagenie [R=permanent]
+RewriteRule     ^sale\.php$           bu-snarjagenie [R=permanent]
+RewriteRule     ^address\.php$    	  address [R=permanent]
+RewriteRule     ^knigi\.php$    	  library [R=permanent]
+RewriteRule     ^velomarsh\.php$      bicycle-routes [R=permanent]
+RewriteRule     ^razmer-craft\.php$   podbor-razmera-craft [R=permanent]
+RewriteRule     ^gornolyzhnye-perchatki-kiev-lyzhnye-perchatki-dlja-lyzh-i-snouborda$   odezhda-perchatki [R=permanent]
+RewriteRule     ^links\.php$   change-links [R=permanent]
+RewriteRule ^clothes$ termobelie [R=permanent]
+RewriteRule ^zaschita-gornolizhnaya$ zawita-dlja-katanija-kupit-kiev [R=permanent]
+RewriteRule ^termobele-tramp$ termobelie [R=permanent]
+RewriteRule ^craft-basic-2-pack-women$ termobelie [R=permanent]
+RewriteRule ^craft-basic-2-pack-women-black$ termobelie [R=permanent]
+RewriteRule ^craft-basic-2-pack-men-cblocking$ termobelie[R=permanent]
+RewriteRule ^craft-basic-2-pack-women-cblocking$ termobelie[R=permanent]
+RewriteRule 	^rjukzak-sportivnyj-travel-extreme-x-race-28-litrov$ rukzak-travel-extreme-x-race-28 [R=permanent]
+
+
+
+
+
+
+

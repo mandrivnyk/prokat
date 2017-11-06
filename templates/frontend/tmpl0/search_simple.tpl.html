@@ -1,0 +1,96 @@
+{* simple search *}
+
+	{literal}
+	<script language='JavaScript'>
+
+	function _formatPrice( _price )
+	{	
+				
+		_pointIndex = -1;	
+		for( i=0; i< _price.length; i++ )
+			if ( _price.charAt(i) == '.' )
+			{
+				_pointIndex = i;
+				break;
+			}
+
+		if (  _pointIndex == -1 )
+			_price = _price + ".00";
+		else if (  _price.length-1 - _pointIndex == 1  )
+			_price = _price + "0";
+
+		_res = "";
+
+		i=0;
+		for( i=_price.length-1; i >= 0; i-- )
+		{
+			if ( _price.charAt(i) == '.' )
+				break;
+			else
+				_res = _price.charAt(i) + _res;
+		}
+
+		_res = "." + _res;
+
+		i--;
+		_digitCounter = 0;
+		for( ; i>=0; i-- )
+		{
+			_digitCounter ++;
+			_res = _price.charAt(i) + _res;
+			if ( _digitCounter == 3 && i != 0 )
+			{
+				_res = "," + _res;
+				_digitCounter = 0;
+			}
+					
+		}
+
+		return _res;						
+				
+	}
+	
+	</script>
+	{/literal}
+
+
+{if $products_to_show_count > 0}
+
+	<center>
+		<p>{$smarty.const.STRING_FOUND} <b>{$products_found}</b> {$smarty.const.STRING_PRODUCTS}
+	</center>
+	<p>
+	{* show found positions *}
+
+	<center>{$string_product_sort}</center>
+	<br>
+	<center>{include file="comparison_products_buttonup.tpl.html"}</center>
+	<center>{$search_navigator}</center>
+
+	<p>
+	<table cellpadding=6 border=0 width=95%>
+		{section name=i1 loop=$products_to_show max=$products_to_show_count}
+			{if $smarty.section.i1.index is div by $smarty.const.CONF_COLUMNS_PER_PAGE}<tr>{/if}
+				<td valign=top width="{math equation="100 / x" x=$smarty.const.CONF_COLUMNS_PER_PAGE format="%d"}%">
+					{include file="product_brief.tpl.html" product_info=$products_to_show[i1]}
+				</td>
+			{if ($smarty.section.i1.index+1) is div by $smarty.const.CONF_COLUMNS_PER_PAGE}</tr>{/if}
+		{/section}
+	</table>
+	<p>
+
+	<center>{include file="comparison_products_buttondown.tpl.html"}</center>
+	<center>{$search_navigator}</center>
+
+{else}
+
+	<center>
+		<p>{$smarty.const.STRING_NO_MATCHES_FOUND}
+
+		<p>
+			<a href="index.php?search_with_change_category_ability=yes">
+              {$smarty.const.ADVANCED_SEARCH_LINK}
+              </a>
+	</center>
+
+{/if}

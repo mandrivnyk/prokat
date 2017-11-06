@@ -1,0 +1,73 @@
+{* customer survey *}
+
+<Table width=100%>
+ <Tr>
+  <Td>
+
+{if $show_survey_results eq 1}
+
+	<p>
+	<table cellspacing=1 cellpadding=1 width=100% border=0>
+	 <tr>
+	 <td colspan=3><b>{$survey_question}</b></td></tr>
+		{section name=i loop=$survey_answers}
+
+			<tr>
+			 <td width=80%><font class="olive">{$survey_answers[i]}</font></td>
+			 <td width=20% align=center>
+			  <font class="olive">{if $voters_count ne 0}{math equation="round(100 * $survey_results[i] / $voters_count)"}{else}0{/if}%</font>
+
+			 </td>
+			</tr>
+
+		{/section}
+
+	</table>
+
+
+{else}	{* show survey form *}
+
+
+	<form action="index.php" method=GET>
+	 <center>
+	 <table cellspacing=1 cellpadding=3 width=100%>
+	   <tr>
+	   <td colspan=2><b>&nbsp;&nbsp;{$survey_question}</b></td>
+	   </tr>
+	   <tr>
+	   <td>
+		{section name=i loop=$survey_answers}
+			<table cellspacing=0 cellpadding=0>
+			<tr>
+			  <td><input type=radio name=answer value={$smarty.section.i.index}></td>
+			  <td><font class="olive">{$survey_answers[i]}</font></td>
+			</tr>
+			</table>
+		{/section}
+	   </td>
+	   </tr>
+	 </table>
+
+	<p><center><input type=submit value="{$smarty.const.OK_BUTTON}">
+
+		{if $productID ne NULL} <input type=hidden name=productID value="{$productID}"> {/if}
+		{if $categoryID ne NULL} <input type=hidden name=categoryID value="{$categoryID}"> {/if}
+		{if $currency ne NULL} <input type=hidden name=currency value="{$currency}"> {/if}
+		{if $user_details ne NULL} <input type=hidden name=user_details value="{$user_details}"> {/if}
+		{if $aux_page ne NULL} <input type=hidden name=aux_page value="{$aux_page}"> {/if}
+		{if $show_price ne NULL} <input type=hidden name=show_price value="{$show_price}"> {/if}
+		{if $register ne NULL} <input type=hidden name=register value="{$register}"> {/if}
+		{if $adv_search ne NULL} <input type=hidden name=adv_search value="{$adv_search|replace:'"':'&quot;'}"> {/if}
+		{if $searchstring ne NULL} <input type=hidden name=searchstring value="{$searchstring|replace:'"':'&quot;'}"> {/if}
+		{if $order ne NULL} <input type=hidden name=order value="{$order}"> {/if}
+		{if $check_order ne NULL} <input type=hidden name=check_order value="{$check_order}"> {/if}
+		<input type=hidden name=save_voting_results value="yes">
+
+	 </center>
+	</form>
+
+{/if}
+
+  </Td>
+ </Tr>
+</Table>

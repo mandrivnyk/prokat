@@ -1,0 +1,98 @@
+<head>
+
+<link rel=STYLESHEET href="style0.css" type="text/css">
+
+<meta http-equiv="Content-Type" content="text/html; charset={$smarty.const.DEFAULT_CHARSET}">
+<title>{$page_title|default:$smarty.const.CONF_DEFAULT_TITLE}</title>
+
+{$page_meta_tags}
+
+<script language="javascript">
+<!--
+{literal}
+
+	function open_window(link,w,h) //opens new window
+	{
+		var win = "width="+w+",height="+h+",menubar=no,location=no,resizable=yes,scrollbars=yes";
+		newWin = window.open(link,'newWin',win);
+		newWin.focus();
+	}
+
+	function open_printable_version(link) //opens new window
+	{
+		var win = "menubar=no,location=no,resizable=yes,scrollbars=yes";
+		newWin = window.open(link,'perintableWin',win);
+		newWin.focus();
+	}
+
+	function confirmDelete(id, ask, url) //confirm order delete
+	{
+		temp = window.confirm(ask);
+		if (temp) //delete
+		{
+			window.location=url+id;
+		}
+	}
+
+	
+
+	function confirmUnsubscribe() //unsubscription confirmation
+	{
+		temp = window.confirm('{/literal}{$smarty.const.QUESTION_UNSUBSCRIBE}{literal}');
+		if (temp) //delete
+		{
+			window.location="index.php?killuser=yes";
+		}
+	}
+
+	function validate() // newsletter subscription form validation
+	{
+		if (document.subscription_form.email.value.length<1)
+		{
+			alert("{/literal}{$smarty.const.ERROR_INPUT_EMAIL}{literal}");
+			return false;
+		}
+		if (document.subscription_form.email.value == 'Email')
+		{
+			alert("{/literal}{$smarty.const.ERROR_INPUT_EMAIL}{literal}");
+			return false;
+		}
+		return true;
+	}
+	function validate_disc() // review form verification
+	{
+		if (document.formD.nick.value.length<1)
+		{
+			alert("{/literal}{$smarty.const.ERROR_INPUT_NICKNAME}{literal}");
+			return false;
+		}
+
+		if (document.formD.topic.value.length<1)
+		{
+			alert("{/literal}{$smarty.const.ERROR_INPUT_MESSAGE_SUBJECT}{literal}");
+			return false;
+		}
+
+		return true;
+	}
+	function validate_search()
+	{
+
+		if (document.Sform.price1.value!="" && ((document.Sform.price1.value < 0) || isNaN(document.Sform.price1.value)))
+		{
+			alert("{/literal}{$smarty.const.ERROR_INPUT_PRICE}{literal}");
+			return false;
+		}
+		if (document.Sform.price2.value!="" && ((document.Sform.price2.value < 0) || isNaN(document.Sform.price2.value)))
+		{
+			alert("{/literal}{$smarty.const.ERROR_INPUT_PRICE}{literal}");
+			return false;
+		}
+
+		return true;
+	}
+{/literal}
+-->
+</script>
+
+</head>

@@ -1,0 +1,187 @@
+{* customer's account *}
+
+
+<h1>{$smarty.const.STRING_ACCOUNT_LINK}</h1>
+
+<TABLE BGCOLOR="#{$smarty.const.CONF_DARK_COLOR}" CELLSPACING="1" CELLPADDING="0" WIDTH=70%><TR><TD><table border="0" cellspacing="1" cellpadding="20" width="100%" bgcolor="white">
+	<tr valign="top"> 
+		<td width="50%" class="myAccount_bottomright" valign="top"> 
+
+				<h3>
+					<u>{$smarty.const.STRING_CONTACT_INFORMATION_DOWN_CASE}:</u>
+				</h3>
+
+				<table>
+					<tr>
+						<td>
+							{$smarty.const.CUSTOMER_FIRST_NAME}
+						</td>
+						<td>
+							<b>{$first_name}</b>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							{$smarty.const.CUSTOMER_LAST_NAME}
+						</td>
+						<td>
+							<b>{$last_name}</b>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							{$smarty.const.CUSTOMER_EMAIL}
+						</td>
+						<td>
+							<b>{$Email}</b>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							{$smarty.const.CUSTOMER_LOGIN}
+						</td>
+						<td>
+							<b>{$login}</b>
+						</td>
+					</tr>
+
+					{section name=i loop=$additional_field_values}
+					<tr>
+						<td>
+							{$additional_field_values[i].reg_field_name}:
+						</td>
+						<td>
+							<b>{$additional_field_values[i].reg_field_value}</b>
+						</td>
+					</tr>
+					{/section}
+
+					{if $custgroup_name}
+
+						{if $discount}
+						<tr>
+							<td>
+								{$smarty.const.STRING_DISCOUNT}
+							</td>
+							<td>
+								{$discount}%
+							</td>
+						</tr>
+						{/if}
+
+						{if $min_discount}
+						<tr>
+							<td>
+								{$smarty.const.STRING_MIN_DISCOUNT}
+							</td>
+							<td>
+								{$min_discount}%
+							</td>
+						</tr>
+						{/if}
+
+					{/if}
+
+				</table>
+
+				<p><a href="index.php?contact_info=yes">
+					{$smarty.const.STRING_UPDATE_CONTACT_INFO}
+				</a>
+
+		</td>
+
+		<td width="50%" class="myAccount_bottom">
+			<h3><u>{$smarty.const.STRING_ADDRESS_BOOK}:</u></h3>
+			{if $addressStr}
+			<p>{$smarty.const.STRING_DEFAULT_ADDRESS}:<br>
+				<b>
+					{$addressStr}
+				</b>
+			</p>
+			{/if}
+			<p><a href="index.php?address_book=yes">{$smarty.const.STRING_UPDATE_ADDRESSES}</a></p>
+			</td>
+		</td>
+	</tr>
+
+
+	<tr valign="top"> 
+		<td width="50%" class="myAccount_bottomright">
+			<h3><u>{$smarty.const.STRING_ORDER_HISTORY}:</u></h3>
+			<p>
+			<table>
+				{section name=i loop=$status_distribution}
+				{if $status_distribution[i].count != 0}
+				<tr>
+					<td>
+							{assign var="there_are_orders" value="1"}
+
+							{$status_distribution[i].count} 
+							{$smarty.const.STRING_COUNT_ORDER_IN_STATUS} 
+							<b>'{$status_distribution[i].status_name}'</b>
+						
+					</td>
+				</tr>
+				{/if}
+				{/section}
+
+				{if !$there_are_orders}
+					<tr><td>{$smarty.const.STRING_NO_ORDERS}</td></tr>
+				</table></p>
+				{else}
+
+			</table></p>
+
+			<p>
+			<a href="index.php?order_history=yes">
+				{$smarty.const.STRING_ORDER_SHOW}
+			</a>
+			</p>
+				{/if}
+
+		</td>
+
+		<td width="50%" class="myAccount_bottom">
+			<h3><u>{$smarty.const.STRING_VISIT_LOG}:</u></h3>
+			<p>{$visits_count} {$smarty.const.STRING_RECORDS}</p>
+			<p>
+				<a href="index.php?visit_history=yes">
+					{$smarty.const.STRING_VISIT_HISTORY_SHOWING}
+				</a>
+			</p>
+		</td>
+  </tr>
+
+  {if $CONF_AFFILIATE_PROGRAM_ENABLED}
+	<tr valign="top"> 
+		<td width="100%" colspan="2">
+			<h3><u>{$smarty.const.STRING_AFFILIATE_PROGRAM}:</u></h3>
+
+			<p>
+			{if $affiliate_customers}
+				{$smarty.const.STRING_AFFILIATE_CUSTOMERS}: <b>{$affiliate_customers}</b>
+			{else}
+			{$smarty.const.STRING_AFFILIATE_NO_CUSTOMERS}
+			{/if}
+			<p>
+				<a href="?affiliate=yes&sub=balance">{$smarty.const.AFFP_USER_BALANCE}</a>
+			</p>
+			<p>
+				<a href="?affiliate=yes&sub=payments_history">{$smarty.const.AFFP_PAYMENTS_HISTORY}</a>
+			</p>
+			<p>
+				<a href="?affiliate=yes&sub=attract_guide">{$smarty.const.AFFP_ATTRACT_GUIDE}</a>
+			</p>
+			{if $CONF_AFFILIATE_EMAIL_NEW_COMMISSION or $CONF_AFFILIATE_EMAIL_NEW_PAYMENT}
+				<p>
+					<a href="?affiliate=yes&sub=settings">{$smarty.const.STRING_MODULE_SETTING}</a>
+				</p>
+				{/if}
+			</p>
+		</td>
+  </tr>
+  {/if}{* if $CONF_AFFILIATE_PROGRAM_ENABLED *}
+
+</table>
+</TD></TR></TABLE>
+<p>&nbsp;

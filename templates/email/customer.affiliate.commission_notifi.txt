@@ -1,0 +1,7 @@
+{* order notification for customer *}
+{$smarty.const.EMAIL_HELLO}, {$customer_firstname}
+
+{$_AFFP_MAIL_NEW_COMMISSION}
+
+{$smarty.const.EMAIL_SINCERELY}, {$smarty.const.CONF_SHOP_NAME}
+{$smarty.const.CONF_SHOP_URL}

@@ -1,0 +1,455 @@
+{* taxes managment *}
+
+<form name='MainForm' method=post action="{$urlToSubmit}">
+
+	{if $define_zone_rates}
+
+	<a href='admin.php?dpt=conf&sub=taxes'>
+		&lt;&lt;{$smarty.const.ADMIN_BACK_TO_TAX_CLASS_LIST}
+	</a>
+	<br>
+
+	<h1>{$smarty.const.ADMIN_DEFINE_COUNTRY_RATE}: {$className}</h1>
+
+	{if $error_percent == 1}
+		<font color=red>
+			<b>{$smarty.const.ERROR_RATE_PERCENT_RANGE}</b>
+		</font>
+		<br>
+		<br>
+	{/if}
+
+	<table cellspacing=0 cellpadding=5 border=0>
+
+		<tr class="mainmenu_selected_{$current_dpt}"> 
+			<td align=middle colspan=4>
+				<b>{$smarty.const.ADMIN_SET_ZONE_RATE}</b>
+			</td>
+		</tr>
+
+		<tr style="background-color: #C0BFCF">
+			<td align="left" class="bg_{$current_dpt}">
+				<span class="big" style="color: black"><b>{$country_name}</b></span>
+			</td>
+			<td align="left">
+				{$smarty.const.ADMIN_ZONE_NAME}
+			</td>
+			<td align="left">
+				{$smarty.const.ADMIN_RATE}
+			</td>
+			<td>&nbsp;</td>
+		</tr>
+
+		{section name=i loop=$zone_rates}
+		<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}" valign="top">
+
+			{if $smarty.section.i.index == 0}
+			<td rowspan='{$rowspan}' class="bg_{$current_dpt}">
+
+				<br>
+
+				<p>
+				<a href='admin.php?dpt=conf&sub=taxes&define_rate={$define_zone_rates}'>
+					&lt;&lt;{$smarty.const.ADMIN_BACK_TO_TAX_COUNTRY_LIST}
+				</a>
+				</p>
+			</td>
+			{/if}
+
+			<td>
+				{if $zone_rates[i].zoneID != 0}
+					{$zone_rates[i].zone_name}				
+				{else}
+
+					{if $zone_count == 0 && $zone_rate_count - 1 == 0}
+						{$smarty.const.ADMIN_ALL_ZONES}
+					{/if}
+
+					{if $zone_count == 0 && $zone_rate_count - 1 != 0}
+						{$smarty.const.ADMIN_ALL_REST_ZONES}
+					{/if}
+
+					{if $zone_count != 0 && $zone_rate_count - 1 != 0}
+						{$smarty.const.ADMIN_REST_ZONES}
+					{/if}
+
+					{if $zone_count != 0 && $zone_rate_count - 1 == 0}
+						{$smarty.const.ADMIN_ALL_REST_ZONES}
+					{/if}
+
+				{/if}
+			</td>
+			<td>
+				<input type=text value='{$zone_rates[i].value}' 
+							name='zone_rate_{$zone_rates[i].zoneID}'>%
+			</td>
+			<td>
+				<a href="javascript:confirmDelete({$zone_rates[i].zoneID},'{$smarty.const.QUESTION_DELETE_CONFIRMATION}','admin.php?dpt=conf&sub=taxes&define_zone_rates={$zone_rates[i].classID}&countryID={$zone_rates[i].countryID}&kill_zone_rate=');">
+					<img src="images/backend/button_delete.gif" border=0 alt="{$smarty.const.DELETE_BUTTON}">
+				</a>				
+			</td>
+		</tr>
+		{/section}
+
+		{if $zone_count != 0}
+		<tr style="background-color: #C0BFCF"> 
+			<td align=middle colspan=4>
+				<b>{$smarty.const.ADD_BUTTON}</b>
+			</td>
+		</tr>
+
+		<tr class="bg_white">
+			{if $zone_rate_count == 0}
+			<td rowspan='{$rowspan}'>
+				{$country_name}
+				<br>
+				<p>
+				<a href='admin.php?dpt=conf&sub=taxes&define_rate={$define_zone_rates}'>					
+					&lt;&lt;{$smarty.const.ADMIN_BACK_TO_TAX_COUNTRY_LIST}					
+				</a>
+				</p>
+			</td>
+			{/if}
+			<td>
+				<select name='new_zone'>
+					<option value='-1'>{$smarty.const.ADMIN_PROMPT_TO_SELECT}</option>
+					{if $zone_rate_count == 0}
+						<option value='0'>{$smarty.const.ADMIN_ALL_ZONES}</option>
+					{/if}
+					{if $zone_rate_count != 0 && $group_exists != 1}
+						<option value='0'>{$smarty.const.ADMIN_ALL_REST_ZONES}</option>
+					{/if}
+					{section name=i loop=$zones}
+						<option value='{$zones[i].zoneID}'>
+							{$zones[i].zone_name}
+						</option>
+					{/section}
+				</select>
+			</td>
+			<td>
+				{$smarty.const.ADMIN_RATE}:<input type=text name='new_rate' value=''>%
+			</td>
+			<td>&nbsp;</td>
+		</tr>
+		{/if}
+
+		<tr bgcolor="white">
+			<td colspan=3>
+				<input type=submit name='save_zone_rates' value='{$smarty.const.SAVE_BUTTON}'>
+				<br><br><br><br>
+			</td>
+		</tr>
+
+		<tr class="mainmenu_selected_{$current_dpt}">
+			<td colspan=3 align=center>
+				<b>{$smarty.const.ADMIN_SET_ZIP_RATE}</b>
+			</td>
+		</tr>
+
+		<tr bgcolor=white>
+			<td colspan=3>
+				{$smarty.const.STRING_ZIP_RATE_PROMPT}
+				<p>{$smarty.const.STRING_ZIP_RATE_PROMPT2}
+			</td>
+		</tr>
+
+		<tr style="background-color: #C0BFCF">
+			<td>
+				{$smarty.const.STRING_ZIP}
+			</td>
+			<td>
+				{$smarty.const.ADMIN_DEFINE_RATE}
+			</td>
+			<td>
+				&nbsp;
+			</td>
+		</tr>
+
+		{section name=i loop=$zip_rates}
+		<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}">
+			<td>
+				<input type=text name='zip_template_{$zip_rates[i].tax_zipID}' 
+						value='{$zip_rates[i].zip_template}'>
+			</td>
+			<td>
+				<input type=text name='zip_rate_{$zip_rates[i].tax_zipID}' 
+						value='{$zip_rates[i].value}'>%
+			</td>
+			<td>
+				<a href="javascript:confirmDelete({$zip_rates[i].tax_zipID},'{$smarty.const.QUESTION_DELETE_CONFIRMATION}','admin.php?dpt=conf&sub=taxes&define_zone_rates={$zip_rates[i].classID}&countryID={$zip_rates[i].countryID}&kill_zip_rate=');">
+					<img src="images/backend/button_delete.gif" border=0 alt="{$smarty.const.DELETE_BUTTON}">
+				</a>				
+			</td>
+		</tr>
+		{/section}
+
+		<tr style="background-color: #C0BFCF">
+			<td colspan=3 align=center>
+				<b>{$smarty.const.ADD_BUTTON}</b>
+			</td>
+		</tr>
+
+		<tr class="bg_white">
+			<td>
+				<input type=text name='new_zip_template' value=''>
+			</td>
+			<td>
+				<input type=text name='new_zip_rate' value=''>%
+			</td>
+			<td>
+				&nbsp;
+			</td>
+		</tr>
+
+		<tr bgcolor=white>
+			<td colspan=3>
+				<input type=submit name='save_zip_rates' value='{$smarty.const.SAVE_BUTTON}'>
+			</td>
+		</tr>
+
+	</table>
+
+	{/if}
+
+
+
+	{if $define_rate}
+
+	<a href='admin.php?dpt=conf&sub=taxes'>
+		&lt;&lt;{$smarty.const.ADMIN_BACK_TO_TAX_CLASS_LIST}
+	</a>
+	<br>
+	<h1>{$smarty.const.ADMIN_DEFINE_COUNTRY_RATE}: {$class_name}</h1>
+
+	{if $error_percent == 1}
+		<font color=red>
+			<b>{$smarty.const.ERROR_RATE_PERCENT_RANGE}</b>
+		</font>
+		<br>
+		<br>
+	{/if}
+
+	<table cellspacing=0 cellpadding=5 border=0>
+
+		<tr class="mainmenu_selected_{$current_dpt}"> 
+			<td align=middle colspan=4>
+				<b>{$smarty.const.ADMIN_SET_COUNTRY_RATE}</b>
+			</td>
+		</tr>
+
+		<tr style="background-color: #C0BFCF"> 
+			<td>{$smarty.const.ADMIN_COUNTRY_NAME}</td>
+			<td>{$smarty.const.ADMIN_DEFINE_RATE}</td>
+			<td>
+				&nbsp;
+			</td>
+		</tr>
+
+		{section name=i loop=$rates}
+		<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}">
+			<td align=left>
+				{if $rates[i].countryID != 0}
+					{$rates[i].country}
+				{else}
+					{if $country_count == 0 && $rate_count - 1 == 0}
+						{$smarty.const.ADMIN_ALL_COUNTRIES}
+					{/if}
+
+					{if $country_count == 0 && $rate_count - 1 != 0}
+						{$smarty.const.ADMIN_ALL_REST_COUNTRIES}
+					{/if}
+
+					{if $country_count != 0 && $rate_count - 1 != 0}
+						{$smarty.const.ADMIN_ALL_REST_COUNTRIES}
+					{/if}
+
+					{if $country_count != 0 && $rate_count - 1 == 0}
+						{$smarty.const.ADMIN_ALL_REST_COUNTRIES}
+					{/if}
+				{/if}
+			</td>
+			<td align=left>
+				{if $rates[i].countryID != 0}
+				<table>
+
+					<tr>
+						<td>
+							{if $count_zones[i] != 0}
+								<input type=radio name='isByZone_{$rates[i].countryID}' id=''
+								{if $rates[i].isByZone == '0'}
+									checked
+								{/if}
+									value='0'
+								>
+							{/if}
+							{$smarty.const.ADMIN_OVERALL_RATE}
+							&nbsp;
+							<input type=text value='{$rates[i].value}' name='rate_{$rates[i].countryID}'>%
+						</td>
+					<tr>
+
+					{if $count_zones[i] != 0}
+					</tr>
+						<td>
+							<input type=radio name='isByZone_{$rates[i].countryID}' id=''
+							{if $rates[i].isByZone == '1'}
+								checked
+							{/if}
+								value='1'
+							>
+							{$admin_is_depended_on_zone[i]}
+							<br>
+							<a href='admin.php?dpt=conf&sub=taxes&define_zone_rates={$rates[i].classID}&countryID={$rates[i].countryID}'>
+								{$smarty.const.ADMIN_SET_RATE_BY_ZONE}...
+							</a>
+						</td>
+					</tr>
+					{/if}
+
+				</table>
+				{else}
+					{$smarty.const.ADMIN_OVERALL_RATE}
+						<input type=text value='{$rates[i].value}' 
+							name='rate_{$rates[i].countryID}'>%
+				{/if}
+			</td>
+			<td align=center>
+				<a href="javascript:confirmDelete({$rates[i].countryID},'{$smarty.const.QUESTION_DELETE_CONFIRMATION}','admin.php?dpt=conf&sub=taxes&define_rate={$rates[i].classID}&kill_rate=');">
+					<img src="images/backend/button_delete.gif" border=0 alt="{$smarty.const.DELETE_BUTTON}">
+				</a>
+			</td>
+		</tr>
+		{/section}
+
+
+		{if $country_count != 0}
+		<tr style="background-color: #C0BFCF"> 
+			<td align=middle colspan=4>
+				<b>{$smarty.const.ADD_BUTTON}</b>
+			</td>
+		</tr>
+
+		<tr class="bg_white">
+			<td>
+				<select name='new_country'>
+					<option value='-1'>{$smarty.const.ADMIN_PROMPT_TO_SELECT}</option>
+				{if $rate_count == 0}
+					<option value='0'>{$smarty.const.ADMIN_ALL_COUNTRIES}</option>
+				{/if}
+				{if $rate_count != 0 && $group_exists != 1}
+					<option value='0'>{$smarty.const.ADMIN_ALL_REST_COUNTRIES}</option>
+				{/if}
+
+				{section name=i loop=$countries}
+					<option value='{$countries[i].countryID}'>
+						{$countries[i].country_name}
+					</option>
+				{/section}
+				</select>
+			</td>
+			<td>
+				{$smarty.const.ADMIN_RATE}:<input type=text name='new_rate' value=''>%
+			</td>
+			<td>&nbsp;</td>
+		</tr>
+		{/if}
+
+	</table>
+
+
+	{/if}
+
+	{if !$define_zone_rates && !$define_rate}
+
+	<table cellspacing=0 cellpadding=5 border=0>
+
+		<tr class="mainmenu_selected_{$current_dpt}"> 
+			<td align=middle colspan=4>
+				<b>{$smarty.const.ADMIN_TAX_CLASSES}</b>
+			</td>
+		</tr>
+
+		<tr style="background-color: #C0BFCF"> 
+			<td>{$smarty.const.ADMIN_CLASS_NAME}</td>
+			<td>{$smarty.const.ADMIN_TAX_BASED_ON_ADDRESS}</td>
+			<td>{$smarty.const.ADMIN_DEFINE_RATE}</td>
+			<td>
+				&nbsp;
+			</td>
+		</tr>
+
+		{section name=i loop=$classes}
+		<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}"> 
+			<td valign="top"> 
+				<input	name='class_name_{$classes[i].classID}' 
+					type=text
+					value="{$classes[i].name}"> 
+			</td>
+			<td>
+				<select name='tax_based_on_address_{$classes[i].classID}'>
+					<option value='0'
+					{if $classes[i].address_type == 0}
+						selected
+					{/if}
+					> 
+						{$smarty.const.ADMIN_ORDER_DELIVERY_ADDRESS}
+					</option>
+					<option value='1'
+					{if $classes[i].address_type == 1}
+						selected
+					{/if}
+					> 
+						{$smarty.const.ADMIN_SCORE_DELIVERY_ADDRESS}
+					</option>
+				</select>
+			</td>
+			<td valign="top">
+				<a href="admin.php?dpt=conf&sub=taxes&define_rate={$classes[i].classID}">
+					{$smarty.const.ADMIN_DEFINE_COUNTRY_RATE}
+				</a>
+			</td>
+			<td valign="top">
+				<a 
+					href="JavaScript:confirmDelete({$classes[i].classID},'{$smarty.const.QUESTION_DELETE_CONFIRMATION}', 'admin.php?dpt=conf&sub=taxes&kill_class=');">
+						<img alt='{$samrty.const.DELETE_BUTTON}'
+						     src="images/backend/button_delete.gif" border=0>
+				</a>
+			</td>
+		</tr>
+		{/section}
+
+		<tr style="background-color: #C0BFCF"> 
+			<td align=middle colspan=4>
+				<b>{$smarty.const.ADD_BUTTON}:</b>
+			</td>
+		</tr>
+
+		<tr class="bg_white"> 
+			<td>
+				<input name='new_class_name' 
+					type=text 
+					value=''>
+			</td>
+			<td>
+				<select name="new_tax_based_on_address" >
+					<option value='0'> 
+						{$smarty.const.ADMIN_ORDER_DELIVERY_ADDRESS}
+					</option>
+					<option value='1'> 
+						{$smarty.const.ADMIN_SCORE_DELIVERY_ADDRESS}
+					</option>
+				</select>
+			</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+	</table>
+
+	{/if}
+
+	{if !$define_zone_rates}
+		<br>
+		<input type=submit name='save' value='{$smarty.const.SAVE_BUTTON}'>
+	{/if}
+
+</form>

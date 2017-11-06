@@ -1,0 +1,64 @@
+{* simple search form *}
+
+<table cellspacing="0" cellpadding="0" border="0">
+
+	<form action="index.php" method=get>
+
+
+	{section name=i loop=$searchstrings}
+		<input type=hidden name='search_string_{$smarty.section.i.index}' 
+			value="{$searchstrings[i]}">		
+	{/section}
+
+
+	<tr>
+
+		<td rowspan="3">&nbsp;&nbsp;</td>
+
+		<td colspan="2">
+
+		<table>
+		<tr><td><font class="light"><B>{$smarty.const.STRING_SEARCH}</B></font></td>
+		<td><img src="images/arrow_navy.gif" border="0"></td>
+		</tr>
+		</table>
+
+		</td>
+	</tr>
+
+	<tr>
+		<td>
+			<input type="text" name="searchstring" size="20" class="login"
+				value="{$searchstring|default:""}">
+		</td>
+		<td>
+			<nobr>&nbsp;<input type="image" border=0 src="images/search_button.gif">&nbsp;&nbsp;&nbsp;</nobr>
+		</td>
+	</tr>
+
+		<!--
+		{if $old_search_query ne ""}
+			<input type=hidden name="oldproducts" value="{$old_search_query}">
+		{/if}
+		-->
+
+	<tr>
+		<td colspan=3>
+
+			<table cellspacing="0" cellpadding="0" border="0">
+			<tr>
+			<td><input type="checkbox" name="inside" 
+				{if $search_in_results}checked{/if}></td>
+			<td><font class="lightsmall">
+						{$smarty.const.STRING_SEARCH_IN_RESULTS}
+					</font></td>
+			</tr>
+			</table>
+
+		</td>
+	</tr>
+
+	</form>
+
+</table>
+

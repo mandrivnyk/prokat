@@ -1,0 +1,509 @@
+{* order history *}
+
+<p><a class="faq" href="index.php?user_details=yes">{$smarty.const.MY_ACCOUNT_LINK}</a>
+
+<p><TABLE BGCOLOR="#{$smarty.const.CONF_DARK_COLOR}" CELLSPACING="1" CELLPADDING="0" WIDTH=100%><TR><TD><table width=100% border=0 cellspacing="0" cellpadding="7">
+	<tr>
+		<td bgcolor="#{$smarty.const.CONF_LIGHT_COLOR}" class="myaccount_tab_bottom" width="25%">
+			<a href='index.php?contact_info=yes'>
+				{$smarty.const.STRING_CONTACT_INFORMATION_DOWN_CASE}
+			</a>
+		</td>
+		<td rowspan="{if $smarty.const.CONF_AFFILIATE_PROGRAM_ENABLED}5{else}4{/if}" width="75%" bgcolor="white">
+
+
+
+
+		{if !$order_detailed}
+
+		{if $user_orders}
+		<p>
+			<center>{$orders_navigator}</center>
+		<p>
+
+		<table width=100%>
+		<tr>
+		<td>
+
+
+
+		<table border=0 cellspacing=1 cellpadding=4 
+			bgcolor=#{$smarty.const.CONF_DARK_COLOR} width=100%>
+
+
+			<tr bgcolor=#{$smarty.const.CONF_MIDDLE_COLOR} align=center>
+				<td>
+					<table>
+						<tr>
+							<td rowspan=2>
+								<b>{$smarty.const.STRING_ORDER_ID}</b>
+							</td>
+							<td>
+								<a href='{$urlToSort}&sort=orderID&direction=ASC'>
+									<img SRC="./images/arrow_up.gif" border=0>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a href='{$urlToSort}&sort=orderID&direction=DESC'>
+									<img SRC="./images/arrow_down.gif" border=0>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<table>
+						<tr>
+							<td rowspan=2>
+								<b>{$smarty.const.TABLE_ORDER_TIME}</b>
+							</td>
+							<td>
+								<a href='{$urlToSort}&sort=order_time&direction=ASC'>
+									<img SRC="./images/arrow_up.gif" border=0>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a href='{$urlToSort}&sort=order_time&direction=DESC'>
+									<img SRC="./images/arrow_down.gif" border=0>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<b>{$smarty.const.STRING_ORDER_STATUS}</b>
+				</td>
+				<td width=100%>
+					<b>{$smarty.const.TABLE_ORDERED_PRODUCTS}</b>
+				</td>
+				<td>
+					<b>{$smarty.const.STRING_PAYMENT_TYPE}</b>
+				</td>
+				<td>
+					<b>{$smarty.const.STRING_SHIPPING_TYPE}</b>
+				</td>
+				<td>
+					<table>
+						<tr>
+							<td rowspan=2>
+								<b>{$smarty.const.TABLE_ORDER_TOTAL}, {$currency_name}</b>
+							</td>
+							<td>
+								<a href='{$urlToSort}&sort=order_amount&direction=ASC'>
+									<img SRC="./images/arrow_up.gif" border=0>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a href='{$urlToSort}&sort=order_amount&direction=DESC'>
+									<img SRC="./images/arrow_down.gif" border=0>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+
+			{section name=i loop=$user_orders}
+			<tr bgcolor=#{$smarty.const.CONF_LIGHT_COLOR}>
+				<td>
+					<a href='index.php?order_detailed={$user_orders[i].orderID}&urlToReturn={$urlToReturn}'>
+						{$user_orders[i].orderID}
+					</a>
+				</td>
+				<td><nobr>{$user_orders[i].order_time}</nobr></td>
+				<td>{$user_orders[i].OrderStatus}</td>
+				<td>
+						<table>
+							{section name=j loop=$user_orders[i].content}
+							<tr>
+								<td>
+
+									{$user_orders[i].content[j].name}<br>
+
+									{if $user_orders[i].content[j].eproduct_filename}
+
+										{if $completed_order_status}
+
+											{if $completed_order_status == $user_orders[i].statusID}
+
+												<a href='get_file.php?getFileParam={$user_orders[i].content[j].getFileParam}'>
+													{$smarty.const.ADMIN_DOWN_LOAD} {$user_orders[i].content[j].file_size} b
+												</a>
+	
+												{if $user_orders[i].content[j].day_count_remainder > 0}
+													- {$smarty.const.ADMIN_EPRODUCT_AVAILABLE_DAYS} 
+														{$user_orders[i].content[j].day_count_remainder}
+													{$smarty.const.ADMIN_DAYS}
+													{if $user_orders[i].content[j].load_counter_remainder != 0}
+															,
+															{$smarty.const.ADMIN_REMANDER_EPRODUCT_DOWNLOAD_TIMES} 
+																{$user_orders[i].content[j].load_counter_remainder}
+															{$smarty.const.ADMIN_DOWNLOAD_TIMES}
+													{/if}
+												{/if}
+											{/if}
+
+										{/if}
+
+									{/if}
+								</td>
+							</tr>
+							{/section}
+						</table>
+				</td>
+				<td>{$user_orders[i].payment_type}</td>
+				<td>{$user_orders[i].shipping_type} <nobr>({$user_orders[i].shipping_cost|string_format:"%.2f"})</nobr></td>
+				<td align=center>{$user_orders[i].order_amount}
+				{if $user_orders[i].calculate_tax ne 0 && $user_orders[i].tax ne 0}
+					<br><nobr>
+					({$smarty.const.STRING_TAX} {$user_orders[i].tax}%)
+					</nobr>
+				{/if}
+				</td>
+			</tr>
+			{/section}
+
+
+		</table>
+
+		</td>
+		<td>&nbsp;</td>
+		</tr>
+		</table>
+
+
+		{else}
+			<p><center>{$smarty.const.STRING_NO_ORDERS}</center>
+		{/if}
+
+
+
+		{else}
+
+
+
+
+			<form name='MainForm' method=POST>
+
+			<a href='{$urlToReturn}'>&lt;&lt; {$smarty.const.ADMIN_ORDER_LIST_GO_BACK}</a>
+
+			<h3>{$smarty.const.STRING_ORDER} #{$order.orderID}</h3>
+
+			<p>
+			<input type=button value="{$smarty.const.STRING_INVOICE_OPEN}" onClick="open_window('invoice.php?orderID={$order.orderID}',700,500);">
+
+			<table border="0" cellspacing="1" cellpadding="10">
+
+				<tr>
+					<td>
+						<strong>
+							<font size="+1">
+								<u>{$smarty.const.STRING_ORDER}</u>
+							</font>
+						</strong>
+					</td>
+					<td>
+						<strong>
+							<font size="+1">
+								<u>{$smarty.const.STRING_PAYMENT_TYPE}</u>
+							</font>
+						</strong>
+					</td>
+					<td>
+						<strong>
+							<font size="+1">
+								<u>{$smarty.const.STRING_SHIPPING_TYPE}</u>
+							</font>
+						</strong>
+					</td>
+				</tr>
+
+				<tr valign="top">
+					<td>
+						<table>
+							<tr>
+								<td>{$smarty.const.ADMIN_ORDER_NUMBER}: <b>{$order.orderID}</b></td>
+							</tr>
+							<tr>
+								<td>{$smarty.const.TABLE_ORDER_TIME}: <b>{$order.order_time}</b></td>
+							</tr>
+							<tr>
+								<td>{$smarty.const.TABLE_CUSTOMER}: <b>{$order.customer_firstname} {$order.customer_lastname}</b></td>
+							</tr>
+							<tr>
+								<td>{$smarty.const.CUSTOMER_EMAIL} <b>{$order.customer_email}</b></td>
+							</tr>
+							<tr>
+								<td>{$smarty.const.ADMIN_IP_ADDRESS}: <b>{$order.customer_ip}</b></td>
+							</tr>
+							<tr>
+								<td>{$smarty.const.STRING_ORDER_STATUS}: <b>{$order.status_name}</b></td>
+							</tr>
+
+							{if $order.customers_comment ne ""}
+							<tr>
+								<td>{$smarty.const.TABLE_ORDER_COMMENTS}: <b>{$order.customers_comment|replace:"<":"&lt;"|replace:">":"&gt;"|replace:'"':'&quot;'}</b></td>
+							</tr>
+							{/if}
+
+						</table>
+					</td>
+					<td>
+						<table>
+							<tr>
+								<td>{$smarty.const.STRING_PAYMENT_TYPE}: <b>{$order.payment_type}</b></td>
+							</tr>
+							<tr>
+								<td>{$smarty.const.ADMIN_PAYER}: <b>{$order.billing_firstname} {$order.billing_lastname}</b></td>
+							</tr>
+							<tr>
+								<td>{$smarty.const.STRING_BILLING_ADDRESS}: 
+									<b>
+									{if $smarty.const.CONF_ADDRESSFORM_STATE != 2}
+									<br />{$order.billing_address} 
+									{/if}
+									{if $smarty.const.CONF_ADDRESSFORM_CITY != 2 || $smarty.const.CONF_ADDRESSFORM_ADDRESS != 2 || $smarty.const.CONF_ADDRESSFORM_ZIP != 2}<br />{/if}
+									{if $smarty.const.CONF_ADDRESSFORM_CITY != 2}
+									{$order.billing_city}
+									{/if}
+									{if $smarty.const.CONF_ADDRESSFORM_ADDRESS != 2}
+									{$order.billing_state}
+									{/if}
+									{if $smarty.const.CONF_ADDRESSFORM_ZIP != 2}
+									{$order.billing_zip}
+									{/if}
+									<br />{$order.billing_country}
+									</b>
+								</td>
+							</tr>
+
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<td>{$smarty.const.STRING_SHIPPING_TYPE}: <b>{$order.shipping_type}</b> {if $order.shippingServiceInfo}({$order.shippingServiceInfo}){/if}</td>
+					</tr>
+					<tr>
+						<td>{$smarty.const.STRING_RECEIVER}: <b>{$order.shipping_firstname} {$order.shipping_lastname}</b></td>
+					</tr>
+					<tr>
+						<td>{$smarty.const.STRING_SHIPPING_ADDRESS}: 
+							<b>
+							{if $smarty.const.CONF_ADDRESSFORM_STATE != 2}
+							<br />{$order.shipping_address}
+							{/if}
+							{if $smarty.const.CONF_ADDRESSFORM_CITY != 2 || $smarty.const.CONF_ADDRESSFORM_ADDRESS != 2 || $smarty.const.CONF_ADDRESSFORM_ZIP != 2}<br />{/if}
+							{if $smarty.const.CONF_ADDRESSFORM_CITY != 2}
+							{$order.shipping_city}
+							{/if}
+							{if $smarty.const.CONF_ADDRESSFORM_ADDRESS != 2}
+							{$order.shipping_state}
+							{/if}
+							{if $smarty.const.CONF_ADDRESSFORM_ZIP != 2}
+							{$order.shipping_zip} 
+							{/if}
+							<br />{$order.shipping_country}
+							</b>
+						</td>
+					</tr>
+				</table>
+			</td>
+		<tr>
+
+		<tr valign="top"> 
+          	<td colspan="3">
+				<strong>
+					<font size="+1"><u>{$smarty.const.ADMIN_ORDERED_PRODUCTS}</u></font>
+				</strong>
+			</td>
+       </tr>
+
+		<tr>
+			<td colspan="3">
+
+				<table width="100%" border="0" cellpadding="5" cellspacing="1" 
+					bgcolor=#{$smarty.const.CONF_DARK_COLOR}>
+
+					<tr bgcolor=#{$smarty.const.CONF_MIDDLE_COLOR}> 
+                		<td><strong>{$smarty.const.ADMIN_PRODUCT_NAME}</strong></td>
+                		<td align="center"><strong>{$smarty.const.TABLE_PRODUCT_QUANTITY}</strong></td>
+                		<td align="center"><strong>{$smarty.const.STRING_TAX}</strong></td>
+                		<td align="right"><strong>{$smarty.const.TABLE_PRODUCT_COST_WITHOUT_TAX}</strong></td>
+              		</tr>
+
+					{section name=i loop=$orderContent}
+					<tr bgcolor=#{$smarty.const.CONF_LIGHT_COLOR}> 
+                		<td>
+							{$orderContent[i].name}
+
+							{if $orderContent[i].eproduct_filename}
+								{if $completed_order_status}
+									{if $completed_order_status == $order.statusID}
+
+										<a href='get_file.php?getFileParam={$orderContent[i].getFileParam}'>
+											{$smarty.const.ADMIN_DOWN_LOAD} {$orderContent[i].file_size} b
+										</a>
+	
+										{if $orderContent[i].day_count_remainder > 0}
+											- {$smarty.const.ADMIN_EPRODUCT_AVAILABLE_DAYS} 
+												{$orderContent[i].day_count_remainder}
+											{$smarty.const.ADMIN_DAYS}
+											{if $orderContent[i].load_counter_remainder != 0}
+												,
+												{$smarty.const.ADMIN_REMANDER_EPRODUCT_DOWNLOAD_TIMES} 
+													{$orderContent[i].load_counter_remainder}
+												{$smarty.const.ADMIN_DOWNLOAD_TIMES}
+											{/if}
+										{/if}
+									{/if}
+								{/if}
+							{/if}
+
+						</td>
+                		<td align="center">{$orderContent[i].Quantity}</td>
+                		<td align="center">{$orderContent[i].tax} %</td>
+                		<td align="right">{$orderContent[i].PriceToShow}</td>
+              		</tr>
+					{/section}
+				</table>
+
+			</td>
+		</tr>
+
+		<tr>
+
+			<td colspan="3">
+
+			<table width="100%" border="0">
+
+				<tr>
+					<td width="80%" align="right">{$smarty.const.STRING_PRED_TOTAL}:</td>
+					<td width="20%" align="right">{$order.clear_total_priceToShow}</td>
+				</tr>
+				<tr>
+					<td width="80%" align="right">{$smarty.const.ADMIN_DISCOUNT}:</td>
+					<td width="20%" align="right">{$order.order_discount}</td>
+				</tr>
+				<tr>
+					<td width="80%" align="right">{$smarty.const.ADMIN_SHIPPING_COST}:</td>
+					<td width="20%" align="right">{$order.shipping_costToShow}</td>
+				</tr>
+				<tr>
+					<td width="80%" align="right"><b>{$smarty.const.TABLE_TOTAL}</b></td>
+					<td width="20%" align="right"><b>{$order.order_amountToShow}</b></td>
+				</tr>
+			</table>
+
+			</td>
+			
+		</tr>
+
+
+		{if $order_status_report}
+		<tr>
+			<td colspan="3">
+				<h3>{$smarty.const.ADMIN_ORDER_EXECUTING}</h3>
+			</td>
+		</tr>
+
+		<tr>
+			<td colspan="3">
+	
+				<table width="100%" border="0" cellpadding="5" cellspacing="1" 
+					bgcolor=#{$smarty.const.CONF_DARK_COLOR}>
+
+					<tr bgcolor=#{$smarty.const.CONF_MIDDLE_COLOR}>
+						<td>
+							<b>{$smarty.const.ADMIN_TIME}</b>
+						</td>
+						<td>
+							<b>{$smarty.const.STRING_ADMIN_COMMENT}</b>
+						</td>
+						<td>
+							<b>{$smarty.const.ADMIN_ORDER_STATUS_NAME}</b>
+						</td>
+					</tr>
+
+					{section name=i loop=$order_status_report}
+					<tr bgcolor=#{$smarty.const.CONF_LIGHT_COLOR}>
+						<td>
+							{$order_status_report[i].status_change_time}
+						</td>
+						<td>
+							{$order_status_report[i].status_comment}
+						</td>
+						<td>
+							{if  $order_status_report[i].status_name != 'STRING_CANCELED_ORDER_STATUS'}
+								{$order_status_report[i].status_name}
+							{else}
+								{$smarty.const.STRING_CANCELED_ORDER_STATUS}
+							{/if}
+						</td>
+					</tr>
+					{/section}
+
+				</table>
+
+			</td>
+		</tr>
+		{/if}
+
+		<tr>
+			<td colspan="3">
+				
+
+				<input type=hidden name='orders_detailed' value='yes'>
+				
+			</td>
+		</tr>
+
+	</table>
+
+	</form>
+
+
+
+		{/if}
+
+
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="#{$smarty.const.CONF_LIGHT_COLOR}" class="myaccount_tab_bottom" width="25%">
+			<a href='index.php?address_book=yes'>
+				{$smarty.const.STRING_ADDRESS_BOOK}
+			</a>
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="white" class="faq" align="center">
+			<b>{$smarty.const.STRING_ORDER_HISTORY}</b>
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="#{$smarty.const.CONF_LIGHT_COLOR}" class="myaccount_tab_top">
+			<a href='index.php?visit_history=yes'>
+				<b>{$smarty.const.STRING_VISIT_HISTORY}</b>
+			</a>
+		</td>
+	</tr>
+	{if $smarty.const.CONF_AFFILIATE_PROGRAM_ENABLED}
+	<tr>
+		<td bgcolor="#{$smarty.const.CONF_LIGHT_COLOR}" class="myaccount_tab_top">
+			
+			<a href='?affiliate=yes&sub=balance'>
+				{$smarty.const.STRING_AFFILIATE_PROGRAM}
+			</a>
+		</td>
+	</tr>
+	{/if}
+</table></TD></TR></TABLE>
+
+<p>&nbsp;

@@ -1,0 +1,18 @@
+{* shopping cart brief info *}
+<table>
+		{if $smarty.const.CONF_SHOW_ADD2CART == '1'}
+		<tr>
+			<td>
+
+ 				{if $shopping_cart_value}
+					<div class="cart" id="shpcrtgc">{$shopping_cart_items} {$smarty.const.CART_CONTENT_NOT_EMPTY}</div>
+					<div class="cart" id="shpcrtca">{$shopping_cart_value_shown|replace:'"':'&quot;'}</div>
+ 				{else}
+					<div class="cart" id="shpcrtgc">{$smarty.const.CART_CONTENT_EMPTY}</div>
+					<div class="cart" id="shpcrtca"><br /></div>
+ 				{/if}
+
+			</td>
+		</tr>
+		{/if}
+</table>

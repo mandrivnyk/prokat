@@ -1,0 +1,161 @@
+{* products extra parameters *}
+
+<p>
+{if $save_successful ne NULL}
+{$save_successful}
+{/if}
+
+<form action="admin.php" method=POST>
+
+
+{if $option_name != null}
+	<a href="admin.php?dpt=catalog&sub=extra">
+		{$smarty.const.ADMIN_GOBACK_TO_OPTION_LIST}
+	</a>
+	<p>
+{/if}
+
+<table border=0 cellpadding=5 cellspacing=0 width="60%">
+
+
+{if $option_name == null}
+
+	<tr class="mainmenu_selected_{$current_dpt}">
+	<td align=center>{$smarty.const.ADMIN_CUSTOM_OPTION_TITLE}</td>
+	<td align=center>{$smarty.const.ADMIN_SORT_ORDER}</td>
+	<td align=center>{$smarty.const.ADMIN_VALUE_VARIANTS}</td>
+	
+	<td></td>
+	</tr>
+	
+	{section name=i loop=$options}
+	
+	 <tr class="{cycle values="bg_white, bg_$current_dpt"}">
+		<td >
+			<input type=text name="extra_option_{$options[i][0]}" value="{$options[i][1]|replace:'"':"&quot;"}" size="70px">
+		</td>
+		<td>
+			<input type=text name="extra_sort_{$options[i][0]}" value="{$options[i][2]}">
+		</td>
+		<td>
+			<a href="admin.php?dpt=catalog&sub=extra&optionID={$options[i][0]}">
+				{$smarty.const.ADMIN_VALUE_VARIANTS}
+			</a>
+			({$options[i].count_variants})
+		</td>
+		<td>
+			<a href="javascript:confirmDelete({$options[i][0]},'{$smarty.const.DELETE_BUTTON}?','admin.php?dpt=catalog&sub=extra&kill_option=');"><img src="images/backend/button_delete.gif" border=0 alt="{$smarty.const.DELETE_BUTTON}">
+			</a>
+		</td>
+	 </tr>
+	
+	{sectionelse}
+	
+	 <tr>
+	 <td colspan=4 align=center><nobr>{$smarty.const.ADMIN_NO_PRODUCT_OPTIONS}</nobr></td>
+	 </tr>
+	
+	{/section}
+	
+	<tr class="mainmenu_selected_{$current_dpt}">
+	<td colspan=4 align=center>{$smarty.const.ADMIN_ADD_NEW_OPTION}</td>
+	</tr>
+	
+	<tr>
+	<td><input type=text name="add_option" value="" size="70px"></td>
+	<td><input type=text name="add_sort" value=""></td>
+	<td></td>
+	<td></td>
+	</tr>
+	
+	<input type=hidden name="save_options" value="yes">
+
+{else}
+
+	<tr class="mainmenu_selected_{$current_dpt}">
+		<td colspan=4 align=center>
+			{$smarty.const.ADMIN_VALUES}
+		</td>
+	</tr>
+	
+	<tr style="background-color: #C0C5CD">
+		<td align=center>
+			{$smarty.const.ADMIN_OPTION}
+		</td>
+		<td align=center>
+			{$smarty.const.ADMIN_ONE_VALUE}
+		</td>
+		<td align=center>
+			{$smarty.const.ADMIN_SORT_ORDER}
+		</td>
+		<td>
+			{$smarty.const.DELETE_BUTTON}
+		</td>
+	</tr>
+	
+	{section name=i loop=$values}
+	
+	<tr class="{cycle values="bg_white, bg_$current_dpt"}">
+		{if $smarty.section.i.index eq 0}
+			<td valign="top" rowspan="{$value_count}">
+				{$option_name}
+			</td>
+		{/if}
+		<td>
+			<input type=text name="option_value_{$values[i].variantID}" value="{$values[i].option_value|replace:'"':"&quot;"}">
+		</td>
+		<td>
+			<input type=text name="sort_order_{$values[i].variantID}" value="{$values[i].sort_order}">
+		</td>
+		<td>
+			<a href="javascript:confirmDelete({$values[i].variantID},'{$smarty.const.QUESTION_DELETE_CONFIRMATION}', 'admin.php?dpt=catalog&amp;sub=extra&amp;optionID={$values[i].optionID}&amp;kill_value=');">
+				<img alt='{$smarty.const.DELETE_BUTTON}' src="images/backend/button_delete.gif" border=0>
+			</a>
+		</td>
+	</tr>
+	
+	{sectionelse}
+	
+	 <tr>
+		<td colspan=4 align=center>
+			<nobr>
+				{$smarty.const.ADMIN_NO_VALUES}
+			</nobr>
+		</td>
+	 </tr>
+	
+	{/section}
+	
+	<tr>
+		<td colspan=4 align=center style="background-color: #C0C5CD">
+			{$smarty.const.ADMIN_ADD_VALUE}
+		</td>
+	</tr>
+	
+	<tr bgcolor=white>
+		<td>
+		</td>
+		<td>
+			<input type=text name="add_value" value="">
+		</td>
+		<td>
+			<input type=text name="add_sort" value="">
+		</td>
+		<td>
+		</td>
+	</tr>
+	
+	<input type=hidden name="save_values" value="yes">
+	<input type=hidden name="optionID" value="{$optionID}">
+{/if}{* if $option_name == null *}
+
+
+</table>
+
+<p>
+<input type=hidden name="dpt" value="catalog">
+<input type=hidden name="sub" value="extra">
+
+<input type=submit value="{$smarty.const.SAVE_BUTTON}">
+
+</form>

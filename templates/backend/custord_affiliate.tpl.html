@@ -1,0 +1,425 @@
+{* Affiliate program settings and info *}
+<script language="javascript" type="text/javascript">
+<!--
+window.reloadURL = '{$REQUEST_URI}';
+//-->
+</script>
+
+<h3>{$smarty.const.STRING_AFFILIATE_PROGRAM}</h3>
+
+<form method="POST" action="{$REQUEST_URI}" name="form_enable_affiliate" style="display:inline">
+<input name="fACTION" value="ENABLE_AFFILIATE" type="hidden" />
+<input name="fREDIRECT" value="{$REQUEST_URI}" type="hidden" />
+<input name="save" value="save" type="hidden" />
+
+<fieldset class="admin_fieldset">
+<legend id="affp_enabled" style="color: black;">
+	{$htmlEnabledSettings}{$smarty.const.STRING_AFFP_ENABLE_PROGRAM}
+</legend>
+</form>
+
+{if $CONF_AFFILIATE_PROGRAM_ENABLED}
+	<form method="POST" action="{$REQUEST_URI}">
+	<input name="fACTION" value="SAVE_SETTINGS" type="hidden" />
+	<input name="fREDIRECT" value="{$REQUEST_URI}" type="hidden" />
+	<h5>{$smarty.const.AFFP_COMMISSIONS_CALCULATE}</h5>
+	{$smarty.const.AFFP_AMOUNT_PERCENT}
+	<br />
+	{if $ErrorPercent}
+	<div class="error_msg_f">{$smarty.const.MSG_ERROR_PERCENT_VALUE}</div>
+	{/if}
+	{$htmlAmountPercent}  %
+	<h5>{$smarty.const.AFFP_USER_SETTINGS_CONTROL}</h5>
+	<p>{$htmlEmailNewCommission} {$smarty.const.AFFR_EMAIL_NEW_COMMISSION_CTRL}
+	<br /><br />
+	{$htmlEmailNewPayment} {$smarty.const.AFFR_EMAIL_NEW_PAYMENT_CTRL}
+	<br />
+	<br />
+	<input name="save" value="{$smarty.const.SAVE_BUTTON}" type="submit" />
+	</form>
+
+<hr />
+<h4>{$smarty.const.AFFP_COMMISSION_PAYMENTS}</h4>
+
+<h5>{$smarty.const.STRING_CALENDAR}</h5>
+<form method="POST" action="{$REQUEST_URI}">
+{if $Error_DateFormat}
+<div class="error_msg_f">{$smarty.const.AFFP_MSG_ERROR_DATE_FORMAT}</div>
+{/if}
+{$smarty.const.STRING_FROM}: <input type="text" name="from" value="{$from}" size="12" /> {$smarty.const.STRING_TILL}: <input name="till" value="{$till}" type="text" size="12" /> <input value="{$smarty.const.VIEW_BUTTON}" type="submit" />
+</form>
+{if !$show_tables}
+{$smarty.const.MSG_PERIOD_ISNT_SPECIFIED}
+{/if}
+{if $show_tables}
+
+{* commissions table *}
+
+{if $CommissionsNumber}
+
+	<h5>{$smarty.const.AFFP_STRING_CUSTOMER_COMMISSIONS} ({$smarty.const.STRING_FROM} {$from} {$smarty.const.STRING_TILL} {$till})</h5>
+	
+	<form action="{$REQUEST_URI}" method="POST" name="form_delete_commission" style="display:none;">
+	<input name="fACTION" value="DELETE_COMMISSION" type="hidden" />
+	<input name="fREDIRECT" value="{$REQUEST_URI}" type="hidden" />
+	<input name="COMMISSION[cID]" value="" type="hidden" />
+	</form>
+	
+	<p><a href="#new_commission_anchor">{$smarty.const.AFFP_SUBMIT_NEW_COMMISSION}</a></p>
+	
+	{if $delete_commission}<div class="ok_msg_f">{$smarty.const.AFFP_MSG_COMMISSION_DELETED}</div>{/if}
+	<table width="100%" border="0" cellpadding="5" cellspacing="0">
+		<tr class="mainmenu_selected_{$current_dpt}">
+			<td>
+				<table>
+					<tr>
+						<td rowspan="2" class="light" style="text-align: center">ID</td>
+						<td><a href="{'OrderFieldC=cID&OrderDivC=ASC'|set_query:$REQUEST_URI}"><img SRC="./images/backend/arrow_up.gif" border=0></a> </td>
+					</tr>
+					<tr>
+						<td><a href="{'OrderFieldC=cID&OrderDivC=DESC'|set_query:$REQUEST_URI}"><img SRC="./images/backend/arrow_down.gif" border=0></a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<td rowspan="2" class="light" style="text-align: center">{$smarty.const.ADMIN_CURRENT_DATE}</td>
+						<td><a href="{'OrderFieldC=xDateTime&OrderDivC=ASC'|set_query:$REQUEST_URI}"><img SRC="./images/backend/arrow_up.gif" border=0></a> </td>
+					</tr>
+					<tr>
+						<td><a href="{'OrderFieldC=xDateTime&OrderDivC=DESC'|set_query:$REQUEST_URI}"><img SRC="./images/backend/arrow_down.gif" border=0></a></td>
+					</tr>
+				</table>
+			</td>
+			<td>{$smarty.const.TABLE_CUSTOMER}</td>
+			<td>
+				<table>
+					<tr>
+						<td rowspan="2" class="light" style="text-align: center">{$smarty.const.STRING_DESCRIPTION}</td>
+						<td><a href="{'OrderFieldC=Description&OrderDivC=ASC'|set_query:$REQUEST_URI}"><img SRC="./images/backend/arrow_up.gif" border=0></a> </td>
+					</tr>
+					<tr>
+						<td><a href="{'OrderFieldC=Description&OrderDivC=DESC'|set_query:$REQUEST_URI}"><img SRC="./images/backend/arrow_down.gif" border=0></a></td>
+					</tr>
+				</table>
+			</td>
+			<td align="right">
+				<table>
+					<tr>
+						<td rowspan="2" class="light" style="text-align: center">{$smarty.const.STRING_SUM}</td>
+						<td><a href="{'OrderFieldC=Amount&OrderDivC=ASC'|set_query:$REQUEST_URI}"><img SRC="./images/backend/arrow_up.gif" border=0></a> </td>
+					</tr>
+					<tr>
+						<td><a href="{'OrderFieldC=Amount&OrderDivC=DESC'|set_query:$REQUEST_URI}"><img SRC="./images/backend/arrow_down.gif" border=0></a></td>
+					</tr>
+				</table>
+			</td>
+			<td width="1%">&nbsp;</td>
+			<td width="1%">&nbsp;</td>
+		</tr>
+		{foreach from=$Commissions item=_Commission}
+			{assign_array var="TotalCommissionsAmount" index=$_Commission.CurrencyISO3 value=$TotalCommissionsAmount[$_Commission.CurrencyISO3]+$_Commission.Amount}
+		<tr class="{cycle values="bg_white,bg_custord"}" align="center">
+			<td>C-{$_Commission.cID}</td>
+			<td>{$_Commission.xDateTime}</td>
+			<td><a href="{''|set_query}?dpt=custord&sub=custlist&customer_details=contact_info&customerID={$_Commission.customerID}">{$_Commission.CustomerLogin}</a></td>
+			<td>{$_Commission.Description}</td>
+			<td align="right" nowrap="nowrap">{$_Commission.Amount} {$_Commission.CurrencyISO3}</td>
+			<td><a href="javascript:open_window('{"sub_page=edit_commission&cID=`$_Commission.cID`"|set_query:$REQUEST_URI}',500,400);">{$smarty.const.EDIT_BUTTON}</a></td>
+			<td><a href="javascript:void(0)" onclick="
+				if(!confirm('{$smarty.const.STRING_LE_CONFIRM}'))return false;
+				document.form_delete_commission.elements['COMMISSION[cID]'].value = {$_Commission.cID};
+				document.form_delete_commission.submit();
+				return false;
+				"  title="{$smarty.const.DELETE_BUTTON}"><img src="./images/backend/button_delete.gif" border=0 alt="{$smarty.const.DELETE_BUTTON}" /></a></td>
+		</tr>
+		{/foreach}
+		<tr style="background-color: #DDC0C5">
+			<td colspan="1" valign="top">
+				{$smarty.const.STRING_SUM}
+			</td>
+			<td colspan="6" align="right">
+				<table align="right">
+				{foreach from=$TotalCommissionsAmount key=_key item=_total}
+					<tr class="big" style="font-weight: bold"><td align="right">{$_total|string_format:"%.2f"}</td><td>{$_key}</td></tr>
+				{/foreach}
+				</table>
+			</td>
+		</tr>
+	</table>
+{else}
+<br /><br />{$smarty.const.AFFP_MSG_NOCOMMISISONS_FOUND}
+{/if}{* if $CommissionsNumber *}
+
+
+{* payments table *}
+
+{if $PaymentsNumber}
+
+	<h5>{$smarty.const.AFFP_STRING_PAYMENTS_TO_CUSTOMERS} ({$smarty.const.STRING_FROM} {$from} {$smarty.const.STRING_TILL} {$till})</h5>
+	<form action="{$REQUEST_URI}" method="POST" name="form_delete_payment" style="display:none;">
+	<input name="fACTION" value="DELETE_PAYMENT" type="hidden" />
+	<input name="fREDIRECT" value="{$REQUEST_URI}" type="hidden" />
+	<input name="PAYMENT[pID]" value="" type="hidden" />
+	</form>
+	
+	<p>
+	<a href="#new_payment_anchor">{$smarty.const.AFFP_SUBMIT_NEW_PAYMENT}</a>
+	</p>
+	
+	{if $delete_payment}<div class="ok_msg_f">{$smarty.const.AFFP_MSG_PAYMENT_DELETED}</div>{/if}
+	<table width="100%" border="0" cellpadding="5" cellspacing="0">
+		<tr class="mainmenu_selected_{$current_dpt}">
+			<td>
+				<table>
+					<tr>
+						<td rowspan="2" class="light" style="text-align: center">ID</td>
+						<td><a href="{'OrderField=pID&OrderDiv=ASC'|set_query:$REQUEST_URI}"><img SRC="./images/backend/arrow_up.gif" border=0></a> </td>
+					</tr>
+					<tr>
+						<td><a href="{'OrderField=pID&OrderDiv=DESC'|set_query:$REQUEST_URI}"><img SRC="./images/backend/arrow_down.gif" border=0></a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<td rowspan="2" class="light" style="text-align: center">{$smarty.const.ADMIN_CURRENT_DATE}</td>
+						<td><a href="{'OrderField=xDate&OrderDiv=ASC'|set_query:$REQUEST_URI}"><img SRC="./images/backend/arrow_up.gif" border=0></a> </td>
+					</tr>
+					<tr>
+						<td><a href="{'OrderField=xDate&OrderDiv=DESC'|set_query:$REQUEST_URI}"><img SRC="./images/backend/arrow_down.gif" border=0></a></td>
+					</tr>
+				</table>
+			</td>
+			<td>{$smarty.const.TABLE_CUSTOMER}</td>
+			<td>
+				<table>
+					<tr>
+						<td rowspan="2" class="light" style="text-align: center">{$smarty.const.STRING_DESCRIPTION}</td>
+						<td><a href="{'OrderField=Description&OrderDiv=ASC'|set_query:$REQUEST_URI}"><img SRC="./images/backend/arrow_up.gif" border=0></a> </td>
+					</tr>
+					<tr>
+						<td><a href="{'OrderField=Description&OrderDiv=DESC'|set_query:$REQUEST_URI}"><img SRC="./images/backend/arrow_down.gif" border=0></a></td>
+					</tr>
+				</table>
+			</td>
+			<td align="right">
+				<table>
+					<tr>
+						<td rowspan="2" class="light" style="text-align: center">{$smarty.const.STRING_SUM}</td>
+						<td><a href="{'OrderField=Amount&OrderDiv=ASC'|set_query:$REQUEST_URI}"><img SRC="./images/backend/arrow_up.gif" border=0></a> </td>
+					</tr>
+					<tr>
+						<td><a href="{'OrderField=Amount&OrderDiv=DESC'|set_query:$REQUEST_URI}"><img SRC="./images/backend/arrow_down.gif" border=0></a></td>
+					</tr>
+				</table>
+			</td>
+			<td width="1%">&nbsp;</td>
+			<td width="1%">&nbsp;</td>
+		</tr>
+		{foreach from=$Payments item=_Payment}
+			{assign_array var="TotalPaymentsAmount" index=$_Payment.CurrencyISO3 value=$TotalPaymentsAmount[$_Payment.CurrencyISO3]+$_Payment.Amount}
+		<tr class="{cycle values="bg_white,bg_custord"}" align="center">
+			<td>P-{$_Payment.pID}</td>
+			<td>{$_Payment.xDate}</td>
+			<td><a href="{''|set_query}?dpt=custord&sub=custlist&customer_details=contact_info&customerID={$_Payment.customerID}">{$_Payment.CustomerLogin}</a></td>
+			<td>{$_Payment.Description}</td>
+			<td nowrap="nowrap" align="right">{$_Payment.Amount} {$_Payment.CurrencyISO3}</td>
+			<td><a href="javascript:open_window('{"sub_page=edit_payment&pID=`$_Payment.pID`"|set_query:$REQUEST_URI}',500,400);">{$smarty.const.EDIT_BUTTON}</a></td>
+			<td><a href="javascript:void(0)" onclick="
+				if(!confirm('{$smarty.const.STRING_LE_CONFIRM}'))return false;
+				document.form_delete_payment.elements['PAYMENT[pID]'].value = {$_Payment.pID};
+				document.form_delete_payment.submit();
+				return false;
+				" title="{$smarty.const.DELETE_BUTTON}"><img src="./images/backend/button_delete.gif" border=0 alt="{$smarty.const.DELETE_BUTTON}" /></a></td>
+		</tr>
+		{/foreach}
+		<tr style="background-color: #DDC0C5">
+			<td colspan="1" valign="top">
+				{$smarty.const.STRING_SUM}
+			</td>
+			<td colspan="6" align="right">
+				<table align="right">
+				{foreach from=$TotalPaymentsAmount key=_key item=_total}
+					<tr class="big" style="font-weight: bold"><td align="right">{$_total|string_format:"%.2f"}</td><td>{$_key}</td></tr>
+				{/foreach}
+				</table>
+			</td>
+		</tr>
+	</table>
+	
+	{* balance *}
+	<br />
+	
+	<table width="100%" border="0" cellpadding="5" cellspacing="0" class="mainmenu_selected_{$current_dpt}">
+		<tr>
+			<td class="big" style="font-weight: bold;color:white" align="left">
+			{$smarty.const.AFFP_USER_BALANCE}
+			</td>
+			<td align="right">
+				<table align="right">
+				{foreach from=$CurrencyISO3 item=_currency}
+				{if $TotalCommissionsAmount[$_currency.currency_iso_3] or $TotalPaymentsAmount[$_currency.currency_iso_3]}
+					<tr>
+						<td align="right" class="headertext" style="font-weight: bold;color:white">
+						{"`$TotalCommissionsAmount[$_currency.currency_iso_3]-$TotalPaymentsAmount[$_currency.currency_iso_3]`"|string_format:"%.2f"}
+						</td>
+						<td class="headertext" style="font-weight: bold;color:white" align="left">
+						{$_currency.currency_iso_3}
+						</td>
+					</tr>
+				{/if}
+				{/foreach}
+				</table>
+			</td>
+		</tr>
+	</table>
+{else}
+<br /><br />{$smarty.const.AFFP_MSG_NOPAYMENTS_FOUND}
+{/if}{* if PaymentsNumber *}
+<br />
+{/if}
+
+<table cellspacing="10" cellpadding="0" align="center"><tr><td valign="top">
+{* new commission form *}
+<a name="new_commission_anchor"></a>
+
+<h5>{$smarty.const.AFFP_SUBMIT_NEW_COMMISSION}</h5>
+
+{if $error_new_commission}<div class="error_msg_f">{$error_new_commission}</div>{/if}
+
+{if $newCommissionStatus}<div class="ok_msg_f">{$smarty.const.AFFP_MSG_NEW_COMMISSION_OK}</div>{/if}
+
+<form method="POST" action="{'#new_commission_anchor'|set_query:$REQUEST_URI}">
+<input name="fACTION" value="NEW_COMMISSION" type="hidden" />
+<input name="fREDIRECT" value="{'#new_commission_anchor'|set_query:$REQUEST_URI}" type="hidden" />
+<table>
+	<tr>
+		<td>
+			{$smarty.const.ADMIN_CURRENT_DATE}
+		</td>
+		<td>
+			<input name="NEW_COMMISSION[xDate]" value="{$NEW_COMMISSION.xDate}" type="text" size="20" />
+		</td>
+	</tr>
+	<tr>
+		<td>
+			{$smarty.const.STRING_SUM}
+		</td>
+		<td nowrap="nowrap">
+			<input name="NEW_COMMISSION[Amount]" value="{$NEW_COMMISSION.Amount}" type="text" size="20" />&nbsp;
+			<select name="NEW_COMMISSION[CurrencyISO3]">
+			{foreach from=$CurrencyISO3 item=_currency}
+				<option
+				{if $_currency.currency_iso_3==$NEW_COMMISSION.CurrencyISO3}
+					selected="selected"
+				{/if}
+				>{$_currency.currency_iso_3}</option>
+			{/foreach}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			{$smarty.const.CUSTOMER_LOGIN}
+		</td>
+		<td>
+			<input name="NEW_COMMISSION[customerLogin]" value="{if $NEW_COMMISSION.customerLogin}	{$NEW_COMMISSION.customerLogin}{elseif $edCustomerLogin}{$edCustomerLogin}{/if}" type="text" size="20" />
+		</td>
+	</tr>
+	<tr>
+		<td>
+			{$smarty.const.STRING_DESCRIPTION}
+		</td>
+		<td>
+			<input name="NEW_COMMISSION[Description]" value="{$NEW_COMMISSION.Description}" type="text" size="20" />
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<input value="{$smarty.const.ADD_BUTTON}" type="submit" />
+		</td>
+	</tr>
+</table>
+
+</form>
+</td>
+<td style="background-color: #666666;width:1px;"><hr style="height:100%; width:1px;" /></td>
+<td valign="top">
+{* new payment form *}
+<a name="new_payment_anchor"></a>
+<h5>{$smarty.const.AFFP_SUBMIT_NEW_PAYMENT}</h5>
+{if $error_new_payment}<div class="error_msg_f">{$error_new_payment}</div>{/if}
+{if $newPayStatus}<div class="ok_msg_f">{$smarty.const.AFFP_MSG_NEW_PAY_OK}</div>{/if}
+<form method="POST" action="{'#new_payment_anchor'|set_query:$REQUEST_URI}">
+<input name="fACTION" value="NEW_PAYMENT" type="hidden" />
+<input name="fREDIRECT" value="{'#new_payment_anchor'|set_query:$REQUEST_URI}" type="hidden" />
+<table>
+	<tr>
+		<td>
+			{$smarty.const.ADMIN_CURRENT_DATE}
+		</td>
+		<td>
+			<input name="NEW_PAYMENT[xDate]" value="{$NEW_PAYMENT.xDate}" type="text" size="20" />
+		</td>
+	</tr>
+	<tr>
+		<td>
+			{$smarty.const.STRING_SUM}
+		</td>
+		<td nowrap="nowrap">
+			<input name="NEW_PAYMENT[Amount]" value="{$NEW_PAYMENT.Amount}" type="text" size="20" />&nbsp;
+			<select name="NEW_PAYMENT[CurrencyISO3]">
+			{foreach from=$CurrencyISO3 item=_currency}
+				<option
+				{if $_currency.currency_iso_3==$NEW_PAYMENT.CurrencyISO3}
+					selected="selected"
+				{/if}
+				>{$_currency.currency_iso_3}</option>
+			{/foreach}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			{$smarty.const.CUSTOMER_LOGIN}
+		</td>
+		<td>
+			<input name="NEW_PAYMENT[customerID]" value="{if $NEW_PAYMENT.customerID}{$NEW_PAYMENT.customerID}{elseif $edCustomerLogin}{$edCustomerLogin}{/if}" type="text" size="20" />
+		</td>
+	</tr>
+	<tr>
+		<td>
+			{$smarty.const.STRING_DESCRIPTION}
+		</td>
+		<td>
+			<input name="NEW_PAYMENT[Description]" value="{$NEW_PAYMENT.Description}" type="text" size="20" />
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<input value="{$smarty.const.ADD_BUTTON}" type="submit" />
+		</td>
+	</tr>
+</table>
+
+</form>
+
+</td></tr></table>
+
+{else}
+	<div style="text-align:center;">{$smarty.const.AFFP_MSG_PROGRAM_DISABLED}</div>
+{/if}{* if $CONF_AFFILIATE_PROGRAM_ENABLED *}
+</fieldset>
+	<script language="javascript" type="text/javascript">
+	<!--
+	{literal}
+		document.form_enable_affiliate.elements['settingCONF_AFFILIATE_PROGRAM_ENABLED'].onclick = function(){
+			document.form_enable_affiliate.submit()
+			return true;
+		}
+	{/literal}
+	//-->
+	</script>

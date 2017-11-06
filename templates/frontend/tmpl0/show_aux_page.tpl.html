@@ -1,0 +1,14 @@
+{* show auxilary page *}
+
+{$page_body}
+
+{if !$printable_version}
+
+<p><table>
+	<tr>
+		<td><a href="javascript:open_printable_version('printable.php?show_aux_page={$show_aux_page}');"><img src="images/printer-icon.gif" border=0 alt="{$smarty.const.STRING_PRINTABLE_VERSION}"></a></td>
+		<td><a href="javascript:open_printable_version('printable.php?show_aux_page={$show_aux_page}');">{$smarty.const.STRING_PRINTABLE_VERSION}</a></td>
+	</tr>
+</table>
+
+{/if}

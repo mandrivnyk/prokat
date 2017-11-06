@@ -1,0 +1,99 @@
+{* currencies *}
+
+<p>
+{if $configuration_saved eq 1}
+	{$smarty.const.ADMIN_UPDATE_SUCCESSFUL}
+{/if}
+
+
+<form action="admin.php" method=post>
+
+<p>	<font color=red>*</font> {$smarty.const.ADMIN_REQUIRED_TO_SET} </p>
+
+<table border=0 cellpadding=5 cellspacing=0>
+
+	<tr class="mainmenu_selected_{$current_dpt}">
+		<td align=center>{$smarty.const.ADMIN_CURRENCY_NAME}<font color=red>*</font></td>
+		<td align=center>{$smarty.const.ADMIN_CURRENCY_ID}<font color=red>*</font></td>
+		<td align=center>{$smarty.const.ADMIN_CURRENCY_ISO3}<font color=red>*</font></td>
+		<td align=center>{$smarty.const.ADMIN_CURRENCY_EXCHANGERATE}<font color=red>*</font></td>
+		<td align=center>{$smarty.const.ADMIN_SORT_ORDER}</td>
+		<td align=center>&nbsp;</td>
+	</tr>
+
+
+	{section name=i loop=$currencies}
+	<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}">
+		<td valign=top>
+			<input type=text name=curr_name_{$currencies[i].CID} value="{$currencies[i].Name|replace:'"':'&quot;'}">
+		</td>
+		<td valign=top>
+			<input type=text name=curr_code_{$currencies[i].CID} value="{$currencies[i].code|replace:'"':'&quot;'}"><br>
+			{$smarty.const.STRING_SHOW}
+			<select name=curr_where_{$currencies[i].CID}>
+				<option value=0{if $currencies[i].where2show eq 0} selected{/if}>{$smarty.const.STRING_BEFORE}</option>
+				<option value=1{if $currencies[i].where2show eq 1} selected{/if}>{$smarty.const.STRING_AFTER}</option>
+			</select> {$smarty.const.STRING_NUMBER}
+		</td>
+		<td valign=top>
+			<input type=text name=curr_currencyIso3_{$currencies[i].CID} 
+				value="{$currencies[i].currency_iso_3|replace:'"':'&quot;'}">
+		</td>
+		<td valign=top>
+			<input type=text name=curr_value_{$currencies[i].CID} value="{$currencies[i].currency_value|replace:'"':'&quot;'}">
+		</td>
+		<td valign=top>
+			<input type=text name=curr_sort_{$currencies[i].CID} value="{$currencies[i].sort_order|replace:'"':'&quot;'}">
+		</td>
+		<td valign=top>
+			<a href="javascript:confirmDelete({$currencies[i].CID},'{$smarty.const.QUESTION_DELETE_CONFIRMATION}', 'admin.php?dpt=conf&sub=currencies&delete=');">
+				<img src="images/backend/button_delete.gif" border=0 alt="{$smarty.const.DELETE_BUTTON}">
+			</a>
+		</td>
+	</tr>
+	{/section}
+
+	<tr class="mainmenu_selected_{$current_dpt}">
+		<td colspan=6>
+			{$smarty.const.ADD_BUTTON}:
+		</td>
+	</tr>
+
+	<tr class="bg_white">
+		<td valign=top>
+			<input type=text name=curr_new_name>
+		</td>
+		<td valign=top>
+			<input type=text name=curr_new_code><br>
+			{$smarty.const.STRING_SHOW}
+			<select name=curr_new_where>
+				<option value=0>{$smarty.const.STRING_BEFORE}</option>
+				<option value=1>{$smarty.const.STRING_AFTER}</option>
+			</select> 
+			{$smarty.const.STRING_NUMBER}
+		</td>
+		<td valign=top>
+			<input type=text name=curr_new_currencyIso3>
+		</td>
+		<td valign=top>
+			<input type=text name=curr_new_value>
+		</td>
+		<td valign=top>
+			<input type=text name=curr_new_sort>
+		</td>
+		<td>
+			&nbsp;
+		</td>
+	</tr>
+
+</table>
+	
+<br>
+
+<p>
+<input type=submit value="{$smarty.const.SAVE_BUTTON}">
+<input type=hidden name=save_currencies value=1>
+<input type=hidden name=dpt value="conf">
+<input type=hidden name=sub value="currencies">
+
+</form>

@@ -1,0 +1,191 @@
+<head>
+<meta name='yandex-verification' content='4e42fba513691a4a' />
+<meta name="google-site-verification" content="O8ThEep9NGi87VehSjBTAz3jWUCsDZEc7IiGEfftkAg" />
+
+<link rel="shortcut icon" href="/images/favicon/favicon.ico" type="image/png" />
+{if $first neq '1'}
+<link rel="stylesheet"  href="/js/highslide/highslide.css">
+{/if}
+<link rel="stylesheet" href="/titan1.css" >
+<!--[if lt IE 7]>
+<link rel="stylesheet" type="text/css" href="/js/highslide/highslide-ie6.css" />
+<![endif]-->
+{if $nofollow eq '1'}
+<meta name="Robots" content="NOINDEX, NOFOLLOW"/>
+{/if}
+<meta charset="{$smarty.const.DEFAULT_CHARSET}">
+<title>{$title_one} {$producer}{if $title_two neq ''} {$name} {$discuss_part} {$title_two} {else} {$discuss_part} {$page_title|default:$smarty.const.CONF_DEFAULT_TITLE}{/if} {$offset}</title>
+
+{$page_meta_tags}
+
+<script>
+<!--
+{literal}
+<!-- Start SiteHeart code -->
+
+(function(){
+var widget_id = 808931;
+_shcp =[{widget_id : widget_id}];
+var lang =(navigator.language || navigator.systemLanguage 
+|| navigator.userLanguage ||"en")
+.substr(0,2).toLowerCase();
+var url ="widget.siteheart.com/widget/sh/"+ widget_id +"/"+ lang +"/widget.js";
+var hcc = document.createElement("script");
+hcc.type ="text/javascript";
+hcc.async =true;
+hcc.src =("https:"== document.location.protocol ?"https":"http")
++"://"+ url;
+var s = document.getElementsByTagName("script")[0];
+s.parentNode.insertBefore(hcc, s.nextSibling);
+})();
+
+<!-- End SiteHeart code -->
+
+//window.onload = callRPC();
+function reDir(oInput, categoryID)
+{
+	window.location = "/index.php?categoryID="+categoryID+"&sort=producer&brend="+oInput;
+
+}
+function killmenu()
+{
+	
+	alert('Содержимое страницы заблокировано.');
+	return false;
+}
+//document.oncontextmenu = killmenu;
+//document.onselectstart="return false";
+	function open_window(link,w,h) //opens new window
+	{
+		var win = "width="+w+",height="+h+",menubar=no,location=no,resizable=yes,scrollbars=yes";
+		newWin = window.open(link,'newWin',win);
+		newWin.focus();
+	}
+
+	function open_printable_version(link) //opens new window
+	{
+		var win = "menubar=no,location=no,resizable=yes,scrollbars=yes";
+		newWin = window.open(link,'perintableWin',win);
+		newWin.focus();
+	}
+
+	function confirmDelete(id, ask, url) //confirm order delete
+	{
+		temp = window.confirm(ask);
+		if (temp) //delete
+		{
+			window.location=url+id;
+		}
+	}
+
+
+
+	function confirmUnsubscribe() //unsubscription confirmation
+	{
+		temp = window.confirm('{/literal}{$smarty.const.QUESTION_UNSUBSCRIBE}{literal}');
+		if (temp) //delete
+		{
+			window.location="index.php?killuser=yes";
+		}
+	}
+
+	function validate() // newsletter subscription form validation
+	{
+		if (document.subscription_form.email.value.length<1)
+		{
+			alert("{/literal}{$smarty.const.ERROR_INPUT_EMAIL}{literal}");
+			return false;
+		}
+		if (document.subscription_form.email.value == 'Email')
+		{
+			alert("{/literal}{$smarty.const.ERROR_INPUT_EMAIL}{literal}");
+			return false;
+		}
+		return true;
+	}
+	function validate_disc() // review form verification
+	{
+		if (document.formD.nick.value.length<1)
+		{
+			alert("{/literal}{$smarty.const.ERROR_INPUT_NICKNAME}{literal}");
+			return false;
+		}
+
+		if (document.formD.topic.value.length<1)
+		{
+			alert("{/literal}{$smarty.const.ERROR_INPUT_MESSAGE_SUBJECT}{literal}");
+			return false;
+		}
+
+		return true;
+	}
+	function validate_search()
+	{
+
+		if (document.Sform.price1.value!="" && ((document.Sform.price1.value < 0) || isNaN(document.Sform.price1.value)))
+		{
+			alert("{/literal}{$smarty.const.ERROR_INPUT_PRICE}{literal}");
+			return false;
+		}
+		if (document.Sform.price2.value!="" && ((document.Sform.price2.value < 0) || isNaN(document.Sform.price2.value)))
+		{
+			alert("{/literal}{$smarty.const.ERROR_INPUT_PRICE}{literal}");
+			return false;
+		}
+
+		return true;
+	}
+	function show_table()
+	{	
+		
+		imgTable=document.getElementById("open-close_text");
+		//alert(imgTable.src);
+		if(imgTable.innerHTML == "Посмотреть всю таблицу")
+			imgTable.innerHTML = "Скрыть таблицу";
+		else
+		{
+			//alert(1);
+			imgTable.innerHTML = "Посмотреть всю таблицу";
+		}
+		for(var i=13; i<260;i++)
+		{
+			e=document.getElementById(i);
+			
+			if( e !== null )
+			{
+	    		if (e.style.display == 'none' ) 
+	    		{
+	     			e.style.display = '';
+		    	}
+		    	else
+	    			e.style.display = 'none';
+			}
+		}
+
+	}
+{/literal}
+-->
+</script>
+
+{if $first neq '12'}
+<script src="/js/highslide/highslide.js"></script>
+<script src="jquery.js"></script>
+<script src="jquery-migrate-1.2.1.js"></script>
+
+
+<script type="text/javascript">
+ {literal}
+
+hs.registerOverlay({
+	html: '<div class="closebutton" onclick="return hs.close(this)" title="Close"></div>',
+	position: 'top right',
+	fade: 2 // fading the semi-transparent overlay looks bad in IE
+});
+
+hs.graphicsDir = 'highslide/graphics/';
+hs.wrapperClassName = 'borderless';
+
+{/literal}
+</script>
+{/if}
+</head>

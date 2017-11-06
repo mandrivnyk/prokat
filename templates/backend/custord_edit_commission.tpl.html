@@ -1,0 +1,82 @@
+<html>
+	<head>
+		<title>{$smarty.const.AFFP_EDIT_COMMISSION}</title>
+		<meta http-equiv="Content-Type" content="text/html; charset={$smarty.const.DEFAULT_CHARSET}">
+		<link rel=STYLESHEET href="style1.css" type="text/css">
+		<script language="javascript" type="text/javascript">
+		<!--
+		{literal}
+		function position_this_window()
+		{
+			var x = (screen.availWidth - 350) / 2;
+			window.resizeTo(350, 400 - 50);
+			window.moveTo(Math.floor(x),200);
+		}
+		{/literal}
+		//-->
+		</script>
+	</head>
+	<body bgcolor=#D2D2FF onLoad="position_this_window();">
+		<form method="POST" action="">
+		<input name="fACTION" value="SAVE_COMMISSION" type="hidden" />
+		<input name="fREDIRECT" value="{$REQUEST_URI}" type="hidden" />
+		<input name="COMMISSION[cID]" value="{$Commission.cID}" type="hidden" />
+		<br /><br >
+		<table align="center">
+			<tr>
+				<td colspan="2" align="center">
+					<div class="edittitle">{$smarty.const.AFFP_EDIT_COMMISSION}</div>
+				{if $error_message}<div class="error_msg_f">{$error_message}</div>{/if}
+				{if $safemode}<div class="error_msg_f">{$smarty.const.ADMIN_SAFEMODE_WARNING}</div>{/if}
+				</td>
+			<tr>
+				<td>
+					{$smarty.const.ADMIN_CURRENT_DATE}
+				</td>
+				<td>
+					<input name="COMMISSION[xDateTime]" value="{if $Commission.xDateTime}{$Commission.xDateTime}{else}{$CurrDate}{/if}" type="text" size="20" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					{$smarty.const.STRING_SUM}
+				</td>
+				<td>
+					<input name="COMMISSION[Amount]" value="{$Commission.Amount}" type="text" size="20" />&nbsp;
+					<select name="COMMISSION[CurrencyISO3]">
+					{foreach from=$CurrencyISO3 item=_currency}
+						<option
+						{if $_currency.currency_iso_3==$Commission.CurrencyISO3}
+							selected="selected"
+						{/if}
+						>{$_currency.currency_iso_3}</option>
+					{/foreach}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					{$smarty.const.CUSTOMER_LOGIN}
+				</td>
+				<td>
+					<input name="COMMISSION[customerLogin]" value="{$Commission.customerLogin}" type="text" size="20" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					{$smarty.const.STRING_DESCRIPTION}
+				</td>
+				<td>
+					<input name="COMMISSION[Description]" value="{$Commission.Description}" type="text" size="20" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<input value="{$smarty.const.SAVE_BUTTON}" type="submit" />
+				</td>
+			</tr>
+		</table>
+		
+		</form>
+	</body>
+</html>

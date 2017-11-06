@@ -1,0 +1,72 @@
+{* customer survey module *}
+
+{if $configuration_saved eq 1}
+<p>{$smarty.const.ADMIN_UPDATE_SUCCESSFUL}
+{/if}
+
+<p>
+
+
+{if $start_new_poll eq "yes"}
+
+<form action="admin.php" method=post>
+
+<p>{$smarty.const.ADMIN_POLL_WARNING}</p>
+
+<p><table border=0>
+
+<tr>
+<td align=right>{$smarty.const.ADMIN_POLL_QUESTION}</td>
+<td>
+<input type=text name=question size=50 value="{$survey_question}">
+</td>
+</tr>
+
+<tr>
+<td align=right>{$smarty.const.ADMIN_POLL_OPTIONS}</td>
+<td>
+<textarea name=answers cols=50 rows=10>
+{section name=i loop=$survey_answers}$survey_answers[i]{/section}
+</textarea>
+</td>
+</tr>
+
+</table>
+
+<input type=submit value="{$smarty.const.SAVE_BUTTON}">
+<input type=hidden name=save_voting value="yes">
+<input type=reset value="{$smarty.const.RESET_BUTTON}">
+
+<input type=hidden name=dpt value="modules">
+<input type=hidden name=sub value="survey">
+
+</form>
+
+
+{else} {* show existing survey results *}
+
+
+<table cellspacing=0 cellpadding=5 border=0>
+<tr class="mainmenu_selected_{$current_dpt}">
+<td><b>{$survey_question}</b></td>
+<td colspan=2 align=center >{$smarty.const.VOTES_FOR_ITEM_STRING}</td>
+</tr>
+
+{section name=i loop=$survey_answers}
+
+<tr class="{if $smarty.section.i.index is div by 2}bg_white{else}bg_{$current_dpt}{/if}">
+
+<td>{$survey_answers[i]}</td>
+<td align=center>{$survey_results[i]}</td>
+<td align=center>{if $voters_count ne 0}{math equation="round(100 * $survey_results[i] / $voters_count)"}{else}0{/if}%</td>
+
+</tr>
+
+{/section}
+
+</table>
+
+<p>[ <a href="admin.php?dpt=modules&sub=survey&start_new_poll=yes">{$smarty.const.ADMIN_START_NEW_POLL}</a> ]
+
+
+{/if}
