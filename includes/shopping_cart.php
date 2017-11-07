@@ -18,7 +18,7 @@
 			$smarty->assign( "make_more_exact_cart_content", 1 );
 
 		//add product to cart with productID=$add
-		if ( isset($_GET["add2cart"]) && $_GET["add2cart"]>0 /*&& isset($_SESSION["variants"]) */) 
+		if ( isset($_GET["add2cart"]) && $_GET["add2cart"]>0 /*&& isset($_SESSION["variants"]) */)
 		{
 			if (isset($_SESSION["variants"]))
 			{
@@ -76,7 +76,7 @@
 						$is=GetProductInStockCount( $productID );
 						if ($val > 0) //$val is a new items count in the shopping cart
 						{
-							if (CONF_CHECKSTOCK==1) 
+							if (CONF_CHECKSTOCK==1)
 								$val = min($val, $is); //check stock level
 							$q = db_query("UPDATE ".SHOPPING_CARTS_TABLE.
 								" SET Quantity='".floor($val).
@@ -92,20 +92,20 @@
 					{
 /*echo '<pre>';
 	print_r($_SESSION);
-echo '</pre>';*/					
+echo '</pre>';*/
 
 //echo 'str_replace("count_","", $key)= '.str_replace("count_","", $key).'<br>';
 
 						$res=DeCodeItemInClient( str_replace("count_","", $key) );
-						
+
 						$is=GetProductInStockCount( $res["productID"] );
-						
+
 						if ($val > 0)
 						{
 							$i=SearchConfigurationInSessionVariable($res["variants"], $res["productID"] );//check stock level
-							
-							
-							
+
+
+
 						/*	echo 'post<pre>';
 	print_r($_POST);
 echo '</pre>';
@@ -144,7 +144,7 @@ echo '$i = '.$i;*/
 	print_r($resCart);
 echo '</pre>';*/
 //exit();
-		$resDiscount = dscCalculateDiscount( $resCart["total_price"], 
+		$resDiscount = dscCalculateDiscount( $resCart["total_price"],
 							isset($_SESSION["log"])?$_SESSION["log"]:"" );
 		$discount_value		= addUnitToPrice( $resDiscount["discount_current_unit"] );
 		$discount_percent	= $resDiscount["discount_percent"];
@@ -156,9 +156,9 @@ echo '</pre>';*/
 
 		// discount_prompt = 0 ( discount information is not shown )
 		// discount_prompt = 1 ( discount information is showed simply without prompt )
-		// discount_prompt = 2 ( discount information is showed with 
+		// discount_prompt = 2 ( discount information is showed with
 		//			STRING_UNREGISTERED_CUSTOMER_DISCOUNT_PROMPT )
-		// discount_prompt = 3 ( discount information is showed with  
+		// discount_prompt = 3 ( discount information is showed with
 		//			STRING_UNREGISTERED_CUSTOMER_COMBINED_DISCOUNT_PROMPT )
 		switch( CONF_DISCOUNT_TYPE )
 		{
@@ -199,7 +199,7 @@ echo '</pre>';*/
 					$smarty->assign("discount_value", $discount_value );
 					$smarty->assign("discount_percent", $discount_percent );
 				}
-				else 
+				else
 				{
 					$smarty->assign("discount_prompt", 3 );
 					$smarty->assign("discount_value", $discount_value );
@@ -207,7 +207,7 @@ echo '</pre>';*/
 				}
 				break;
 
-			// discount is calculated as MAX( discount is based on customer group, 
+			// discount is calculated as MAX( discount is based on customer group,
 			//			discount calculated with help general order price  )
 			case 5:
 				if ( isset($_SESSION["log"]) )
@@ -216,7 +216,7 @@ echo '</pre>';*/
 					$smarty->assign("discount_value", $discount_value );
 					$smarty->assign("discount_percent", $discount_percent );
 				}
-				else 
+				else
 				{
 					$smarty->assign("discount_prompt", 3 );
 					$smarty->assign("discount_value", $discount_value );
@@ -227,7 +227,7 @@ echo '</pre>';*/
 
 
 		if ( isset($_SESSION["log"]) )
-			$smarty->assign( "shippingAddressID", 
+			$smarty->assign( "shippingAddressID",
 					regGetDefaultAddressIDByLogin($_SESSION["log"]) );
 
 		$smarty->assign("main_content_template", "shopping_cart.tpl.html");
