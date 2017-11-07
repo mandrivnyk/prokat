@@ -1,25 +1,37 @@
-В наличии:
 {literal}
 <script>
 
     $(document).ready(function(){
-        getSkladJsonPhp({/literal}{$productCode}{literal});
-
+        var productCodeString = "{/literal}{$productCode}{literal}";
+        getSkladJsonPhp(productCodeString);
     });
 
 
 
-    function getSkladJsonPhp(productCode)
+    function getSkladJsonPhp(productCodeString)
     {
         $.ajax({
             type: "GET",
             url: "/public_scripts/ajax_sklad_get.php",
-            data: "productCode="+productCode,
+            data: "productCode="+productCodeString+"&forSelect=1",
 
             success: function(responseText){
                 if( !$.isEmptyObject(responseText)) {
-                    $("#sklad").html(responseText);
+                    $("#sklad").show();
+                    $("#skladContent").html(responseText);
                     $("#variantsOld").remove();
+                }
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: "/public_scripts/ajax_sklad_get.php",
+            data: "productCode="+productCodeString+"&forCharacterList=1",
+
+            success: function(responseList){
+                if( !$.isEmptyObject(responseList)) {
+                    $("#inSkladTRTag").show();
+                    $("#inSkladTDTag").html(responseList);
                 }
             }
         });
@@ -30,7 +42,7 @@
 <span id="variantsOld">
     {if isset($size_arr)}
         <select onchange="" id="size_select">
-            <option >-Выберите размер-</option>
+            <option value="0">Выберите размер</option>
             {section name=i loop=$size_arr}
             <option value="{$size_arr[i]}">{$size_arr[i]}</option>
 
@@ -39,7 +51,7 @@
     {/if}
     {if isset($colors_arr)}
         <select id="colors_select">
-            <option>-Выберите цвет-</option>
+            <option value="0">Выберите цвет</option>
             {section name=i loop=$colors_arr}
             <option value="{$colors_arr[i]}">{$colors_arr[i]}</option>
 

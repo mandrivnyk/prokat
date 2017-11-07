@@ -10,12 +10,13 @@ class sklad
         $this->_setDir($_SERVER['DOCUMENT_ROOT'].'/sklad/');
     }
 
-
-    public function getVariants($productCode)
-    {
-        if($productCode >0)
-            $this->_getVariantsFromFile($productCode);
-    }
+//
+//    public function getVariants($productCode)
+//    {
+//        if($productCode >0) {
+//            $variants = $this->getVariantsFromFile($productCode);
+//        }
+//    }
 
     public function _convertVariantsTo1251($variant)
     {
@@ -38,13 +39,13 @@ class sklad
 
     /**
      * @param $productCode
+     * @return array $variants
      */
-    public function _getVariantsFromFile($productCode)
+    public function getVariantsFromFile($productCode)
     {
-
         $pathToFile = $this->_getDir().$productCode.".json";
         header('Content-Type: text/html; charset=windows-1251');
-
+        $variants = [];
         if(is_file($pathToFile))
         {
             $fp = $this->utf8_fopen_read($pathToFile);
@@ -58,29 +59,36 @@ class sklad
                 }
                 $variants =   implode($variants);
                 $variants = json_decode($variants, true) ;
-
-                $com_str = '';
-
-                echo $com_str;
             }
-            else
-                echo '';
         }
-        else
-            echo '';
+        return $variants;
     }
 
-    public function createSkladInSelectTag($variants){
+    public function createSkladInSelectTag($variants, $i){
         $com_str = '';
         if(count($variants) > 0) {
-            $com_str .= "<select id='size_select'><option >-Выберите варианты-</option>";
+            $com_str .= "<select id='select_variants_".$i."'><option value='0'>Выберите варианты</option>";
             foreach ($variants as $variant) {
                 $variant =   $this->_convertVariantsTo1251($variant);
-                $com_str .= "<option value='".$variant['size']." ".$variant['color']."'>".'размер: '.$variant['size'].' цвет: '.$variant['color']."</option>";
+                $com_str .= "<option value='артикул: ".$variant['productCode'].", размер: ".$variant['size'].", цвет: ".$variant['color'].", склад №".$variant['sklad']."'>".'размер: '.$variant['size'].' цвет: '.$variant['color']."</option>";
+                //$com_str .= "<option value='".$variant['size']." ".$variant['color']."'>".''.$variant['productCode'].' размер: '.$variant['size'].' '.$variant['color']."</option>";
             }
-            $com_str .= "</select><br><br>";
+            $com_str .= "</select><br>";
         }
-        echo $com_str;
+        return $com_str;
+    }
+
+    public function createSkladInList($variants){
+        $com_str = '';
+        if(count($variants) > 0) {
+            $com_str = '';
+            foreach ($variants as $variant) {
+                $variant =   $this->_convertVariantsTo1251($variant);
+                $com_str .= '<tr><td>'.$variant['productCode'].'</td><td>'.$variant['size'].'</td><td>'.$variant['color'].'</td></tr>';
+            }
+            //$com_str = substr($com_str, 0, -4);
+        }
+        return $com_str;
     }
 
     public function _setDir($dir)
