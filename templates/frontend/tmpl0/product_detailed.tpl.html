@@ -291,24 +291,9 @@
 
 											{if $product_info.Price>0 && ( $smarty.const.CONF_SHOW_ADD2CART eq 1 ) &&
 												( $smarty.const.CONF_CHECKSTOCK==0 || $product_info.in_stock > 0 ) }
-												{if isset($size_arr)}
-													<select onchange="" id="size_select">
-														<option >-Выберите размер-</option>
-														{section name=i loop=$size_arr}
-															<option value="{$size_arr[i]}">{$size_arr[i]}</option>
+										  		{include file="sklad.tpl.html" productCode=$product_info.product_code  productID=$product_info.productID size_arr=$size_arr colors_arr=$colors_arr}
+										  <div id="sklad"></div>
 
-														{/section}
-													</select><br><br>
-												{/if}
-												{if isset($colors_arr)}
-												<select id="colors_select">
-													<option>-Выберите цвет-</option>
-													{section name=i loop=$colors_arr}
-														<option value="{$colors_arr[i]}">{$colors_arr[i]}</option>
-
-													{/section}
-												</select><br><br>
-												{/if}
 	<script langauge='JavaScript'>
 	{literal}
 	function get_size_selected()

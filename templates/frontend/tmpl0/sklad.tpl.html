@@ -1,0 +1,50 @@
+В наличии:
+{literal}
+<script>
+
+    $(document).ready(function(){
+        getSkladJsonPhp({/literal}{$productCode}{literal});
+
+    });
+
+
+
+    function getSkladJsonPhp(productCode)
+    {
+        $.ajax({
+            type: "GET",
+            url: "/public_scripts/ajax_sklad_get.php",
+            data: "productCode="+productCode,
+
+            success: function(responseText){
+                if( !$.isEmptyObject(responseText)) {
+                    $("#sklad").html(responseText);
+                    $("#variantsOld").remove();
+                }
+            }
+        });
+    }
+</script>
+    {/literal}
+
+<span id="variantsOld">
+    {if isset($size_arr)}
+        <select onchange="" id="size_select">
+            <option >-Выберите размер-</option>
+            {section name=i loop=$size_arr}
+            <option value="{$size_arr[i]}">{$size_arr[i]}</option>
+
+            {/section}
+        </select><br><br>
+    {/if}
+    {if isset($colors_arr)}
+        <select id="colors_select">
+            <option>-Выберите цвет-</option>
+            {section name=i loop=$colors_arr}
+            <option value="{$colors_arr[i]}">{$colors_arr[i]}</option>
+
+            {/section}
+        </select><br><br>
+    {/if}
+</span>
+
