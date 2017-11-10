@@ -294,6 +294,7 @@
         $freight_cost	= 0;
         $variants 		= '';
 
+        //exit();
 
         if (isset($_SESSION["log"])) //get cart content from the database
         {
@@ -359,7 +360,9 @@
         /*echo '<pre>';
         print_r($_SESSION);
     echo '</pre>';*/
-    //print_r($_SESSION);
+//            echo '<pre>';
+//            print_r($_SESSION);
+//            echo '</pre>';
             $total_price 	= 0; //total cart value
             $cart_content	= array();
 

@@ -138,7 +138,10 @@ echo '$i = '.$i;*/
 			Redirect( $cart_php_file."?shopping_cart=yes" );
 		}
 
-
+//        echo '<pre>';
+//        print_r($_SESSION);
+//        echo '</pre>';
+//        exit();
 		$resCart = cartGetCartContent();
 /*echo '<pre>';
 	print_r($resCart);
