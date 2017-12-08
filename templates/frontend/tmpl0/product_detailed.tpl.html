@@ -410,7 +410,7 @@
 
 				</tr>
 
-				{if $akcia==1 &&  ($product_info.PriceWithOutUnit > 1500)  && ($product_info[15] == 0)
+				{if $akcia==1 &&  ($product_info.PriceWithOutUnit > 2000)  && ($product_info[15] == 0)
                 && $producer neq 'Lasting' &&  $producer neq 'Alpine pro' &&  $producer neq 'Salewa' && $producer neq 'Bizioni' && $producer neq 'Esbit'&& $producer neq 'Osprey' &&  $producer neq 'Rock Technologies'
                 && $producer neq 'Trimm' &&  $producer neq 'Turbat' &&   $producer neq 'Wind x-treme' &&   $producer neq 'Zamberlan'  }
 				<tr>
@@ -420,10 +420,10 @@
 
 							<h3 style="color:#309919;font-size: 25px;">
 							<img src="/products_pictures/{$product_info.thumbnail}" alt="{$product_info.name|escape:'html'}" title="{$product_info.name|escape:'html'}"><span class="saleAkcii"> +
-							{if $product_info.PriceWithOutUnit > 1500 && $product_info.PriceWithOutUnit < 2500} <!------------------- akcii 1-->
+							{if $product_info.PriceWithOutUnit > 2000 && $product_info.PriceWithOutUnit <= 3000} <!------------------- akcii 1-->
 								<img src="/images/Gift-Box-Icon.png" alt="{$smarty.const.GIFT}" title="{$smarty.const.GIFT}"> ={$product_info.PriceWithOutUnit} {$smarty.const.GRN}
                                 <div class="akciiMore"><a  class="akciiMore" target="_blank" href="/podarki-akcii-1" title="{$smarty.const.CHOOSE_YOUR_GIFT}"  alt="{$smarty.const.CHOOSE_YOUR_GIFT}">{$smarty.const.MORE_INFO_ON_PRODUCT}</a></div>
-							{elseif $product_info.PriceWithOutUnit > 2500 && $product_info.PriceWithOutUnit < 4000} <!------------------- akcii 2-->
+							{elseif $product_info.PriceWithOutUnit > 3000 && $product_info.PriceWithOutUnit <= 4000} <!------------------- akcii 2-->
 								<img src="/images/Gift-Box-Icon.png" alt="{$smarty.const.GIFT}" title="{$smarty.const.GIFT}"> ={$product_info.PriceWithOutUnit} {$smarty.const.GRN}
                                <div class="akciiMore"> <a  target="_blank" href="/podarki-akcii-2" title="{$smarty.const.CHOOSE_YOUR_GIFT}"  alt="{$smarty.const.CHOOSE_YOUR_GIFT}">{$smarty.const.MORE_INFO_ON_PRODUCT}</a></div>
 							{elseif $product_info.PriceWithOutUnit > 4000 } <!------------------- akcii 3-->
