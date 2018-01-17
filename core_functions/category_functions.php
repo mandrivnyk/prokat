@@ -714,92 +714,42 @@ function update_products_Count_Value_For_Categories($parent)
 
 function update_parent_products_skidka($_CategoryID, $skidka_old, $skidka)
 {
-	//-------------
+	//--------------��������� ���� "������" ��� �������-----------------------
 	$sql = "UPDATE ".PRODUCTS_TABLE."
 			SET skidka=".$skidka."
 			WHERE in_stock>0 AND categoryID=".intval($_CategoryID)." ";
 	db_query($sql);
-	
-	
-	$sql = "UPDATE ".PRODUCTS_TABLE." u 
-                    inner join ".CATEGORIY_PRODUCT_TABLE." s on
-                        u.productID = s.productID 
-                    AND s.categoryID = ".intval($_CategoryID)."
-                    AND u.in_stock>0
-                    set u.skidka=".$skidka." ";
-    echo $sql;
-    db_query($sql);
 
 
 	if(($skidka >0) AND ($skidka_old>0))
 	{
-		//------
+		//------������� ���� �� ������ ������-----------------
 		$sql = "UPDATE ".PRODUCTS_TABLE."
 				SET Price=list_price, list_price =0
 				WHERE list_price<>0 AND categoryID=".intval($_CategoryID)." ";
 		db_query($sql);
-		
-		
-		$sql = "UPDATE ".PRODUCTS_TABLE." u 
-                    inner join ".CATEGORIY_PRODUCT_TABLE." s on
-                        u.productID = s.productID 
-                    AND s.categoryID = ".intval($_CategoryID)."
-                    AND u.list_price<>0
-                    set u.Price=u.list_price,list_price =0";
-        db_query($sql);
-		
-		
 	}
 	
 
 	if($skidka >0)
 	{
-	
-		//--------------
+		//--------------��������� �������������� ���� ������ � ���� list_price ��� ��� ������� ������� ���� ��� ������
 		$sql = "UPDATE ".PRODUCTS_TABLE."
 				SET list_price=Price
-				WHERE in_stock>0 AND list_price=0 AND  categoryID=".intval($_CategoryID)." AND producer in ('Craft', 'Lasting', 'X-Bionic', 'Alpine pro') ";
+				WHERE in_stock>0 AND list_price=0 AND  categoryID=".intval($_CategoryID)." AND producer = 'Craft' ";
 				//WHERE in_stock>0 AND list_price=0 AND producer='Craft' AND  categoryID=".intval($_CategoryID)." ";
 		db_query($sql);
-		//--------------
+		//--------------������������ ���� ������ � ������ ������ � ������ ��� � ���� !! ���������� ���� �� �������  ����� ������� �����!!!
 		$sql = "UPDATE ".PRODUCTS_TABLE."
 				SET Price=CEILING((Price*(100-skidka))/100)
-				WHERE in_stock>0 AND categoryID=".intval($_CategoryID)." AND producer in ('Craft', 'Lasting', 'X-Bionic', 'Alpine pro')";
-		$result = db_query($sql);
-		
-		
-		//--------------- esli category_id = dopolniteljnaya
-		
-		$sql = "UPDATE ".PRODUCTS_TABLE." u 
-                    inner join ".CATEGORIY_PRODUCT_TABLE." s on
-                        u.productID = s.productID 
-                    AND s.categoryID = ".intval($_CategoryID)."
-                    AND u.in_stock>0
-                    set u.list_price=u.Price";
-        db_query($sql);
-        
-		$sql = "UPDATE ".PRODUCTS_TABLE." u 
-                    inner join ".CATEGORIY_PRODUCT_TABLE." s on
-                        u.productID = s.productID 
-                    AND s.categoryID = ".intval($_CategoryID)."
-                    AND u.in_stock>0
-                    set u.Price=(u.Price*(100-u.skidka))/100";		
-        echo $sql;
-        db_query($sql);
-        
-        
-        $sql = "UPDATE ".PRODUCTS_TABLE."
-				SET Price=CEILING(Price)";
-		echo $sql;		
+				WHERE in_stock>0 AND categoryID=".intval($_CategoryID)." AND producer = 'Craft'";
 		db_query($sql);
-        
-        //exit();
-        
-    
-		
-		
-		
-			
+			/*WHERE in_stock>0 AND categoryID=".intval($_CategoryID)." AND producer <> 'Craft' ";
+		db_query($sql);
+		$sql = "UPDATE ".PRODUCTS_TABLE."
+				SET Price=CEILING((Price*95)/100)
+				WHERE in_stock>0 AND categoryID=".intval($_CategoryID)." AND producer = 'Craft' ";
+		db_query($sql);*/
 	}
 	elseif ($skidka == 0) 
 	{
@@ -807,23 +757,12 @@ function update_parent_products_skidka($_CategoryID, $skidka_old, $skidka)
 				SET Price=list_price, list_price =0
 				WHERE list_price<>0 AND categoryID=".intval($_CategoryID)." ";
 		db_query($sql);
-		
-		$sql = "UPDATE ".PRODUCTS_TABLE." u 
-                    inner join ".CATEGORIY_PRODUCT_TABLE." s on
-                        u.productID = s.productID 
-                    AND s.categoryID = ".intval($_CategoryID)."
-                    AND u.in_stock>0
-                    set u.Price=u.list_price,list_price =0";
-        db_query($sql);
 	}
 	//  {math equation="ceil((x*(100-y))/100)" x=$product_info.PriceWithOutUnit  y=$product_info.skidka} ���
 	//echo $sql;
 
 	//die();	
 }
-
-
-
 
 
 
