@@ -41,7 +41,8 @@
 				if ( isset($_GET["search_name"]) )
 					if ( trim($_GET["search_name"]) != "" )
 						$searchParamName = array( $_GET["search_name"] );
-
+if(!isset($_GET["search_price_to"]))
+	$_GET["search_price_to"] = '';
 				$rangePrice = 
 						array( "from" => $_GET["search_price_from"], 
 							  "to"   => $_GET["search_price_to"] );

@@ -11,10 +11,10 @@ include_once("./core_functions/placeholders_functions.php" );
 
 function db_connect($host,$user,$pass) //create connection
 {
-	$r = mysql_connect($host,$user,$pass);
+	$r = @mysql_connect($host,$user,$pass);
 	if($r == '')
 	{
-		echo '<Br><p style="font-size:18px;color:black;">пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.<Br> пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</span>';
+		echo '<Br><p style="font-size:18px;color:black;">На сайте ведутся технические работы.<Br> Приносим наши извинения.</span>';
 		exit();
 	}
 	

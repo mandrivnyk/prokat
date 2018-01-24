@@ -279,9 +279,9 @@ function cartClearCartContet()
 		unset($_SESSION["gids"]);
 		unset($_SESSION["counts"]);
 		unset($_SESSION["configurations"]);
-		session_unregister("gids"); //calling session_unregister() is required since unset() may not work on some systems
-		session_unregister("counts");
-		session_unregister("configurations");
+//		session_unregister("gids"); //calling session_unregister() is required since unset() may not work on some systems
+//		session_unregister("counts");
+//		session_unregister("configurations");
 	}
 }
 

@@ -150,47 +150,47 @@
 			global $url_name;
 			//echo $url_name;
 			/*echo '<pre>';
-				print_r($callBackParam);
+				print_r($callBackParam);			
 			echo '</pre>';
 			echo '<pre>';
-				print_r($offset);
+				print_r($offset);			
 			echo '</pre>';
 			echo '<pre>';
-				print_r($count);
+				print_r($count);			
 			echo '</pre>';
 			echo '<pre>';
-				print_r(_getUrlToNavigate($categoryID));
+				print_r(_getUrlToNavigate($categoryID));			
 			echo '</pre>';*/
 			$navigatorHtml = GetNavigatorHtml(_getUrlToNavigate($categoryID), CONF_PRODUCTS_PER_PAGE,'prdSearchProductByTemplate', $callBackParam,$products, $offset, $count );
-
-
-
+			
+			
+			
 			//,$products, $offset, $count
-	/*
+	/*		
 echo '<pre>';
 	print_r($products);
 echo '</pre>';
 exit();*/
 /*
-$m=0;$k=0;
+$m=0;$k=0;			
 for($i=0; $i<count($products); $i++)
 {
-
+	
 	if(($products[$i]['Price'] == '') || ($products[$i]['Price'] == 0))
-	{
+	{	
 		echo '<pre>';
 		print_r($products[$i]);
 	echo '</pre>';
 		$products_null[$m++] = $products[$i++];
-
-
+		
+	
 	}
-	else
+	else 
 	{
 		$products_plus[$k++] = $products[$i++];
-
+		
 	}
-
+	
 }
 exit();
 if(isset($products_plus))
@@ -206,9 +206,9 @@ echo '</pre>';*/
 		return 0;
 	else if($x[10] > $y[10])
 		return -1;
-	else
+	else 	
 		return 1;
-
+	
 }
 $products = usort($products, 'compare');
 echo '<pre>';
@@ -226,7 +226,7 @@ echo '</pre>';*/
 			/*echo '<pre>';
 				print_r($brendsAll);
 			echo '</pre>';*/
-
+			
 			$imgs_topsale = GetPicturesTOPSALE();
 			$smarty->assign( "imgs_topsale", $imgs_topsale);
 			if ( CONF_PRODUCT_SORT == '1' )
@@ -255,17 +255,6 @@ echo '</pre>';*/
 			$smarty->assign( "producers", $producers);
 			$smarty->assign( "products_to_show", $products);
 			$smarty->assign( "categoryID", $categoryID);
-            //echo $categoryID;
-
-            // -- Акции подарки
-            if(
-                ($category['parent'] == 343)  // бу снаряжение
-            )
-                $akcia = 0;
-            else
-                $akcia = 1;
-            //echo '  $akcia = '.$akcia;
-                $smarty->assign( "akcia", $akcia);
 			$smarty->assign( "main_content_template", "category.tpl.html");
 		}
 	}

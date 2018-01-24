@@ -994,20 +994,20 @@ function prdSearchProductByTemplate($callBackParam, &$count_row, $navigatorParam
 				echo $where_clause;*/
 				}
 			}
-			else
+			else 
 			{
 				if($callBackParam["sort"] == "Price")
-						$order_by_clause = " order by  IF (".$callBackParam["sort"]."=0, 1,0), ".$callBackParam["sort"]." ASC";
-				else
-					$order_by_clause = " order by ".$callBackParam["sort"]." ASC";
+						$order_by_clause = " order by  IF (".$callBackParam["sort"]."=0, 1,0), ".$callBackParam["sort"]." ASC"; 
+				else 
+					$order_by_clause = " order by ".$callBackParam["sort"]." ASC"; 
 				//		IF(Price = 0, 1, 0), Price ASC		$order_by_clause = " order by if(case when in_stock>0 then 0 else 1 end, ".$callBackParam["sort"].") ASC ";
 
 				if (  isset($callBackParam["direction"]) )
 					if (  $callBackParam["direction"] == "DESC" )
 					{
 						if($callBackParam["sort"] == "Price")
-							$order_by_clause = " order by  IF (".$callBackParam["sort"]."=0, 1,0), ".$callBackParam["sort"]." DESC";
-						else
+							$order_by_clause = " order by  IF (".$callBackParam["sort"]."=0, 1,0), ".$callBackParam["sort"]." DESC"; 
+						else 
 							$order_by_clause = " order by ".$callBackParam["sort"]." DESC ";
 					}
 			}
@@ -1019,7 +1019,7 @@ function prdSearchProductByTemplate($callBackParam, &$count_row, $navigatorParam
 	$products_count = db_fetch_row($q);
 	$products_count = $products_count[0];
 	$sqlQuery = "
-		SELECT categoryID, producer, num_topsale,  title_one,title_two,url_name, name, brief_description,brief_description2, customers_rating, Price,Price_UE, in_stock, skidka, customer_votes, list_price, productID,
+		SELECT categoryID, producer, num_topsale,  title_one,title_two,url_name, name, brief_description,brief_description2, customers_rating, Price, in_stock, skidka, customer_votes, list_price, productID,
 		default_picture, sort_order, items_sold, enabled, product_code, description, shipping_freight FROM ".PRODUCTS_TABLE." $where_clause $order_by_clause
 	";
 //print $sqlQuery.'<br>';die;
@@ -1037,7 +1037,7 @@ if($callBackParam["sort"] == "producer")
 					$q1 = db_query( $sqlQuery );
 					$qp = 0;
 					while( $row1 = db_fetch_row($q1) )
-					{
+					{	
 						//echo $row1['producer'].'<br>';
 						$row1['producer'] = trim($row1['producer']);
 						if($row1['producer'] == $callBackParam["brend"])
@@ -1122,7 +1122,7 @@ if(isset($_GET['discuss']) && isset($_GET['discuss']) == 'yes' )
 {
 	$discuss =  ' обсуждение ';
 }
-else
+else 
 	$discuss =  ' ';
 	if  ( $meta_description != "" )
 		$res .= "<meta name=\"Description\" content=\"".$discuss.str_replace("\"","&quot;",$meta_description)."\">\n";
@@ -1140,15 +1140,12 @@ function GetProductBrends()
 	while ($row = db_fetch_row($q))
 	{
 		$result[$i]['id'] = $row["id"];
-		$result[$i]['kurs'] = $row["kurs"];
-		$result[$i]['valuta'] = $row["valuta"];
-		$result[$i]['warranty'] = $row["warranty"];
 		$result[$i]['filename'] = $row["filename"];
 		$result[$i++]['name'] = $row["name"];
 	}
-	   /* echo '<pre>';
+		/*	echo '<pre>';
 		print_r($result);
-		echo '</pre>'; */
+		echo '</pre>';*/
 	return $result;
 }
 function GetProductClass()
@@ -1245,7 +1242,7 @@ function getProducersByCategory($categoryID)
 			$categoryIDs= $categoryIDs.$row[0].',';
 			$y++;
 		}
-		//echo $y; exit();
+		//echo $y; exit(); 
 		if($y>0)
 		{
 			$categoryIDs = substr($categoryIDs, 0, -1);
@@ -1279,8 +1276,8 @@ function getProducersByCategory($categoryID)
 			print_r($producers);
 		echo '</pre>';*/
 	}
-	else
-		$producers = 0;
+	else 	
+		$producers = 0;	
 	return $producers;
-}
+}	
 ?>

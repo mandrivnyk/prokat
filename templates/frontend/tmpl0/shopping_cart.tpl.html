@@ -202,12 +202,12 @@
 			<tr>
 				<td align=center>
 				 {if $this_is_a_popup_cart_window}
-					<input type="button"
-						value="{$smarty.const.CLOSE_BUTTON}"
+					<input type="button" 
+						value="{$smarty.const.CLOSE_BUTTON}" 
 						onClick="JavaScript:window.close();">
 				 {else}
-					<input type="button"
-						value="{$smarty.const.STRING_BACK_TO_SHOPPING}"
+					<input type="button" 
+						value="{$smarty.const.STRING_BACK_TO_SHOPPING}" 
 						onClick="JavaScript:window.location='{$cart_php_file}';">
 				 {/if}
 				</td>
@@ -267,6 +267,26 @@ pageTracker._trackPageview();
 <br>
 <br>
 
+<!-- MyCounter --><div style="display:block">
+									<script language="JavaScript" type="text/javascript"><!--
+									{literal}
+									my_id = 98357;
+									my_width = 1;
+									my_height = 1;
+									my_alt = "MyCounter - счётчик и статистика (посетителей и хитов сегодня)";
+									//--></script>
+									<script type="text/javascript"
+									  src="http://scripts.mycounter.ua/counter2.0.js">
+									</script><noscript>
+									<a target="_blank" href="http://mycounter.ua/"><img
+									src="http://get.mycounter.ua/counter.php?id=98357"
+									title="MyCounter - счётчик и статистика (посетителей и хитов сегодня)"
+									alt="MyCounter - счётчик и статистика (посетителей и хитов сегодня)"
+									width="1" height="1" border="0" /></a>
+									{/literal}
+									</noscript>
+									
+							</div><!-- End MyCounter code -->
 
 </body>
 </html>

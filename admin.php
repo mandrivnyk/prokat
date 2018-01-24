@@ -1,8 +1,40 @@
 <?php
+$safeAdmin = 1; // ------------- «ащита админки от взлома-------------------
+if($safeAdmin == 1)
+{
+	$badQueryStrings = array(
+								'?refresh',
+								'fb_locale',
+								'do=forum',
+								'option=',
+								'prdID',
+								'password',
+								'concat',
+								'usertype',
+								'select',
+								'union',
+								'query',
+								'admin',
+								'stripcslashes',
+								'copy',
+								'tp:'
+	);
+	
+	for($i=0;$i<count($badQueryStrings);$i++)
+	{
+		if(stristr($_SERVER['REQUEST_URI'], $badQueryStrings[$i]))
+		{
+			//header('Location: http://prokat.ho.com.ua');
+			//echo $_SERVER['REQUEST_URI'];
+			exit; //  - запрещаю вход дл€ ненужных поисковых ботов и прочей нечести
+		}
+			
+	}
+}
 	if (!is_dir('./statistic/'.$_SERVER['REMOTE_ADDR']))  // ---- директори€ - ip  
 	{
 		//---создать директорию
-		if (mkdir('./statistic/'.$_SERVER['REMOTE_ADDR'], 0755)) 
+		if (@mkdir('./statistic/'.$_SERVER['REMOTE_ADDR'], 0755)) 
 		{
    			if( !file_exists('./statistic/'.$_SERVER['REMOTE_ADDR'].'/'.date('Y-m-d').'.txt')) 
    			{
@@ -145,8 +177,6 @@ function add_department($admin_dpt)
 
 	//connect to database
 	db_connect(DB_HOST,DB_USER,DB_PASS) or die (db_error());
-$q = db_query("SET NAMES CP1251");
-$q = db_query("SET COLLATION_CONNECTION=CP1251_GENERAL_CI");
 	db_select_db(DB_NAME) or die (db_error());
 
 	settingDefineConstants();

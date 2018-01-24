@@ -11,7 +11,6 @@ function saveKurs(id)
 {
 	//alert (id);
 	var kurs = $("#"+id).val();
-    var warranty = $("#"+id+"_warranty").val();
 	var valuta = $("#"+id+"_valuta :selected").val();
 	//alert(valuta);
 	if(kurs >0 && valuta !== '')
@@ -19,7 +18,7 @@ function saveKurs(id)
 		$.ajax({
 		    type: "GET",
 		    url: "./public_scripts/kurs_reload.php",
-		    data: "id="+id+"&kurs="+kurs+"&valuta="+valuta+"&warranty="+warranty+"&action=1",
+		    data: "id="+id+"&kurs="+kurs+"&valuta="+valuta+"&action=1",    
 		    success: function(responseText){
 		       
 		            $("#"+id+"_result").html(responseText);
@@ -33,7 +32,6 @@ function recountPrice(id, brend)
 {
 	//alert (id);
 	var kurs = $("#"+id).val();
-
 	var valuta = $("#"+id+"_valuta :selected").val();
 	//alert(valuta);
 	if(kurs >0)
@@ -41,7 +39,7 @@ function recountPrice(id, brend)
 		$.ajax({
 		    type: "GET",
 		    url: "./public_scripts/kurs_reload.php",
-		    data: "id="+id+"&kurs="+kurs+"&brend="+brend+"&valuta="+valuta+"&action=2",
+		    data: "id="+id+"&kurs="+kurs+"&brend="+brend+"&valuta="+valuta+"&action=2",    
 		    success: function(responseText){
 		       
 		            $("#"+id+"_result").html(responseText);
@@ -60,10 +58,6 @@ function recountPrice(id, brend)
 <td> Лого</td>
 <td> Курс </td>
 <td> Валюта </td>
-<td> Гарантия (месяцы) <br>
-    0 - стандартная 14 дней
-
-</td>
 <td> Действия </td>
 </tr>
 
@@ -81,12 +75,9 @@ function recountPrice(id, brend)
 		    <option value="UAH" {if $brendsAll[i].valuta eq 'UAH'}selected{/if}>UAH</option>
 	    </select>
  	</td>
-    <td>
-        <input type="text" value="{if $brendsAll[i].warranty neq ''}{$brendsAll[i].warranty}{/if}" size="5" name="" id="{$brendsAll[i].id}_warranty">
-    </td>
 	<td><div id="{$brendsAll[i].id}_result"></div>	
-		<div style="background: #fc0;cursor:pointer; padding:5px; margin:5px;" onclick="saveKurs({$brendsAll[i].id})">Save</div> <br>
-		<div style="background: #ccc;cursor:pointer; padding:5px; margin:5px;"   onclick="recountPrice({$brendsAll[i].id},'{$brendsAll[i].name}')">Recount price</div><br>
+		<div style="background: #fc0;cursor:pointer;" onclick="saveKurs({$brendsAll[i].id})">Save kurs</div> <br>
+		<div style="background: #ccc;cursor:pointer;"   onclick="recountPrice({$brendsAll[i].id},'{$brendsAll[i].name}')">Recount price</div><br>
 		
 	
  			<a href="javascript:confirmDelete({$brendsAll[i].id},'Удалить {$brendsAll[i].filename}?','admin.php?dpt=modules&amp;sub=brends&amp;brendID=');">

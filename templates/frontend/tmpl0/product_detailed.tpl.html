@@ -62,9 +62,9 @@
 													<h1>{if $currencies_count ne 0 && $product_info.Price > 0}
 											{* show list price? *}
 											{if $product_info.list_price > 0 && $product_info.list_price > $product_info.Price && $product_info.Price > 0}
-
+												
 												<font color=brown>
-													<del>{$product_info.list_priceWithUnit}</del>
+													<strike>{$product_info.list_priceWithUnit}</strike>
 												</font>
 												<br>
 											{/if}
@@ -77,14 +77,14 @@
 												<span itemprop="price">{$product_info.PriceWithOutUnit}</span><meta itemprop="currency" content="UAH" />{$smarty.const.GRN}
 												{/if}<br>
 											</font>
-											</b>
-
+											</b>	
+											
 
 											{* you save *}
 											{if $product_info.list_price > 0 &&
 												$product_info.list_price > $product_info.Price &&
 												$product_info.Price > 0}
-
+												
 												{$smarty.const.YOU_SAVE}:
 													<font color=brown>
 														{$product_info[14]} ({$product_info[15]}%)
@@ -98,7 +98,7 @@
 													{$smarty.const.IN_STOCK}:
 													<b>
 													{if $product_info.in_stock > 0}
-
+													
 														{if $smarty.const.CONF_EXACT_PRODUCT_BALANCE}
 															<font color="#289711">{*$product_info.in_stock*}{$smarty.const.ANSWER_YES}</font>
 														{else}
@@ -124,18 +124,18 @@
 
 
 						<td width="1%" align="center" valign="top" border="0" class="product_detail_td" rowspan="3">
-
+	
 							{if $product_info.img_orig}
 								{if $product_info.img_big}
 									{if !$printable_version}
-
-
+								
+																		
 									<a title="нажмите, чтоб увеличить" onclick="return hs.expand(this)" class="highslide" href="/images/products/{$product_info.img_big}" style="">
-
+									
 									{/if}
 											<img border=0 src="images/products/{$product_info.img_small}" alt="{$product_info.title_one} {$product_info.producer} {$product_info.name|escape:'html'}">
 									</a>
-
+										
 									{if !$printable_version}
 										<div class="highslide-caption">
 				    						{$product_extra[0].option_value}
@@ -159,17 +159,17 @@
 								{if $product_info.thumbnail}
 									{if $product_info.big_picture}
 										{if !$printable_version}
-
+										
 										<div class="section" id="samples-wrapper">
 										<div class="thumbwrapper" >
 										<div style="border: 0px solid blue; position: relative;">
 										{/if}
 										<a title="нажмите, чтоб увеличить" onclick="return hs.expand(this,{literal}{{/literal} outlineType: 'rounded-white' {literal}}{/literal})" class="highslide" href="/products_pictures/{$product_info.big_picture}" style="">
-											{section name=i loop=$imgs_topsale}
+											{section name=i loop=$imgs_topsale} 
 												{if $imgs_topsale[i].num_topsale eq $product_info.num_topsale}
 													<i style="background: url('/images/topsale/{$imgs_topsale[i].filename}') no-repeat scroll 0 0 transparent;" class="top-sale"></i>
 												{/if}
-											{/section}
+											{/section}	
 											<img itemprop="image" border=0 src="/products_pictures/{$product_info.thumbnail}" title="{$product_info.producer} {$product_info.name|escape:'html'}" alt="{$product_info.title_one} {$product_info.producer} {$product_info.name|escape:'html'}">
 										</a>
 										{if !$printable_version}
@@ -191,7 +191,7 @@
 											</div>
 											</div>
 											</div>
-
+																						
 										<br>
 											<table>
 												<tr>
@@ -233,12 +233,12 @@
 							{section name=i loop=$all_product_pictures}
 								{if $smarty.section.i.index % 2 == 0}<tr>{/if}
 								<td>
-
+								
 								<a onclick="return hs.expand(this)" class="highslide" href="/products_pictures/{$all_product_pictures[i].enlarged}">
 									<img src="products_pictures/{$all_product_pictures[i].thumbnail}" border=0>
 								</a>
 
-
+														
 													<div class="highslide-caption">
 							    						{$product_extra[0].option_value}
 														{$product_info.name}&nbsp;&nbsp;&nbsp;&nbsp;
@@ -254,10 +254,10 @@
 													</b>
 												{/if}
 													</div>
-
-
-
-
+								
+								
+								
+								
 								</td>
 								{if ($smarty.section.i.index+1) % 2 == 0}</tr>{/if}
 							{/section}
@@ -279,7 +279,7 @@
 
 											{if $product_info.Price>0 && ( $smarty.const.CONF_SHOW_ADD2CART eq 1 ) &&
 												( $smarty.const.CONF_CHECKSTOCK==0 || $product_info.in_stock > 0 ) }
-
+												
 												<input name='cart' type=image src="images/cart_big_navy.gif"alt="{$smarty.const.ADD_TO_CART_STRING}">
 											{else}
 												&nbsp;
@@ -294,18 +294,18 @@
 												{if isset($size_arr)}
 													<select onchange="" id="size_select">
 														<option >-Выберите размер-</option>
-														{section name=i loop=$size_arr}
+														{section name=i loop=$size_arr}														
 															<option value="{$size_arr[i]}">{$size_arr[i]}</option>
-
+															
 														{/section}
 													</select><br><br>
 												{/if}
 												{if isset($colors_arr)}
 												<select id="colors_select">
 													<option>-Выберите цвет-</option>
-													{section name=i loop=$colors_arr}
+													{section name=i loop=$colors_arr}														
 														<option value="{$colors_arr[i]}">{$colors_arr[i]}</option>
-
+														
 													{/section}
 												</select><br><br>
 												{/if}
@@ -316,33 +316,33 @@
 		var ret_base = 'cart.php?';
 		var ret_size = '';
 		var ret_color = '';
-
-
+		
+		
 		//alert(1);
-
+		
 		if(document.getElementById('size_select') != null)
 		{
 			if(document.getElementById('size_select').value != '-Выберите размер-')
 			{
-				var Size_sel = document.getElementById('size_select').value;
+				var Size_sel = document.getElementById('size_select').value; 
 				//alert(Size_sel);
 				ret_size =  'size_sel='+Size_sel+'&';
 			}
 		}
 		//alert(1);
-
+		
 		if(document.getElementById('colors_select') != null)
 		{
 			if(document.getElementById('colors_select').value != '-Выберите цвет-')
 			{
-				var Color_sel = document.getElementById('colors_select').value;
+				var Color_sel = document.getElementById('colors_select').value; 
 				//alert(Size_sel);
 				ret_color =  'color_sel='+Color_sel+'&';
 			}
 		}
 		return ret_base+ret_size+ret_color;
-
-
+		
+	
 	}
 	{/literal}
 	</script>
@@ -374,7 +374,7 @@
 								<b>{$smarty.const.ADMIN_PALATKA_COLOR}</b>: {$product_info.color }  <br>
 							{/if}
 
-
+						
 
 						{if $product_info.shipping_freightUC}
 							{$smarty.const.ADMIN_SHIPPING_FREIGHT}:&nbsp;
@@ -388,7 +388,7 @@
 							<br>
 						{/if}<br>
 
-
+						
 						<!-- AddThis Button BEGIN -->
 						<div class="addthis_toolbox addthis_default_style" style="padding-left: 13px;" >
 						<a class="addthis_button_preferred_1"></a>
@@ -409,36 +409,31 @@
 
 
 				</tr>
-
-				{if $akcia==1 &&  ($product_info.PriceWithOutUnit > 2000)  && ($product_info[15] == 0)
-                && $producer neq 'Lasting' &&  $producer neq 'Alpine pro' &&  $producer neq 'Salewa' && $producer neq 'Bizioni' && $producer neq 'Esbit'&& $producer neq 'Osprey' &&  $producer neq 'Rock Technologies'
-                && $producer neq 'Trimm' &&  $producer neq 'Turbat' &&   $producer neq 'Wind x-treme' &&   $producer neq 'Zamberlan'  }
+				
+				{if ($product_category_path[1].categoryID eq '249' || $product_category_path[1].categoryID eq '250' ) && $product_info.PriceWithOutUnit > 900  && $product_info[15] == 0}
 				<tr>
 					<td style="padding-left: 30px;" align="center">
-						<fieldset style="text-align: center; width: 400px;"><legend><span style="color:red; font-size: 25px;"><b>{$smarty.const.AKCION_PREDLOG}:</b></span></legend>
-
-
+						<fieldset style="text-align: center; width: 400px;"><legend><span style="color:red; font-size: 14px;"><b>{$smarty.const.AKCION_PREDLOG}:</b></span></legend>
+							{assign var="oldprice" value="`$product_info.PriceWithOutUnit+85`"}	
+							
 							<h3 style="color:#309919;font-size: 25px;">
-							<img src="/products_pictures/{$product_info.thumbnail}" alt="{$product_info.name|escape:'html'}" title="{$product_info.name|escape:'html'}"><span class="saleAkcii"> +
-							{if $product_info.PriceWithOutUnit > 2000 && $product_info.PriceWithOutUnit <= 3000} <!------------------- akcii 1-->
-								<img src="/images/Gift-Box-Icon.png" alt="{$smarty.const.GIFT}" title="{$smarty.const.GIFT}"> ={$product_info.PriceWithOutUnit} {$smarty.const.GRN}
-                                <div class="akciiMore"><a  class="akciiMore" target="_blank" href="/podarki-akcii-1" title="{$smarty.const.CHOOSE_YOUR_GIFT}"  alt="{$smarty.const.CHOOSE_YOUR_GIFT}">{$smarty.const.MORE_INFO_ON_PRODUCT}</a></div>
-							{elseif $product_info.PriceWithOutUnit > 3000 && $product_info.PriceWithOutUnit <= 4000} <!------------------- akcii 2-->
-								<img src="/images/Gift-Box-Icon.png" alt="{$smarty.const.GIFT}" title="{$smarty.const.GIFT}"> ={$product_info.PriceWithOutUnit} {$smarty.const.GRN}
-                               <div class="akciiMore"> <a  target="_blank" href="/podarki-akcii-2" title="{$smarty.const.CHOOSE_YOUR_GIFT}"  alt="{$smarty.const.CHOOSE_YOUR_GIFT}">{$smarty.const.MORE_INFO_ON_PRODUCT}</a></div>
-							{elseif $product_info.PriceWithOutUnit > 4000 } <!------------------- akcii 3-->
-								<img src="/images/Gift-Box-Icon.png" alt="{$smarty.const.GIFT}" title="{$smarty.const.GIFT}"> ={$product_info.PriceWithOutUnit} {$smarty.const.GRN}
-                                   <div class="akciiMore"><a class="akciiMore" target="_blank" href="/podarki-akcii-3" title="{$smarty.const.CHOOSE_YOUR_GIFT}"  alt="{$smarty.const.CHOOSE_YOUR_GIFT}">{$smarty.const.MORE_INFO_ON_PRODUCT}</a></div>
+							<img src="/products_pictures/{$product_info.thumbnail}" alt="{$product_info.name|escape:'html'}" title="{$product_info.name|escape:'html'}"> + 
+							{if $product_info.PriceWithOutUnit > 1300 && $product_info.PriceWithOutUnit < 1800} <!------------------- akcii 1-->
+								<a href="/podarki-akcii-1" title="{$smarty.const.CHOOSE_YOUR_GIFT}"  alt="{$smarty.const.CHOOSE_YOUR_GIFT}">{$smarty.const.GIFT}</a> =   
+							{elseif $product_info.PriceWithOutUnit > 1800 && $product_info.PriceWithOutUnit < 2500} <!------------------- akcii 2-->
+								<a href="/podarki-akcii-2" title="{$smarty.const.CHOOSE_YOUR_GIFT}"   alt="{$smarty.const.CHOOSE_YOUR_GIFT}">{$smarty.const.GIFT}</a> = 
+							{elseif $product_info.PriceWithOutUnit > 2500 } <!------------------- akcii 3-->
+								<a href="/podarki-akcii-3" title="{$smarty.const.CHOOSE_YOUR_GIFT}" alt="{$smarty.const.CHOOSE_YOUR_GIFT}">{$smarty.const.GIFT}</a> = 
 							{/if}
-							</span></h3>
-
+							{$product_info.PriceWithOutUnit} {$smarty.const.GRN}</h3>
+							
 						</fieldset>
-
+						
 					</td>
 				</tr>
 				<tr>
 					<td align="center">
-
+					
 					</td>
 				</tr>
 				{/if}
@@ -463,10 +458,9 @@
 											</td>
 											<td class="table_extra_par">
 												<b>{$producer}
-												{if $producer eq 'Alpine pro'}(Чехия)
+												{if $producer eq 'Alpine pro'}(Чехия)												
 												{elseif $producer eq 'Trimm'}(Чехия)
 												{elseif $producer eq 'Hannah'}(Чехия)
-												{elseif $producer eq 'Babyweavers'}(Англия)
 												{elseif $producer eq 'Kama'}(Чехия)
 												{elseif $producer eq 'Pinguin'}(Чехия)
 												{elseif $producer eq 'Lasting'}(Чехия)
@@ -522,39 +516,19 @@
 												{elseif $producer eq 'Oakley'}(США)
 												{elseif $producer eq 'Smith Optics'}(Made in the USA)
 												{/if}
-
+												
 												</b>
-
-
+												
+												
 											</td>
 										</tr>
-
+								
 								{/if}
-                            {if isset($product_info.warranty) && $product_category_path[1].categoryID neq '283'}
-                            <tr bgcolor="{if $smarty.section.i.index % 2 == 0}#{$smarty.const.CONF_LIGHT_COLOR}{else}white{/if}" class="table_extra_par">
-                                <td valign="top" style="padding-left:5px; padding-right:5px; padding-top:2px;padding-bottom:2px;" class="table_extra_par">
-
-                                    {$smarty.const.ADMIN_WARRANTY}:
-                                </td>
-
-                                <td class="table_extra_par">
-                                    <b>
-                                    {if   $product_category_path[1].categoryID eq '343' }
-                                        от магазина 14 дней (<a href="/garantija" noindex rel="nofollow">подробнее</a>)
-                                    {elseif $product_info.warranty eq 0}
-                                        от производителя 14 дней (<a href="/garantija" noindex rel="nofollow">подробнее</a>)
-                                        {else}
-                                        от производителя {$product_info.warranty} месяцев (<a href="/garantija" noindex rel="nofollow">подробнее</a>)
-                                    {/if}
-                                    </b>
-                                </td>
-                            </tr>
-                            {/if}
 								{section name=i loop=$product_extra}
 									{if $product_extra[i].option_type eq 0 }
 										<tr bgcolor="{if $smarty.section.i.index % 2 == 0}#{$smarty.const.CONF_LIGHT_COLOR}{else}white{/if}" class="table_extra_par">
 											<td valign="top" style="padding-left:5px; padding-right:5px; padding-top:2px;padding-bottom:2px;" class="table_extra_par">
-
+											
 												{$product_extra[i].name}:
 											</td>
 											<td class="table_extra_par">
@@ -563,7 +537,7 @@
 											{else}
 												<b>{$product_extra[i].option_value}</b>
 											{/if}
-
+												
 											</td>
 										</tr>
 									{else}
@@ -748,19 +722,16 @@
 						{$product_info.description}
 					</td>
 				</tr>
-
+				
 				<tr>
 					<td>
+				
 
-
-										<span style="color: red; font-size: 18;">
-											<fieldset width="50%"><legend>Информация:</legend>
-												Доставка нового снаряжения бесплатная при заказе на сумму более {$smarty.const.DELIVERY_COST}{$smarty.const.GRN}: Киев, Ирпень, Буча, Украина.<br>
-                                                 Прокатное снаряжение, акционные, б/у и товары со скидкой доставляются платно. (<a href="/delivery">Условия доставки</a>)
-											</fieldset>
+										<span style="color: red; font-size: 18;">Доставка бесплатная при заказе на сумму более {$smarty.const.DELIVERY_COST}{$smarty.const.GRN}: Киев, Ирпень, Буча, Украина.<br>
+                                                 Акционные, б/у и товары со скидкой доставляются платно. (<a href="/delivery">Условия доставки</a>) 										
 										</span>
 						<p><strong>{$product_info.title_one} {$producer} {$product_info.name}</strong> в интернет магазине Mandrivnyk в Киеве, Ирпене, Буче, в Украине.
-						</p>
+						</p>				
 					</td>
 				</tr>
 			</table>
@@ -775,11 +746,11 @@
 <section  style="padding-top:5px;">
 	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table_main_cat1" >
 		{* related products *}
-
+	
 
 		  <tr>
 			<td colspan=2 class="product_detail_td" >
-
+			
 				<p>
 				<u>
 					{$smarty.const.STRING_RELATED_ITEMS}:
@@ -808,7 +779,7 @@
 					</table>
 			</td>
 		  </tr>
-
+		  
 	</table>
 </section>
 {/if}
@@ -820,9 +791,9 @@
 <section style="padding-top:5px;">
 	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table_main_cat1" >
 		 <tr>
-		 	<td  align="left" width="100%" style="padding-left: 10px;">
-
-			 	<table width="100%" cellpadding="0" cellspacing="0" border="0" >
+		 	<td  align="left" width="100%" style="padding-left: 10px;"> 
+		 	
+			 	<table width="100%" cellpadding="0" cellspacing="0" border="0" >	
 					<tr >
 				       <td align="center">
 				       		<h1>Другие товары категории:</h1>
@@ -836,7 +807,7 @@
 					        	    						<tr>
 					        	    							<td style="padding: 8 0 0 0" valign="middle" align="center" rowspan="2" height="118px">
 					        	    								<a href="{$CloudTags[i].url_name}"  rel="nofollow"><img border="0" title="{$CloudTags[i].producer} {$CloudTags[i].name}" alt="{$CloudTags[i].producer} {$CloudTags[i].name}" src="/products_pictures/{$CloudTags[i].thumbnail}" > </a><br>
-																	<img src="/images/line-100x1.jpg" alt="line-100x1" title="line-100x1">
+																	<img src="/images/line-100x1.jpg" alt="line-100x1" title="line-100x1">		
 					        	    							</td>
 					        	    							<td  valign="top" class="opisanie-tovar-empty" align="justify">
 					        	    								<a  alt="{$CloudTags[i].producer} {$CloudTags[i].name}" title="{$CloudTags[i].producer} {$CloudTags[i].name}"  href="{$CloudTags[i].url_name}">{$CloudTags[i].producer} {$CloudTags[i].name}</a><br><br>
@@ -848,75 +819,75 @@
 					        	    								{$CloudTags[i].Price} грн
 					        	    							</td>
 					        	    						</tr>
-					        	    					</table>
-													</div>
-												{/section}
+					        	    					</table>											
+													</div>	
+												{/section}	
 						</td>
-					</tr>
-				</table>
-
-
-
+					</tr>	
+				</table>		
+		 	
+		 	
+		 	
 		 								<h3 style="font-size:12px;padding:5px;">
-		 									<span itemprop="seller"> Интернет магазин Mandrivnyk</span>:
-
+		 									<span itemprop="seller"> Интернет магазин Mandrivnyk</span>: 	
+		 									 				 
 		 								{if $product_info.categoryID eq 275}	<!-- термобелье-->
-
-
+										
+		 									 					 
 										{elseif $product_info.categoryID eq 252}	<!-- палатки-->
-											 работает услуга <a href="/prokat-palatok">прокат палаток</a>.
-		 									 <a href="/termobelie">Термобелье</a> лучших производителей Европы.
-
-										{elseif $product_info.categoryID eq 267}	<!-- спальники-->
-
-											 услуга: "<a href="/">прокат туристического снаряжения</a>" экономит ваши деньги.
-		 									 <a href="/termobelie">Термобелье Киев</a>.
-
-										{elseif $product_info.categoryID eq 297}	<!-- термоноски -->
-
-
-										{elseif $product_info.categoryID eq 312}	<!-- рюкзаки -->
-		 									 <a href="http://turprokat.com.ua/prokat-palatok-arenda-palatki-naprokat-Kiev-Bucha/">прокат палатки </a> в нашем пункте проката.
-		 									 Качественное <a href="/termobelie">Термобелье</a> Craft, Lasting, Commandor.
-
-										{elseif $product_info.categoryID eq 330}	<!-- Пончо -->
-											 <a href="/prokat-rukzakov">прокат рюкзаков</a> на 30-100 литров.
-		 									 Топовое <a href="/termobele-craft">термобелье</a> от шведского бренда Craft по скидкам.
-
-										{elseif $product_info.categoryID eq 338}	<!-- коврики -->
-											 <a href="/">палатки напрокат</a> 2-4 местные, не промокаемые.
-		 									 Европейское <a href="/termobelie">термобелье купить Киев</a> с бесплатнок доставкой.
-
-										{elseif $product_info.categoryID eq 264}	<!-- тенты -->
-											 <a href="/prokat-rukzakov">прокат рюкзаков</a> на 30-100 литров.
-		 									 Комплекты <a href="/termobele-craft">термобелья Craft</a> для зимы и весны.
-
-										{elseif $product_info.categoryID eq 344}	<!-- палатки бу -->
-											 услуга <a href="/">прокат палаток в г.Киев</a>.
+											 работает услуга <a href="/prokat-palatok">прокат палаток</a>. 	
+		 									 <a href="/termobelie">Термобелье</a> лучших производителей Европы. 
+		 									 
+										{elseif $product_info.categoryID eq 267}	<!-- спальники-->	
+										
+											 услуга: "<a href="/">прокат туристического снаряжения</a>" экономит ваши деньги.						 							 	 									 
+		 									 <a href="/termobelie">Термобелье Киев</a>. 
+		 									 
+										{elseif $product_info.categoryID eq 297}	<!-- термоноски -->	
+											
+		 									 
+										{elseif $product_info.categoryID eq 312}	<!-- рюкзаки -->	
+		 									 <a href="http://turprokat.com.ua/prokat-palatok-arenda-palatki-naprokat-Kiev-Bucha/">прокат палатки </a> в нашем пункте проката.				 
+		 									 Качественное <a href="/termobelie">Термобелье</a> Craft, Lasting, Commandor.   
+		 									 
+										{elseif $product_info.categoryID eq 330}	<!-- Пончо -->	
+											 <a href="/prokat-rukzakov">прокат рюкзаков</a> на 30-100 литров. 					  						 
+		 									 Топовое <a href="/termobele-craft">термобелье</a> от шведского бренда Craft по скидкам.    
+		 									 
+										{elseif $product_info.categoryID eq 338}	<!-- коврики -->	
+											 <a href="/">палатки напрокат</a> 2-4 местные, не промокаемые. 								 
+		 									 Европейское <a href="/termobelie">термобелье купить Киев</a> с бесплатнок доставкой.  
+		 									    
+										{elseif $product_info.categoryID eq 264}	<!-- тенты -->	
+											 <a href="/prokat-rukzakov">прокат рюкзаков</a> на 30-100 литров. 					 						 
+		 									 Комплекты <a href="/termobele-craft">термобелья Craft</a> для зимы и весны.      
+		 									 
+										{elseif $product_info.categoryID eq 344}	<!-- палатки бу -->	
+											 услуга <a href="/">прокат палаток в г.Киев</a>.  								  
 		 									 Качественное <a href="/termobelie">термобелье купить для отвода влаги</a>  и сохранения тепла.
-
-										{elseif $product_info.categoryID eq 340}	<!-- рюкзаки бу -->
-											 услуга <a href="http://turprokat.com.ua/prokat-palatok-arenda-palatki-naprokat-Kiev-Bucha/">прокат палатки Киев</a>.
+		 									      
+										{elseif $product_info.categoryID eq 340}	<!-- рюкзаки бу -->	
+											 услуга <a href="http://turprokat.com.ua/prokat-palatok-arenda-palatki-naprokat-Kiev-Bucha/">прокат палатки Киев</a>. 
 		 									 <a href="/termobelie">Термобелье</a> для спорта и туризма.
-
-										{elseif $product_info.categoryID eq 341}	<!-- спальники бу -->
-											 услуга <a href="/">прокат палаток Киев</a> - только качественное снаряжение.
-		 									 <a href="/men-termobelie">Термобелье мужское Киев</a> со скидкой.
-
-										{elseif $product_info.categoryID eq 342}	<!-- коврики бу -->
-											услуга <a href="http://turprokat.com.ua/prokat-palatok-arenda-palatki-naprokat-Kiev-Bucha/">прокат палаток</a> в Киеве.
-		 									 Для согрева и отвода влаги используется <a href="/termobelie">термобелье</a>.
-
+		 									       
+										{elseif $product_info.categoryID eq 341}	<!-- спальники бу -->	
+											 услуга <a href="/">прокат палаток Киев</a> - только качественное снаряжение. 								 								 
+		 									 <a href="/men-termobelie">Термобелье мужское Киев</a> со скидкой.  
+		 									       
+										{elseif $product_info.categoryID eq 342}	<!-- коврики бу -->	
+											услуга <a href="http://turprokat.com.ua/prokat-palatok-arenda-palatki-naprokat-Kiev-Bucha/">прокат палаток</a> в Киеве. 
+		 									 Для согрева и отвода влаги используется <a href="/termobelie">термобелье</a>. 
+		 									 
 		 								{else}
-		 									предлагаем воспользоваться услугой "<a href="/prokat-palatok">прокат палаток</a>", рюкзаков, спальников и др.
-		 									<a href="/krossovki-trekingovye-v-kieve">Треккинговые кроссовки</a> ведущих брендов.
+		 									предлагаем воспользоваться услугой "<a href="/prokat-palatok">прокат палаток</a>", рюкзаков, спальников и др.	 									
+		 									<a href="/krossovki-trekingovye-v-kieve">Треккинговые кроссовки</a> ведущих брендов.  
 										{/if}
-
+										 
 		 								</h3>
 		 	</td>
 		 </tr>
 		{/if}
-
+		
 	</table>
 </section>
 {/if}

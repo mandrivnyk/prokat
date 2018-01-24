@@ -68,6 +68,7 @@
 						{
 							$CloudTags[] = $rowCloud;
 						}*/
+							$CloudTags = array();
 							while ($rowCloud = db_fetch_row($q))
 							{
 								$q1 = db_query("SELECT * FROM ".PRODUCTS_TABLE." t1 LEFT JOIN ".PRODUCT_PICTURES." t2 ON t1.productID= t2.productID WHERE t1.productID =".$rowCloud['productID']." AND t1.enabled =1"  ) or die (db_error());
@@ -79,8 +80,8 @@
 							}
 				/*echo '<pre>';
 					print_r($CloudTags);
-				echo '</pre>';*/
-				if(isset($CloudTags))
+				echo '</pre>';*/ 
+                               if(count($CloudTags) >0 )
 				$smarty->assign("CloudTags", $CloudTags);
 				//-----------------------------------------------------------------------------------------
 			}
@@ -126,10 +127,6 @@
 			}
 			if ($a) //product found
 			{
-                $q = db_query("SELECT warranty FROM ".PRODUCTS_BRENDS." WHERE name='".$a['producer']."'") or die (db_error());
-                if($res = db_fetch_row($q))
-                    $a['warranty'] = $res['warranty'];
-
 				if (!isset($categoryID)) $categoryID = $a["categoryID"];
 				//get selected category info
 				$q = db_query("SELECT categoryID, name, description, picture FROM ".CATEGORIES_TABLE." WHERE categoryID='$categoryID'") or die (db_error());
@@ -214,14 +211,9 @@
 				$a[13] = show_price( $a["list_price"] );
 				$a[14] = show_price( $a["list_price"] - $a["Price"]); //you save (value)
 				$a["PriceWithOutUnit"]=show_priceWithOutUnit( $a["Price"] );
-
-				if ( $a["list_price"] >0) {
-                    $a[15] =
-                        ceil(((($a["list_price"] - $a["Price"]) /
-                                $a["list_price"]) * 100)); //you save (%)
-                }
-                else
-                    $a[15] = 0;
+				if ( $a["list_price"] ) $a[15] =
+					ceil(((($a["list_price"]-$a["Price"])/
+						$a["list_price"])*100)); //you save (%)
 				if ( isset($_GET["picture_id"]) )
 				{
 					$pictures = db_query("select photoID, filename, thumbnail, enlarged from ".
@@ -241,7 +233,7 @@
 				}
 				$all_product_pictures = array();
 				$all_product_pictures_id = array();
-		$i=0;
+		$i=0;		
 				while( $picture=db_fetch_row($pictures) )
 				{
 /*echo '<pre>';
@@ -259,7 +251,7 @@ echo '</pre>';*/
 						if( file_exists("./products_pictures/".$picture[3]) )
 							{
 								$all_product_pictures[$i++]['enlarged']=$picture[3];
-							}
+							}				
 				}
 				//eproduct
 				if (strlen($a["eproduct_filename"]) > 0 && file_exists("products_files/".$a["eproduct_filename"]) )
@@ -295,22 +287,9 @@ echo '</pre>';*/
 					$smarty->assign("sent",1);
 				$smarty->assign("all_product_pictures_id", $all_product_pictures_id );
 				$smarty->assign("all_product_pictures", $all_product_pictures );
-
-   // echo '$categoryID = '.$categoryID;
-                //$akcia = 0;
-                //$akcia
-                if(
-                ($categoryID == 351)  || // бу снаряжение
-                ($categoryID == 344)  || // бу снаряжение
-                ($categoryID == 340)  || // бу снаряжение
-                ($categoryID == 491)  || // бу снаряжение
-                ($categoryID == 341)  // бу снаряжение
-                )
-                    $akcia = 0;
-                else
-                    $akcia = 1;
-
-				$smarty->assign("akcia", $akcia);
+/*echo '<pre>';
+	print_r($a);
+echo '</pre>';*/
 				$smarty->assign("product_info", $a);
 				$imgs_topsale = GetPicturesTOPSALE();
 			$smarty->assign( "imgs_topsale", $imgs_topsale);

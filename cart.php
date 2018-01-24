@@ -3,15 +3,15 @@
 	print_r($_GET);
 echo '</pre>';*/
 
-	if (!is_dir('./statistic/'.$_SERVER['REMOTE_ADDR']))  // ---- директория - ip  
+	if (!is_dir('. /statistic_from_030713/'.$_SERVER['REMOTE_ADDR']))  // ---- директория - ip  
 	{
 		//---создать директорию
-		if (mkdir('./statistic/'.$_SERVER['REMOTE_ADDR'], 0755)) 
+		if (@mkdir('. /statistic_from_030713/'.$_SERVER['REMOTE_ADDR'], 0755)) 
 		{
-   			if( !file_exists('./statistic/'.$_SERVER['REMOTE_ADDR'].'/'.date('Y-m-d').'.txt')) 
+   			if( !file_exists('. /statistic_from_030713/'.$_SERVER['REMOTE_ADDR'].'/'.date('Y-m-d').'.txt')) 
    			{
-				$fp = fopen('./statistic/'.$_SERVER['REMOTE_ADDR'].'/'.date('Y-m-d').'.txt', "w"); // ("r" - считывать "w" - создавать "a" - добовлять к тексту), мы создаем файл
-				$str = $_SERVER['REMOTE_ADDR'].' = '.date('Y-m-d').' = '.$_SERVER['REQUEST_TIME'];
+				$fp = fopen('. /statistic_from_030713/'.$_SERVER['REMOTE_ADDR'].'/'.date('Y-m-d').'.txt', "w"); // ("r" - считывать "w" - создавать "a" - добовлять к тексту), мы создаем файл
+				$str = $_SERVER['REMOTE_ADDR'].' = '.date('Y-m-d').' = '. date('H:m:s');
 				$str = $str.' = '.$_SERVER['REQUEST_URI'];
 				$str = $str.' = '.$_SERVER['HTTP_USER_AGENT']."\r\n";
 				$res = fwrite($fp, $str);
@@ -23,10 +23,10 @@ echo '</pre>';*/
 	else   // ------------------------------------файл txt - дата
 	{
 		
-			if( !file_exists('./statistic/'.$_SERVER['REMOTE_ADDR'].'/'.date('Y-m-d').'.txt')) 
+			if( !file_exists('. /statistic_from_030713/'.$_SERVER['REMOTE_ADDR'].'/'.date('Y-m-d').'.txt')) 
    			{
-				$fp = fopen('./statistic/'.$_SERVER['REMOTE_ADDR'].'/'.date('Y-m-d').'.txt', "w"); // ("r" - считывать "w" - создавать "a" - добовлять к тексту), мы создаем файл
-				$str = $_SERVER['REMOTE_ADDR'].' = '.date('Y-m-d').' = '.$_SERVER['REQUEST_TIME'];
+				$fp = fopen('. /statistic_from_030713/'.$_SERVER['REMOTE_ADDR'].'/'.date('Y-m-d').'.txt', "w"); // ("r" - считывать "w" - создавать "a" - добовлять к тексту), мы создаем файл
+				$str = $_SERVER['REMOTE_ADDR'].' = '.date('Y-m-d').' = '. date('H:m:s');
 				$str = $str.' = '.$_SERVER['REQUEST_URI'];
 				$str = $str.' = '.$_SERVER['HTTP_USER_AGENT']."\r\n";
 				$res = fwrite($fp, $str);
@@ -34,8 +34,8 @@ echo '</pre>';*/
 			}	
 			else 
 			{
-				$fp = fopen('./statistic/'.$_SERVER['REMOTE_ADDR'].'/'.date('Y-m-d').'.txt', "a"); // ("r" - считывать "w" - создавать "a" - добовлять к тексту), мы создаем файл
-				$str = $_SERVER['REMOTE_ADDR'].' = '.date('Y-m-d').' = '.$_SERVER['REQUEST_TIME'];
+				$fp = fopen('. /statistic_from_030713/'.$_SERVER['REMOTE_ADDR'].'/'.date('Y-m-d').'.txt', "a"); // ("r" - считывать "w" - создавать "a" - добовлять к тексту), мы создаем файл
+				$str = $_SERVER['REMOTE_ADDR'].' = '.date('Y-m-d').' = '.date('H:m:s');
 				$str = $str.' = '.$_SERVER['REQUEST_URI'];
 				$str = $str.' = '.$_SERVER['HTTP_USER_AGENT']."\r\n";
 				$res = fwrite($fp, $str);
@@ -46,14 +46,14 @@ echo '</pre>';*/
 	
 	
 $fp = fopen('./incomeip.txt', 'a');
-$str = $_SERVER['REMOTE_ADDR'].' = '.date('Y-m-d').' = '.$_SERVER['REQUEST_TIME'];
+$str = $_SERVER['REMOTE_ADDR'].' = '.date('Y-m-d').' = '. date('H:m:s');
 $str = $str.' = '.$_SERVER['REQUEST_URI'];
 $str = $str.' = '.$_SERVER['HTTP_USER_AGENT']."\r\n";
 $res = fwrite($fp, $str);
 fclose($fp);
 	
 $fp = fopen('./cart.txt', 'a');
-$str = $_SERVER['REMOTE_ADDR'].' = '.date('Y-m-d').' = '.$_SERVER['REQUEST_TIME'];
+$str = $_SERVER['REMOTE_ADDR'].' = '.date('Y-m-d').' = '. date('H:m:s');
 $str = $str.' = '.$_SERVER['REQUEST_URI'];
 $str = $str.' = '.$_SERVER['HTTP_USER_AGENT']."\r\n";
 $res = fwrite($fp, $str);
@@ -202,7 +202,7 @@ echo '</pre>';	*/
 		unset( $_SESSION["variants"] );
 		$_SESSION["variants"]=$variants;
 		
-/*echo '<pre>';
+/*		echo '<pre>';
 	print_r($_SESSION);
 echo '</pre>';*/
 		header("Location: cart.php?shopping_cart=yes&add2cart=".(int)$_GET["addproduct"] );
