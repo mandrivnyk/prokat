@@ -1,0 +1,62 @@
+{literal}
+<script>
+
+    $(document).ready(function(){
+        var productCodeString = "{/literal}{$productCode}{literal}";
+        getSkladJsonPhp(productCodeString);
+    });
+
+
+
+    function getSkladJsonPhp(productCodeString)
+    {
+        $.ajax({
+            type: "GET",
+            url: "/public_scripts/ajax_sklad_get.php",
+            data: "productCode="+productCodeString+"&forSelect=1",
+
+            success: function(responseText){
+                if( !$.isEmptyObject(responseText)) {
+                    $("#sklad").show();
+                    $("#skladContent").html(responseText);
+                    $("#variantsOld").remove();
+                }
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: "/public_scripts/ajax_sklad_get.php",
+            data: "productCode="+productCodeString+"&forCharacterList=1",
+
+            success: function(responseList){
+                if( !$.isEmptyObject(responseList)) {
+                    $("#inSkladTRTag").show();
+                    $("#inSkladTDTag").html(responseList);
+                }
+            }
+        });
+    }
+</script>
+    {/literal}
+
+<span id="variantsOld">
+    {if isset($size_arr)}
+        <select onchange="" id="size_select">
+            <option value="0">Выберите размер</option>
+            {section name=i loop=$size_arr}
+            <option value="{$size_arr[i]}">{$size_arr[i]}</option>
+
+            {/section}
+        </select><br><br>
+    {/if}
+    {if isset($colors_arr)}
+        <select id="colors_select">
+            <option value="0">Выберите цвет</option>
+            {section name=i loop=$colors_arr}
+            <option value="{$colors_arr[i]}">{$colors_arr[i]}</option>
+
+            {/section}
+        </select><br><br>
+    {/if}
+</span>
+
