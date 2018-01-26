@@ -1,5 +1,5 @@
 <?php
-
+****
 	//ADMIN :: products managment
 
 	include("./cfg/connect.inc.php");
@@ -834,17 +834,6 @@ echo '</pre>';*/
 		if ( $_POST["ConfiguratorHideTable_hidden"] == "1" )
 
 			$showConfiguratorTable = 1;
-
-    $showVariantsProduct = 0;
-
-
-if ( isset($_POST["VariantsProductHideTable_hidden"]) )
-
-    if ( $_POST["VariantsProductHideTable_hidden"] == "1" )
-
-        $showVariantsProduct = 1;
-
-
 
 	$showPhotoTable = 0;
 
@@ -1725,64 +1714,6 @@ $skidka = $product["skidka"];
 	</td>
 
 </tr>
-
-	<!-- ************************  VARIANTS OF PRODUCT *********************** -->
-
-
-    <tr><td align=center colspan=2>
-
-            <center>
-
-                <a href="JavaScript:VariantsProductHideTable();">
-
-                    <?php echo ADMIN_VARIANTS_PRODUCTS;?>
-
-                    <input type=hidden name='VariantsProductHideTable_hidden'
-
-                           value='<?php echo $showVariantsProduct ?>'>
-
-                </a>
-
-            </center>
-
-            <script language='javascript'>
-
-                function VariantsProductHideTable()
-
-                {
-
-                    if ( VariantsProductTable.style.display == 'none' )
-
-                    {
-
-                        VariantsProductTable.style.display = 'block';
-
-                        document.MainForm.VariantsProductHideTable_hidden.value='1';
-
-                    }
-
-                    else
-
-                    {
-
-                        VariantsProductTable.style.display = 'none';
-
-                        document.MainForm.VariantsProductHideTable_hidden.value='0';
-
-                    }
-
-                }
-
-            </script>
-            <table id='VariantsProductTable'>
-
-                <tr><td>
-                        <textarea name='variantsProduct' 	rows="3" cols="60"><?php echo $product["variantsProduct"];?></textarea>
-                    </td></tr>
-            </table>
-
-
-
 
 	<!-- ************************ CONFIGUARTOR *********************** -->
 

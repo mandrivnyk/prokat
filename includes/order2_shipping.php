@@ -59,7 +59,7 @@
 			$city				= "";
 			$address			= "";
 
-			regGetCustomerInfo($_SESSION["log"], 
+			@regGetCustomerInfo($_SESSION["log"], 
 					$cust_password, $Email, $first_name, 
 					$last_name, $subscribed4news, $additional_field_values, 
 					$countryID, $zoneID, $state, $zip, $city, $address );

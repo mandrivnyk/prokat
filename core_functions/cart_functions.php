@@ -1,11 +1,4 @@
-    <?php
-    /*****************************************************************************
-     *                                                                           *
-     * Shop-Script PREMIUM                                                       *
-     * Copyright (c) 2005 WebAsyst LLC. All rights reserved.                     *
-     *                                                                           *
-     *****************************************************************************/
-    ?><?php
+<?php
     // compare two configuration
     function CompareConfiguration($variants1, $variants2)
     {
@@ -111,19 +104,20 @@
         $res = "";
         foreach( $variants as $var )
         {
-            $q=db_query("select option_value from ".
-                PRODUCTS_OPTIONS_VALUES_VARIANTS_TABLE.
-                    " where variantID='".$var."'" );
-            if ( $r=db_fetch_row($q) )
-            {
-                if ( $first_flag )
-                {
-                    $res.=$r["option_value"];
-                    $first_flag = false;
-                }
-                else
-                    $res.=", ".$r["option_value"];
-            }
+//            $q=db_query("select option_value from ".
+//                PRODUCTS_OPTIONS_VALUES_VARIANTS_TABLE.
+//                    " where variantID='".$var."'" );
+//            if ( $r=db_fetch_row($q) )
+//            {
+//                if ( $first_flag )
+//                {
+//                    $res.=$r["option_value"];
+//                    $first_flag = false;
+//                }
+//                else
+//                    $res.=", ".$r["option_value"];
+//            }
+            $res.=$var;
         }
         return $res;
     }
@@ -294,7 +288,6 @@
         $freight_cost	= 0;
         $variants 		= '';
 
-        //exit();
 
         if (isset($_SESSION["log"])) //get cart content from the database
         {
@@ -360,9 +353,7 @@
         /*echo '<pre>';
         print_r($_SESSION);
     echo '</pre>';*/
-//            echo '<pre>';
-//            print_r($_SESSION);
-//            echo '</pre>';
+    //print_r($_SESSION);
             $total_price 	= 0; //total cart value
             $cart_content	= array();
 

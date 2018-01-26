@@ -1,4 +1,4 @@
-<?php
+<?
 	//include("./core_functions/picture_functions.php");
 /*echo '<pre>';
 	print_r($_FILES);

@@ -181,10 +181,10 @@
 							{* show list price? *}
 							{if $product_info.list_price > 0 &&
 									$product_info.list_price > $product_info.Price &&
-									$product_info.Price > 0 && }
+									$product_info.Price > 0}
 								{$smarty.const.LIST_PRICE}:
 								<font color=brown>
-									<del>{$product_info.list_priceWithUnit}</del>
+									<strike>{$product_info.list_priceWithUnit}</strike>
 								</font>
 								<br>
 							{/if}
@@ -247,127 +247,127 @@
 
 				<tr>
 					<td>
-						<!-------------  пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ---------------------->
+						<!-------------  Класс палатки---------------------->
 						{section name=k loop=$class_palatka}
 							{if $smarty.section.k.index eq  $product_info.class  }
 								<b>{$smarty.const.ADMIN_PALATKA_CLASS}</b>:	{$class_palatka[k]}<br>
 							{/if}
 						{/section}
 						<!------------------------------------------------->
-						<!-------------  пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ---------------------->
+						<!-------------  Бренд палатки---------------------->
 						{section name=y loop=$brends_arr}
 							{if $brends_arr[y].id eq $product_info.brend_id}
 								<b>{$smarty.const.ADMIN_BREND}</b>:{$brends_arr[y].name}<br>
 							{/if}
 						{/section}
 						<!------------------------------------------------->
-						<!-------------  пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ  пїЅпїЅпїЅпїЅпїЅпїЅпїЅ---------------------->
+						<!-------------  количество мест в  палатке---------------------->
 
 							{if $product_info.num_place neq ''}
 								<b>{$smarty.const.ADMIN_PALATKA_NUM_PLACES}</b>: {$product_info.num_place}<br>
 							{/if}
 						<!------------------------------------------------->
-						<!-------------  пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ  пїЅпїЅпїЅпїЅпїЅпїЅпїЅ---------------------->
+						<!-------------  количество входов в  палатке---------------------->
 
 							{if $product_info.num_entry neq ''}
 								<b>{$smarty.const.ADMIN_PALATKA_NUM_ENTRIES}</b>: {$product_info.num_entry}<br>
 							{/if}
 						<!------------------------------------------------->
 
-						<!-------------  пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ---------------------->
+						<!-------------  Система палатки---------------------->
 						{section name=sys loop=$system_palatka}
 							{if $smarty.section.sys.index eq  $product_info.system  }
 								<b>{$smarty.const.ADMIN_PALATKA_SYSTEM}</b>:	{$system_palatka[sys]}<br>
 							{/if}
 						{/section}
 						<!------------------------------------------------->
-						<!-------------  пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ  пїЅпїЅпїЅпїЅпїЅпїЅпїЅ---------------------->
+						<!-------------  высота тамбура в  палатке---------------------->
 
 							{if $product_info.tambur_h  neq ''}
 								<b>{$smarty.const.ADMIN_PALATKA_TAMBUR_H}</b>: {$product_info.tambur_h } {$smarty.const.ADMIN_SANTIMETRI}<br>
 							{/if}
 						<!------------------------------------------------->
-						<!-------------  пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ  пїЅпїЅпїЅпїЅпїЅпїЅпїЅ---------------------->
+						<!-------------  ширина тамбура в  палатке---------------------->
 
 							{if $product_info.tambur_w  neq ''}
 								<b>{$smarty.const.ADMIN_PALATKA_TAMBUR_W}</b>: {$product_info.tambur_w } {$smarty.const.ADMIN_SANTIMETRI}<br>
 							{/if}
 						<!------------------------------------------------->
-						<!-------------  пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ  пїЅ  пїЅпїЅпїЅпїЅпїЅпїЅпїЅ---------------------->
+						<!-------------  количество дуг  в  палатке---------------------->
 
 							{if $product_info.num_dugi  neq ''}
 								<b>{$smarty.const.ADMIN_PALATKA_NUM_DUG}</b>: {$product_info.num_dugi } <br>
 							{/if}
 						<!------------------------------------------------->
-						<!-------------  пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ---------------------->
+						<!-------------  Каркас палатки---------------------->
 						{section name=karkas loop=$karkas_palatka}
 							{if $smarty.section.karkas.index eq  $product_info.karkas  }
 								<b>{$smarty.const.ADMIN_PALATKA_KARKAS}</b>:	{$karkas_palatka[karkas]}<br>
 							{/if}
 						{/section}
 						<!------------------------------------------------->
-						<!-------------  пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ  пїЅ  пїЅпїЅпїЅпїЅпїЅпїЅпїЅ---------------------->
+						<!-------------  количество дуг  в  палатке---------------------->
 
 							{if $product_info.furniture  neq ''}
 								<b>{$smarty.const.ADMIN_PALATKA_FURNITURE}</b>: {$product_info.furniture } <br>
 							{/if}
 						<!------------------------------------------------->
-						<!-------------  пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ  пїЅ  пїЅпїЅпїЅпїЅпїЅпїЅпїЅ---------------------->
+						<!-------------  внешний тент  в  палатке---------------------->
 
 							{if $product_info.tent  neq ''}
 								<b>{$smarty.const.ADMIN_PALATKA_TENT_OUT}</b>: {$product_info.tent } <br>
 							{/if}
 						<!------------------------------------------------->
-						<!-------------  пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ  пїЅ  пїЅпїЅпїЅпїЅпїЅпїЅпїЅ---------------------->
+						<!-------------  внутренний тент  в  палатке---------------------->
 
 							{if $product_info.inner_tent  neq ''}
 								<b>{$smarty.const.ADMIN_PALATKA_TENT_INNER}</b>: {$product_info.inner_tent } <br>
 							{/if}
 						<!------------------------------------------------->
-						<!-------------  пїЅпїЅпїЅпїЅпїЅ  пїЅ  пїЅпїЅпїЅпїЅпїЅпїЅпїЅ---------------------->
+						<!-------------  днище  в  палатке---------------------->
 
 							{if $product_info.floor  neq ''}
 								<b>{$smarty.const.ADMIN_PALATKA_FLOOR}</b>: {$product_info.floor } <br>
 							{/if}
 						<!------------------------------------------------->
-						<!-------------  пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ  пїЅ  пїЅпїЅпїЅпїЅпїЅпїЅпїЅ---------------------->
+						<!-------------  длина днища  в  палатке---------------------->
 
 							{if $product_info.floor_size_h  neq ''}
 								<b>{$smarty.const.ADMIN_PALATKA_FLOOR_SIZE_H}</b>: {$product_info.floor_size_h } <br>
 							{/if}
 						<!------------------------------------------------->
-						<!-------------  пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ  пїЅ  пїЅпїЅпїЅпїЅпїЅпїЅпїЅ---------------------->
+						<!-------------  ширина днища  в  палатке---------------------->
 
 							{if $product_info.floor_size_w  neq ''}
 								<b>{$smarty.const.ADMIN_PALATKA_FLOOR_SIZE_W}</b>: {$product_info.floor_size_w } <br>
 							{/if}
 						<!------------------------------------------------->
-						<!-------------  пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ  пїЅпїЅпїЅпїЅпїЅпїЅпїЅ---------------------->
+						<!-------------  размер площадки в  палатке---------------------->
 
 							{if $product_info.size_plosch  neq ''}
 								<b>{$smarty.const.ADMIN_PALATKA_PLOSCH_SIZE}</b>: {$product_info.size_plosch } <br>
 							{/if}
 						<!------------------------------------------------->
-						<!-------------  пїЅпїЅпїЅпїЅпїЅ  пїЅпїЅпїЅпїЅпїЅпїЅпїЅ---------------------->
+						<!-------------  вісота  палатки---------------------->
 
 							{if $product_info.height  neq ''}
 								<b>{$smarty.const.ADMIN_PALATKA_HEIGHT}</b>: {$product_info.height }  {$smarty.const.ADMIN_SANTIMETRI} <br>
 							{/if}
 
 						<!------------------------------------------------->
-						<!-------------  пїЅпїЅпїЅ  пїЅпїЅпїЅпїЅпїЅпїЅпїЅ---------------------->
+						<!-------------  вес  палатки---------------------->
 
 							{if $product_info.weight  neq ''}
 								<b>{$smarty.const.ADMIN_PALATKA_WEIGHT}</b>: {$product_info.weight }  {$smarty.const.CONF_WEIGHT_UNIT} <br>
 							{/if}
 						<!------------------------------------------------->
-						<!-------------  пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ  пїЅпїЅпїЅпїЅпїЅпїЅпїЅ---------------------->
+						<!-------------  размер упаковки  палатки---------------------->
 
 							{if $product_info.size_package  neq ''}
 								<b>{$smarty.const.ADMIN_PALATKA_SIZE_PACKAGE}</b>: {$product_info.size_package }  <br>
 							{/if}
 						<!------------------------------------------------->
-						<!-------------  пїЅпїЅпїЅпїЅ  пїЅпїЅпїЅпїЅпїЅпїЅпїЅ---------------------->
+						<!-------------  цвет  палатки---------------------->
 
 							{if $product_info.color  neq ''}
 								<b>{$smarty.const.ADMIN_PALATKA_COLOR}</b>: {$product_info.color }  <br>

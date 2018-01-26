@@ -1,4 +1,11 @@
 <?php
+/*****************************************************************************
+ *                                                                           *
+ * Shop-Script PREMIUM                                                       *
+ * Copyright (c) 2005 WebAsyst LLC. All rights reserved.                     *
+ *                                                                           *
+ *****************************************************************************/
+?><?php
 	//ADMIN :: configuration
 
 	//define admin department

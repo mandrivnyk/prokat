@@ -19,7 +19,6 @@
 			array("id"=>"topsale", "name"=>STRING_MODULES_TOP_SALE ),
 			array("id"=>"brends", "name"=>STRING_MODULES_BRENDS ),
 			array("id"=>"xmlHotline", "name"=>STRING_XML_HOTLINE ),
-			array("id"=>"xmlPriceua", "name"=>STRING_XML_PRICEUA ),
 			array("id"=>"pars", "name"=>STRING_MODULES_PARS)
 		)
 	);
@@ -31,8 +30,7 @@
 	{
 		//set default sub department if required
 		if (!isset($sub)) $sub = "news";
-//echo "./includes/admin/sub/".$admin_dpt["id"]."_$sub.php";
-//        exit();
+
 		if (file_exists("./includes/admin/sub/".$admin_dpt["id"]."_$sub.php")) //sub-department file exists
 		{
 			//assign admin main department template

@@ -1,8 +1,4 @@
-    <?php
-    /*echo '<pre>';
-        print_r($_GET);
-    echo '</pre>';*/
-
+<?php
 
         if (!is_dir('./statistic/'.$_SERVER['REMOTE_ADDR']))  // ---- директория - ip
         {
@@ -184,56 +180,55 @@
 
 
 
-            print_r($_GET);
-
-    if(isset($_GET['select_variants_0']))
+//            print_r($_GET);
+//            print_r($variants);
+    if($_GET['select_variants_0'])
     {
-        //print_r('-------- mb_detect_encoding = '.mb_detect_encoding($_GET['select_variants_0']));
-        //$select_variants_0 =  iconv("UTF-8","windows-1251",$_GET['select_variants_0']);
-        $select_variants_0 = $_GET['select_variants_0'];
-        //print_r('-------- $select_variants_0 = '.$select_variants_0);
-
-
+        $select_variants_0 =  @iconv("UTF-8","windows-1251",$_GET['select_variants_0']);
         $variants_length = count($variants);
         $variants[$variants_length] = str_replace(" ","+", ''.$select_variants_0);
     }
 
-    if(isset($_GET['select_variants_1']))
+    if($_GET['select_variants_1'])
     {
-        //$select_variants_1 =  @iconv("UTF-8","windows-1251",$_GET['select_variants_1']);
-        $select_variants_1 = $_GET['select_variants_1'];
+
+//        echo '123';
+       // $select_variants_1 =  iconv("UTF-8","windows-1251",$_GET['select_variants_1']);
+        //$select_variants_1 =  $_GET['select_variants_1'];
+//        print_r($_GET['select_variants_1']);
+//        print_r($select_variants_1);
         $variants_length = count($variants);
-        $variants[$variants_length] = str_replace(" ","+", ''.$select_variants_1);
+       // $variants[$variants_length] = str_replace(" ","+", ''.$select_variants_1);
+        $variants[$variants_length] = $_GET['select_variants_1'];
+//        print_r($variants);
+//        print_r("END");
     }
 
-    if(isset($_GET['size_sel']))
+    if($_GET['size_sel'])
     {
-       // $size_sel =  @iconv("UTF-8","windows-1251",$_GET['size_sel']);
-        $size_sel = $_GET['size_sel'];
+        $size_sel =  @iconv("UTF-8","windows-1251",$_GET['size_sel']);
         $variants_length = count($variants);
-        $variants[$variants_length] = str_replace(" ","+", ' '.$size_sel);
+        $variants[$variants_length] = str_replace(" ","+", ' Размер: '.$size_sel);
         //echo '$variants[$variants_length]= '.$variants[$variants_length];
 
     }
-    if(isset($_GET['color_sel']))
+    if($_GET['color_sel'])
     {
-        //$color_sel =  @iconv("UTF-8","windows-1251",$_GET['color_sel']);
-        $color_sel = $_GET['color_sel'];
+        $color_sel =  @iconv("UTF-8","windows-1251",$_GET['color_sel']);
         $variants_length = count($variants);
-        $variants[$variants_length] =  str_replace(" ","+", ' '.$color_sel);
+        $variants[$variants_length] =  str_replace(" ","+", ' Цвет: '.$color_sel);
     }
 
-//    echo '<pre>';
-//        print_r($variants);
-//    echo '</pre>';
 
             unset( $_SESSION["variants"] );
             $_SESSION["variants"]=$variants;
-
-echo '<pre>';
+//            echo '<pre>AFTER';
+//            print_r($_SESSION);
+//            echo '</pre>';
+//            exit();
+    /*echo '<pre>';
         print_r($_SESSION);
-    echo '</pre>';
-
+    echo '</pre>';*/
             header("Location: cart.php?shopping_cart=yes&add2cart=".(int)$_GET["addproduct"] );
         }
 
