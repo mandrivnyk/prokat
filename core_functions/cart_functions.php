@@ -1,11 +1,4 @@
-    <?php
-    /*****************************************************************************
-     *                                                                           *
-     * Shop-Script PREMIUM                                                       *
-     * Copyright (c) 2005 WebAsyst LLC. All rights reserved.                     *
-     *                                                                           *
-     *****************************************************************************/
-    ?><?php
+<?php
     // compare two configuration
     function CompareConfiguration($variants1, $variants2)
     {

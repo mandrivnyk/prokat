@@ -1,7 +1,4 @@
-    <?php
-    /*echo '<pre>';
-        print_r($_GET);
-    echo '</pre>';*/
+<?php
 
         if (!is_dir('./statistic/'.$_SERVER['REMOTE_ADDR']))  // ---- директория - ip
         {
@@ -194,9 +191,17 @@
 
     if($_GET['select_variants_1'])
     {
-        $select_variants_1 =  @iconv("UTF-8","windows-1251",$_GET['select_variants_1']);
+
+//        echo '123';
+       // $select_variants_1 =  iconv("UTF-8","windows-1251",$_GET['select_variants_1']);
+        //$select_variants_1 =  $_GET['select_variants_1'];
+//        print_r($_GET['select_variants_1']);
+//        print_r($select_variants_1);
         $variants_length = count($variants);
-        $variants[$variants_length] = str_replace(" ","+", ''.$select_variants_1);
+       // $variants[$variants_length] = str_replace(" ","+", ''.$select_variants_1);
+        $variants[$variants_length] = $_GET['select_variants_1'];
+//        print_r($variants);
+//        print_r("END");
     }
 
     if($_GET['size_sel'])
@@ -214,13 +219,13 @@
         $variants[$variants_length] =  str_replace(" ","+", ' Цвет: '.$color_sel);
     }
 
-//    echo '<pre>';
-//        print_r($variants);
-//    echo '</pre>';
 
             unset( $_SESSION["variants"] );
             $_SESSION["variants"]=$variants;
-
+//            echo '<pre>AFTER';
+//            print_r($_SESSION);
+//            echo '</pre>';
+//            exit();
     /*echo '<pre>';
         print_r($_SESSION);
     echo '</pre>';*/
@@ -237,5 +242,3 @@
 
         //show Smarty output
         $smarty->display("shopping_cart.tpl.html");
-
-    ?>

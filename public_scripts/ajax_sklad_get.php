@@ -31,7 +31,7 @@ if($productCode >0) {
         if($forSelect >0) {
             foreach ($productCodes as $key=>$productCode) {
                 $result .= '<br><b>Артикул: ' . $productCode . '</b>';
-                $result .= $sklad->createSkladInSelectTag($sklad->getVariantsFromFile($productCode), $key);
+                $result .= $sklad->createSkladInSelectTag($sklad->getVariantsFromFile($productCode), 1);
             }
             echo $result.'<br>';
             exit();

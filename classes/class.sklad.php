@@ -45,7 +45,7 @@ class sklad
     {
         $pathToFile = $this->_getDir().$productCode.".json";
         header('Content-Type: text/html; charset=windows-1251');
-        $variants = [];
+        $variants = array();
         if(is_file($pathToFile))
         {
             $fp = $this->utf8_fopen_read($pathToFile);
