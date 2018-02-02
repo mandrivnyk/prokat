@@ -22,7 +22,7 @@
 
 			<td align=right>
 				<a href="{$cart_php_file}?shopping_cart=yes&clear_cart=yes">
-					<img src="images/remove.jpg" border=0 > 
+					<img src="images/remove.jpg" border=0 >
 						<u>{$smarty.const.CART_CLEAR}</u>
 					</img>
 				</a>
@@ -74,7 +74,7 @@
 		<tr bgcolor=white>
 			<td>
 				{if $this_is_a_popup_cart_window}
-					<b>{$cart_content[i].name} {if isset($cart_content[i].info_prod) && ($cart_content[i].info_prod|count_characters > 0)}&nbsp;&nbsp;&nbsp; ({$cart_content[i].info_prod|replace:'+':' '}){/if}</b>
+					<b>{$cart_content[i].name}</b>
 				{else}
 					<a href='{$cart_php_file}?productID={$cart_content[i].productID}'>{$cart_content[i].name}</a>
 				{/if}
@@ -93,8 +93,8 @@
 				{if $cart_content[i].min_order_amount}
 					<font color=red>
 						<b>
-							{$smarty.const.STRING_MIN_ORDER_AMOUNT} 
-								{$cart_content[i].min_order_amount} 
+							{$smarty.const.STRING_MIN_ORDER_AMOUNT}
+								{$cart_content[i].min_order_amount}
 							{$smarty.const.STRING_ITEM}
 						</b>
 					</font>
@@ -128,7 +128,7 @@
 				{$smarty.const.ADMIN_DISCOUNT} {$discount_percent}
 			</td>
 			<td align=center>
-				{$discount_value}	
+				{$discount_value}
 			</td>
 			<td>
 				&nbsp;
@@ -158,7 +158,7 @@
 				{$smarty.const.STRING_UNREGISTERED_CUSTOMER_COMBINED_DISCOUNT_PROMPT}
 			</td>
 			<td align=center>
-				{$discount_value}	
+				{$discount_value}
 			</td>
 			<td>
 				&nbsp;
@@ -202,12 +202,12 @@
 			<tr>
 				<td align=center>
 				 {if $this_is_a_popup_cart_window}
-					<input type="button" 
-						value="{$smarty.const.CLOSE_BUTTON}" 
+					<input type="button"
+						value="{$smarty.const.CLOSE_BUTTON}"
 						onClick="JavaScript:window.close();">
 				 {else}
-					<input type="button" 
-						value="{$smarty.const.STRING_BACK_TO_SHOPPING}" 
+					<input type="button"
+						value="{$smarty.const.STRING_BACK_TO_SHOPPING}"
 						onClick="JavaScript:window.location='{$cart_php_file}';">
 				 {/if}
 				</td>
@@ -236,7 +236,7 @@ function adjust_cart_window(counter)
 	var scr_h = screen.availHeight - 50;
 	var wnd_h = 210 + counter*50;
 	window.resizeTo( 400, Math.min(scr_h, wnd_h) );
-	
+
 }
 {/literal}
 	adjust_cart_window({counter name=product_count});
@@ -285,7 +285,7 @@ pageTracker._trackPageview();
 									width="1" height="1" border="0" /></a>
 									{/literal}
 									</noscript>
-									
+
 							</div><!-- End MyCounter code -->
 
 </body>

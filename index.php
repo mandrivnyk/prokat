@@ -1,16 +1,17 @@
 <?php
 $cache_enable =0;  //-------------------Включение -  1/отключение -  0 кеширования--------------------------------
-
+//unset( $_SESSION );
+//exit();
 	
 include("./includes/filtrBot.php");
 include("./includes/statisticIP.php");
 
 date_default_timezone_set('Europe/Kiev');
 include('./resizeimage.inc.php');
-
+session_start();
 if ($cache_enable == 1)
 {
-	session_start();
+
 	if(!isset($_POST['ComparisonHidden1'])
 		&& !isset($_POST['ComparisonHidden2'])
 		&& !isset($_GET['quick_register'])
@@ -22,7 +23,8 @@ if ($cache_enable == 1)
 		&& !isset($_GET['order2_shipping'])
 		&& !isset($_GET['register'])
 		&& !isset($_GET['change_address'])
-		&& !isset($_GET['discuss']))
+		&& !isset($_GET['discuss'])
+		&& !isset($_GET['shopping_cart']))
 	{
 		if($_SERVER['REQUEST_URI'] == '/')
 			$request_uri = '/index.php';
@@ -98,6 +100,8 @@ if ($cache_enable == 1)
 	include('./classes/class.virtual.paymentmodule.php');
 	include('./classes/class.virtual.smsmail.php');
 	include('./modules/smsmail/class.smsnotify.php');
+	include('./classes/class.cart.php');
+
 	MagicQuotesRuntimeSetting();
 	//init Smarty
 	require 'smarty/smarty.class.php';
@@ -333,6 +337,13 @@ echo '</pre>';*/
 			$smarty->assign( "aux_page3", $aux_pages[2] );
 			$smarty->assign( "aux_page4", $aux_pages[3] );
 		}
+
+
+
+		if(isset($_POST["shopping_cart"]) || isset($_GET["shopping_cart"])) {
+	     $cart = new Cart($smarty, $smarty_mail);
+         $cart->shoppingCart();
+        }
 /*$a2 = getmicrotime();
 $diff = $a2 - $a1;
 echo "shop-script core: ".$diff;

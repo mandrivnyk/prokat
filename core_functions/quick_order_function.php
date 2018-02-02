@@ -96,7 +96,7 @@ function quickOrderBillingAddressVerify()
 
 function quikOrderSetCustomerInfo()
 {
-	session_start();
+	//session_start();
 	$_SESSION["first_name"]	= $_POST["first_name"];
 	$_SESSION["middle_name"]	= $_POST["middle_name"];
 	$_SESSION["last_name"]	= $_POST["middle_name"]." ".$_POST["last_name"];

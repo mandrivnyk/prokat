@@ -478,7 +478,7 @@ function _sendOrderNotifycationToAdmin( $orderID, &$smarty_mail, $tax )
 		$product = db_fetch_row($q);
 		$content[$i]["product_code"] = $product["product_code"];
 		$variants	= GetConfigurationByItemId( $content[$i]["itemID"] );
-		$options	= GetStrOptions( $variants );
+		$options	= GetStrOptions( $variants[0], $product["product_code"] );
 		if ( $options != "" )
 			$content[$i]["name"] = $product["name"]."(".$options.")";
 		else

@@ -148,7 +148,9 @@
 						{* shopping cart page is shown in the same window - in this cart 'add to cart' button is a form submit button *}
 
 						{if  $product_info.Price>0 && ( $smarty.const.CONF_SHOW_ADD2CART eq 1 ) && ( $smarty.const.CONF_CHECKSTOCK==0 || $product_info.in_stock > 0 ) }
-							<input name="cart_{$product_info.productID}" type="image" src="/images/cart_navy.gif" alt="{$smarty.const.ADD_TO_CART_STRING}">
+
+					<a href="index.php?shopping_cart=yes&addproduct={$product_info.productID}"><img border=0 src="/images/cart_navy.gif" alt="{$smarty.const.ADD_TO_CART_STRING}" ></a>
+
 						{/if}
 
 					{else}

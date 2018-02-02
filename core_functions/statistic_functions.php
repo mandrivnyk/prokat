@@ -1,11 +1,4 @@
 <?php
-/*****************************************************************************
- *                                                                           *
- * Shop-Script PREMIUM                                                       *
- * Copyright (c) 2005 WebAsyst LLC. All rights reserved.                     *
- *                                                                           *
- *****************************************************************************/
-?><?php
 // *****************************************************************************
 // Purpose	get remote customer computer IP address
 // Inputs   	$log - login
@@ -169,7 +162,7 @@ function stChangeOrderStatus( $orderID, $statusID, $comment = '', $notify = 0 )
 	list($status_name) = db_fetch_row($q_status_name);
 	$sql =  "insert into ".ORDER_STATUS_CHANGE_LOG_TABLE.
 		" ( orderID, status_name, status_change_time, status_comment ) ".
-		" values( ".$orderID.", '".mysql_escape_string($status_name)."', '".
+		" values( ".$orderID.", '".mysql_real_escape_string($status_name)."', '".
 			get_current_time()."', '".TransformStringToDataBase($comment)."' ) ";
 	db_query($sql);
 			

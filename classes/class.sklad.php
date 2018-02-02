@@ -63,14 +63,43 @@ class sklad
         }
         return $variants;
     }
+    /**
+     * @param $productCode
+     * @return String $variant
+     */
+    public function getVariantStringFromFile($productCode, $variantNum)
+    {
+        $result = "";
+        $pathToFile = $this->_getDir().$productCode.".json";
+        //header('Content-Type: text/html; charset=windows-1251');
+        $variants = array();
+        if(is_file($pathToFile))
+        {
+            $fp = $this->utf8_fopen_read($pathToFile);
+
+            if ($fp)
+            {
+                $i=0;
+                while (!feof($fp))
+                {
+                    $variants[$i++]  = fgets($fp, 999);
+                }
+                $variants =   implode($variants);
+                $variants = json_decode($variants, true) ;
+            }
+
+            $result = 'артикул: '.$variants[$variantNum]['productCode'].', размер: '.$variants[$variantNum]['size'].', цвет: '.$variants[$variantNum]['color'];
+        }
+        return $result;
+    }
 
     public function createSkladInSelectTag($variants, $i){
         $com_str = '';
         if(count($variants) > 0) {
-            $com_str .= "<select id='select_variants_".$i."'><option value='0'>Выберите варианты</option>";
-            foreach ($variants as $variant) {
+            $com_str .= "<select id='select_variants_".$i."' name='select_variants_".$i."'><option value=''>Выберите варианты</option>";
+            foreach ($variants as $key=>$variant) {
                 $variant =   $this->_convertVariantsTo1251($variant);
-                $com_str .= "<option value='артикул: ".$variant['productCode'].", размер: ".$variant['size'].", цвет: ".$variant['color'].", склад №".$variant['sklad']."'>".'размер: '.$variant['size'].' цвет: '.$variant['color']."</option>";
+                $com_str .= "<option value='".$key."'>".'размер: '.$variant['size'].' цвет: '.$variant['color']."</option>";
                 //$com_str .= "<option value='".$variant['size']." ".$variant['color']."'>".''.$variant['productCode'].' размер: '.$variant['size'].' '.$variant['color']."</option>";
             }
             $com_str .= "</select><br>";

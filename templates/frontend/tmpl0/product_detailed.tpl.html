@@ -270,17 +270,18 @@
 
                                         {if !$printable_version}
 
-                                          <form action="index.php?productID={$product_info.productID}"
-                                                method=post name="HiddenFieldsForm">
-
+                                          <form action="index.php?productID={$product_info.productID}" method=post name="HiddenFieldsForm">
+                                              {include file="sklad.tpl.html" productCode=$product_info.product_code  productID=$product_info.productID size_arr=$size_arr colors_arr=$colors_arr}
+                                              <div id="sklad" style="display: none">{$smarty.const.IN_SKLAD} <span id="skladContent"></span></div>
                                           {if $smarty.const.CONF_OPEN_SHOPPING_CART_IN_NEW_WINDOW eq 0}
 
                                                 {* shopping cart page is shown in the same window - in this cart 'add to cart' button is a form submit button *}
 
                                                 {if $product_info.Price>0 && ( $smarty.const.CONF_SHOW_ADD2CART eq 1 ) &&
                                                     ( $smarty.const.CONF_CHECKSTOCK==0 || $product_info.in_stock > 0 ) }
-
-                                                    <input name='cart' type=image src="images/cart_big_navy.gif"alt="{$smarty.const.ADD_TO_CART_STRING}">
+                                                    <input type="hidden" name="addproduct" value="{$product_info.productID}">
+                                                    <input type="hidden" name="shopping_cart" value="yes">
+                                                    <input name='cart' type=submit  src="images/cart_big_navy.gif" alt="{$smarty.const.ADD_TO_CART_STRING}">
                                                 {else}
                                                     &nbsp;
                                                 {/if}
@@ -291,64 +292,63 @@
 
                                                 {if $product_info.Price>0 && ( $smarty.const.CONF_SHOW_ADD2CART eq 1 ) &&
                                                     ( $smarty.const.CONF_CHECKSTOCK==0 || $product_info.in_stock > 0 ) }
-                                                    {include file="sklad.tpl.html" productCode=$product_info.product_code  productID=$product_info.productID size_arr=$size_arr colors_arr=$colors_arr}
-                                              <div id="sklad" style="display: none">{$smarty.const.IN_SKLAD} <span id="skladContent"></span></div>
-
-        <script langauge='JavaScript'>
-        {literal}
 
 
-        function get_size_selected()
-        {
-            var ret_base = 'cart.php?';
-            var variants_string = '';
-            var size_string = '';
-            var color_string = '';
+                                                <script langauge='JavaScript'>
+                                                {literal}
 
 
-            console.log("start------------");
-            for(var i = 0; i<2; i++) {
-                if(document.getElementById('select_variants_'+i) != null)
-                {
-                    console.log("here 1------------"+i);
-                    if($("#select_variants_"+i).val()  != 0)
-                    {
-                        console.log("here 2------------"+i);
-                        //var Size_sel = $("#colors_select").val();
-                        //alert(Size_sel);
-                        variants_string +=  'select_variants_'+i+'='+$( "#select_variants_"+i).val()+'&';
-                    }
-                }
-            }
-
-            if(document.getElementById('size_select') != null)
-            {
-                if($("#size_select").val()  != 0)
-                {
-                    //var Size_sel = $("#colors_select").val();
-                    //alert(Size_sel);
-                    size_string +=  'size_sel='+$( "#size_select" ).val()+'&';
-                }
-            }
-            //alert(1);
-
-            if(document.getElementById('colors_select') != null)
-            {
-                if($("#colors_select").val() != 0)
-                {
-                    //var Color_sel = document.getElementById('colors_select').value;
-                    //alert(Size_sel);
-                    color_string +=  'color_sel='+$("#colors_select").val()+'&';
-                }
-            }
-            console.log("variants_string------------"+variants_string);
-            return ret_base+variants_string+size_string+color_string;
+                                                function get_size_selected()
+                                                {
+                                                    var ret_base = 'cart.php?';
+                                                    var variants_string = '';
+                                                    var size_string = '';
+                                                    var color_string = '';
 
 
-        }
-        {/literal}
-        </script>
-    <a id="cart_id" href="javascript: var url_mod =get_size_selected(); open_window(url_mod+'addproduct={$product_info.productID}{counter name='select_counter_hidden' start=0 skip=1 print=false}{counter name='select_counter_hidden_extra' start=0 skip=1 print=false}{section name=i loop=$product_extra}{if $product_extra[i].option_type eq 1}{section name=s loop=$product_extra[i].option_show_times}&option_select_hidden_{counter name=select_counter_hidden}='+document.HiddenFieldsForm.option_select_hidden_{counter name=select_counter_hidden_extra}.value+'{/section}{/if}{/section}',400,300);"><img border=0 src="images/cart_big_navy.gif"
+                                                    console.log("start------------");
+                                                    for(var i = 0; i<2; i++) {
+                                                        if(document.getElementById('select_variants_'+i) != null)
+                                                        {
+                                                            console.log("here 1------------"+i);
+                                                            if($("#select_variants_"+i).val()  != 0)
+                                                            {
+                                                                console.log("here 2------------"+i);
+                                                                //var Size_sel = $("#colors_select").val();
+                                                                //alert(Size_sel);
+                                                                variants_string +=  'select_variants_'+i+'='+$( "#select_variants_"+i).val()+'&';
+                                                            }
+                                                        }
+                                                    }
+
+                                                    if(document.getElementById('size_select') != null)
+                                                    {
+                                                        if($("#size_select").val()  != 0)
+                                                        {
+                                                            //var Size_sel = $("#colors_select").val();
+                                                            //alert(Size_sel);
+                                                            size_string +=  'size_sel='+$( "#size_select" ).val()+'&';
+                                                        }
+                                                    }
+                                                    //alert(1);
+
+                                                    if(document.getElementById('colors_select') != null)
+                                                    {
+                                                        if($("#colors_select").val() != 0)
+                                                        {
+                                                            //var Color_sel = document.getElementById('colors_select').value;
+                                                            //alert(Size_sel);
+                                                            color_string +=  'color_sel='+$("#colors_select").val()+'&';
+                                                        }
+                                                    }
+                                                    console.log("variants_string------------"+variants_string);
+                                                    return ret_base+variants_string+size_string+color_string;
+
+
+                                                }
+                                                {/literal}
+                                                </script>
+                                            <a id="cart_id" href="javascript: var url_mod =get_size_selected(); open_window(url_mod+'addproduct={$product_info.productID}{counter name='select_counter_hidden' start=0 skip=1 print=false}{counter name='select_counter_hidden_extra' start=0 skip=1 print=false}{section name=i loop=$product_extra}{if $product_extra[i].option_type eq 1}{section name=s loop=$product_extra[i].option_show_times}&option_select_hidden_{counter name=select_counter_hidden}='+document.HiddenFieldsForm.option_select_hidden_{counter name=select_counter_hidden_extra}.value+'{/section}{/if}{/section}',400,300);"><img border=0 src="images/cart_big_navy.gif"
                                                         alt="{$smarty.const.ADD_TO_CART_STRING}"></a>
 
                                                 {else}

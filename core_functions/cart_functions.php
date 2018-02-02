@@ -1,4 +1,6 @@
 <?php
+
+require_once('./classes/class.sklad.php');
     // compare two configuration
     function CompareConfiguration($variants1, $variants2)
     {
@@ -98,12 +100,15 @@
             "values( '".regGetIdByLogin($_SESSION["log"])."', '".$itemID."', 1 )" );
     }
 
-    function GetStrOptions($variants)
+    function GetStrOptions($variantNum, $productCode)
     {
-        $first_flag=true;
-        $res = "";
-        foreach( $variants as $var )
-        {
+        $sklad = new sklad();
+
+//        $first_flag=true;
+//        $res = "";
+//        foreach( $variants as $var )
+//        {
+        $res = $sklad->getVariantStringFromFile($productCode, $variantNum);
 //            $q=db_query("select option_value from ".
 //                PRODUCTS_OPTIONS_VALUES_VARIANTS_TABLE.
 //                    " where variantID='".$var."'" );
@@ -117,8 +122,8 @@
 //                else
 //                    $res.=", ".$r["option_value"];
 //            }
-            $res.=$var;
-        }
+//            $res.=$var;
+//        }
         return $res;
     }
 
@@ -289,64 +294,8 @@
         $variants 		= '';
 
 
-        if (isset($_SESSION["log"])) //get cart content from the database
-        {
-            $q = db_query("SELECT itemID, Quantity FROM ".
-                    SHOPPING_CARTS_TABLE.
-                    " WHERE customerID='".regGetIdByLogin($_SESSION["log"])."'" );
+        //unauthorized user - get cart from session vars
 
-            while ($cart_item = db_fetch_row($q))
-            {
-                // get variants
-                $variants=GetConfigurationByItemId( $cart_item["itemID"] );
-
-                // shopping cart item
-                $q_shopping_cart_item = db_query("select productID from ".
-                        SHOPPING_CART_ITEMS_TABLE." where ".
-                        " itemID='".$cart_item["itemID"]."'" );
-                $shopping_cart_item = db_fetch_row( $q_shopping_cart_item );
-                $q_products = db_query("SELECT name, Price, productID, min_order_amount, shipping_freight, free_shipping FROM ".
-                        PRODUCTS_TABLE.
-                        " WHERE productID='".$shopping_cart_item["productID"]."'");
-                if ( $product = db_fetch_row($q_products) )
-                {
-                    $costUC = GetPriceProductWithOption( $variants,
-                                $shopping_cart_item["productID"] );
-                    $tmp =
-                        array(
-                            "productID" =>  $product["productID"],
-                            "id"		=>	$cart_item["itemID"],
-                            "name"		=>	$product["name"],
-                            "quantity"	=>	$cart_item["Quantity"],
-                            "free_shipping"	=>	$product["free_shipping"],
-                            "costUC"	=>	$costUC,
-                            "cost"		=>	show_price($cart_item["Quantity"]*
-                                            GetPriceProductWithOption($variants,
-                                                $shopping_cart_item["productID"]))   );
-
-                    $freight_cost += $cart_item["Quantity"]*$product["shipping_freight"];
-
-                    $strOptions=GetStrOptions(
-                            GetConfigurationByItemId( $tmp["id"] ));
-
-                    if ( trim($strOptions) != "" )
-                            $tmp["name"].="  (".$strOptions.")";
-
-
-                    if ( $product["min_order_amount"] > $cart_item["Quantity"] )
-                        $tmp["min_order_amount"] = $product["min_order_amount"];
-
-
-                    $cart_content[] = $tmp;
-                    $total_price += $cart_item["Quantity"]*
-                            GetPriceProductWithOption($variants,
-                                $shopping_cart_item["productID"]);
-
-                }
-            }
-        }
-        else //unauthorized user - get cart from session vars
-        {
             //echo '2';
             //print_r($_SESSION['gids']);
         //session_start();
@@ -367,7 +316,7 @@
                         $session_items[]=CodeItemInClient($_SESSION["configurations"][$j], $_SESSION["gids"][$j]);
 
 
-                        $q = db_query("SELECT name, Price, shipping_freight, free_shipping FROM ".PRODUCTS_TABLE." WHERE productID='".$_SESSION["gids"][$j]."'");
+                        $q = db_query("SELECT name, Price, shipping_freight, free_shipping, product_code FROM ".PRODUCTS_TABLE." WHERE productID='".$_SESSION["gids"][$j]."'");
 
                         if ($r = db_fetch_row($q))
                         {
@@ -386,6 +335,7 @@
 
                             $tmp = array(
                                     "productID"	=>  $_SESSION["gids"][$j],
+                                    "product_code"	=>  $r["product_code"],
                                     "id"		=>	$id, //$_SESSION["gids"][$j],
                                     "info_prod"		=>	$info_prod,
                                     "name"		=>	$r[0],
@@ -394,7 +344,11 @@
                                     "costUC"	=>	$costUC,
                                     "cost"		=>	show_price($costUC * $_SESSION["counts"][$j])
                                 );
-                            $strOptions=GetStrOptions( $_SESSION["configurations"][$j] );
+                            $strOptions= "";
+                            if(isset($_SESSION["configurations"][$j][0])) {
+                                $strOptions = GetStrOptions( $variantNum, $r["product_code"] );
+                            }
+
                             if ( trim($strOptions) != "" )
                                 $tmp["name"].="  (".$strOptions.")";
 
@@ -416,7 +370,7 @@
                         }
                     }
                 }
-        }
+
     /*echo '1';
     print_r($cart_content);
     exit();*/
@@ -455,15 +409,13 @@
 
         $is=GetProductInStockCount( $productID );
 
-        $q = db_query( "select min_order_amount from ".PRODUCTS_TABLE.
-            " where productID=".$productID );
-        $min_order_amount = db_fetch_row( $q );
-        $min_order_amount = $min_order_amount[ 0 ];
-
+//        $q = db_query( "select min_order_amount from ".PRODUCTS_TABLE.
+//            " where productID=".$productID );
+//        $min_order_amount = db_fetch_row( $q );
+//        $min_order_amount = $min_order_amount[ 0 ];
+        $min_order_amount = 1;
         $count_to_order = 1;
 
-        if (!isset($_SESSION["log"])) //save shopping cart in the session variables
-        {
 
             //$_SESSION["gids"] contains product IDs
             //$_SESSION["counts"] contains product quantities
@@ -499,41 +451,7 @@
             }
             else
                 return false;
-        }
-        else //authorized customer - get cart from database
-        {
-            $itemID=SearchConfigurationInDataBase($variants, $productID );
-            if ( $itemID !=-1 ) // if this configuration exists in database
-            {
-                $q = db_query("SELECT Quantity FROM ".
-                    SHOPPING_CARTS_TABLE.
-                    " WHERE customerID='".regGetIdByLogin($_SESSION["log"])."' AND itemID='".$itemID."'");
-                $row = db_fetch_row($q);
-                $quantity = $row[0];
-                if (CONF_CHECKSTOCK==0 || $quantity + $count_to_order <= $is)
-                    db_query("UPDATE ".SHOPPING_CARTS_TABLE.
-                        " SET Quantity=".($row[0]+$count_to_order).
-                        " WHERE customerID='".regGetIdByLogin($_SESSION["log"]).
-                        "' AND itemID='".$itemID."'");
-                else
-                    return false;
-            }
-            else //insert new item
-            {
-                $count_to_order = $min_order_amount;
-                if (CONF_CHECKSTOCK==0 || $is >= $count_to_order)
-                {
-                    $itemID=InsertNewItem($variants, $productID );
-                    InsertItemIntoCart($itemID);
-                    db_query("UPDATE ".SHOPPING_CARTS_TABLE.
-                        " SET Quantity=".$count_to_order.
-                        " WHERE customerID='".regGetIdByLogin($_SESSION["log"]).
-                        "' AND itemID='".$itemID."'");
-                }
-                else
-                    return false;
-            }
-        }
+
 
         return true;
     }
