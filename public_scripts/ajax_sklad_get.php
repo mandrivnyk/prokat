@@ -3,16 +3,32 @@ $productCode = 0;
 $forSelect = 0;
 $forCharacterList = 0;
 
-if(isset($_GET['productCode']))
-    $productCode = iconv("UTF-8","windows-1251",trim($_GET['productCode']));
+if(isset($_POST['productCode']))
+    $productCode = iconv("UTF-8","windows-1251",trim($_POST['productCode']));
 
-if(isset($_GET['forSelect']))
-    $forSelect = iconv("UTF-8","windows-1251",$_GET['forSelect']);
+if(isset($_POST['forSelect']))
+    $forSelect = iconv("UTF-8","windows-1251",$_POST['forSelect']);
 
-if(isset($_GET['forCharacterList']))
-    $forCharacterList = iconv("UTF-8","windows-1251",$_GET['forCharacterList']);
+if(isset($_POST['forCharacterList']))
+    $forCharacterList = iconv("UTF-8","windows-1251",$_POST['forCharacterList']);
 
+if(isset($_POST['size_arr'])){
+    $sizes = $_POST['size_arr'];
+    array_walk($sizes, 'convert');
+}
 
+//print_r($sizes);
+
+if(isset($_POST['colors_arr'])) {
+    $colors = $_POST['colors_arr'];
+    array_walk($colors, 'convert');
+}
+
+//print_r($colors);
+
+function convert(&$value, $key){
+    $value = iconv("UTF-8","windows-1251",  $value);
+}
 
 require_once('../classes/class.sklad.php');
 
@@ -30,6 +46,10 @@ if($productCode >0) {
 
         if($forSelect >0) {
             foreach ($productCodes as $key=>$productCode) {
+                if(!$sklad->checkIsFile($productCode)) {
+                    $sklad->setVariantsToFile();
+                }
+
                 $result .= '<br><b>Артикул: ' . $productCode . '</b>';
                 $result .= $sklad->createSkladInSelectTag($sklad->getVariantsFromFile($productCode), 1);
             }
@@ -48,6 +68,8 @@ if($productCode >0) {
             exit();
         }
 }
+
+
 
 
 

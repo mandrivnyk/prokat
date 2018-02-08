@@ -36,6 +36,13 @@ class sklad
         return $handle;
     }
 
+    public function checkIsFile($productCode){
+        $pathToFile = $this->_getDir().$productCode.".json";
+        if(is_file($pathToFile))
+            return true;
+        return false;
+    }
+
 
     /**
      * @param $productCode
@@ -63,6 +70,12 @@ class sklad
         }
         return $variants;
     }
+
+    public function setVariantsToFile($productCode, $variants) {
+
+    }
+
+
     /**
      * @param $productCode
      * @return String $variant

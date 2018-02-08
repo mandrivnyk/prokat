@@ -10,11 +10,29 @@
 
     function getSkladJsonPhp(productCodeString)
     {
-        $.ajax({
-            type: "GET",
-            url: "/public_scripts/ajax_sklad_get.php",
-            data: "productCode="+productCodeString+"&forSelect=1",
+        var size_arr = [];
+        var colors_arr = [];
+        {/literal}
+            {if isset($size_arr)}{section name=i loop=$size_arr}{literal} size_arr[{/literal}{$smarty.section.i.iteration-1}{literal}] = {/literal} "{$size_arr[i]}";
+            {/section}{/if}
+        {literal}
+        {/literal}
+            {if isset($colors_arr)}{section name=y loop=$colors_arr}{literal} colors_arr[{/literal}{$smarty.section.y.iteration-1}{literal}] = {/literal} "{$colors_arr[y]}";
+                {/section}{/if}
+        {literal}
 
+            // size_arr = $.toJSON(size_arr);
+            // colors_arr = $.toJSON(colors_arr);
+
+        $.ajax({
+            type: "POST",
+            url: "/public_scripts/ajax_sklad_get.php",
+            data: {
+                size_arr: size_arr,
+                colors_arr: colors_arr,
+                productCode: productCodeString,
+                forSelect: 1
+            },
             success: function(responseText){
                 if( !$.isEmptyObject(responseText)) {
                     $("#sklad").show();
@@ -24,10 +42,14 @@
             }
         });
         $.ajax({
-            type: "GET",
+            type: "POST",
             url: "/public_scripts/ajax_sklad_get.php",
-            data: "productCode="+productCodeString+"&forCharacterList=1",
-
+            data: {
+                size_arr: size_arr,
+                colors_arr: colors_arr,
+                productCode: productCodeString,
+                forCharacterList: 1
+            },
             success: function(responseList){
                 if( !$.isEmptyObject(responseList)) {
                     $("#inSkladTRTag").show();
