@@ -276,12 +276,7 @@ class comments
 //        $this->data['text'] = mb_convert_encoding($this->data['text'], 'UTF-8', 'OLD-ENCODING');
         if( !file_exists($this->_getDir().$this->data['productID'].'.json'))
                 {
-            //echo ' 4';
-//    				$fp = fopen($this->_getDir().$this->data['productID'].'.json', "w"); // ("r" - считывать "w" - создавать "a" - добавлять к тексту), мы создаем файл
-//
                     $str = "[{\"date\":\"".date('d-m-Y  H:m:s')."\",\"mark\":".$this->data['mark'].",\"name\":\"".$this->data['name']."\",\"minuses\":\"".$this->data['minuses']."\",\"pluses\":\"".$this->data['pluses']."\",\"text\":\"".$this->data['text']."\",\"email\":\"".$this->data['email']."\"}]";
-//                    fwrite($fp, $str);
-//    				fclose ($fp);
 
                     $this->writeFile($this->_getDir().$this->data['productID'].'.json',$str);
                 }
@@ -295,10 +290,6 @@ class comments
                                 $comment[$i++] = fgets($fp, 999);
 
                             }
-                            /*echo '<pre>';
-                                print_r($comment);
-                            echo '</pre>';*/
-
                         }
                    fclose ($fp);
                     unlink($this->_getDir().$this->data['productID'].'.json');

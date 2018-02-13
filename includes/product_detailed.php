@@ -150,11 +150,13 @@
 				echo '</pre>';*/
 				for($i=0;$i<count($extra); $i++)
 				{
+                    print_r($extra[$i]['name']);
 					if(($extra[$i]['name'] == 'Цвет')||($extra[$i]['name'] == 'Цвет внешнего тента'))
 					{
 						//echo $extra[$i]['option_value'];
 						$colors_arr = explode(',', $extra[$i]['option_value']);
-						if(count($colors_arr)>1)
+
+						if(count($colors_arr)>=1)
 								$smarty->assign("colors_arr", $colors_arr);
 						/*echo '<pre>';
 							print_r($colors_arr);
@@ -164,7 +166,7 @@
 					{
 						//echo $extra[$i]['option_value'];
 						$size_arr = explode(',', $extra[$i]['option_value']);
-						if(count($size_arr)>1)
+						if(count($size_arr)>=1)
 							$smarty->assign("size_arr", $size_arr);
 						/*echo '<pre>';
 							print_r($size_arr);

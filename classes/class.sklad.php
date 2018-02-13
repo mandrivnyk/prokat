@@ -71,10 +71,72 @@ class sklad
         return $variants;
     }
 
-    public function setVariantsToFile($productCode, $variants) {
+    public function setVariantsToFile($data) {
 
+        $pathToFile = $this->_getDir().$data['productCode'].".json";
+
+        if( !file_exists($pathToFile))
+        {
+
+            $content = array();
+
+            $content['productCode'] = $data['productCode'];
+            $content['quantity'] = 1;
+            $content['price'] = 0;
+            $content['barCode'] = "";
+            $content['producer'] = "";
+            $content['sklad'] = 0;
+
+            if(count($data['sizes']) > 0 && count($data['colors']) > 0) {
+                $united = $this->makeParsSizeColors($data['sizes'], $data['colors']);
+                $content = $this->uniteArrays($united, $content);
+            }
+            else {
+                if(count($data['sizes']) > 0) {
+                    $content = $this->uniteArrays($data['sizes'], $content);
+                }
+
+                if(count($data['colors']) > 0){
+                    $content = $this->uniteArrays($data['colors'], $content);
+                }
+            }
+            $this->writeFile($this->_getDir().$data['productCode'].'.json', json_encode($content));
+         }
     }
 
+        function makeParsSizeColors($sizes, $colors){
+            $result = array();
+            $i=0;
+            foreach ($sizes as $key=>$size) {
+                foreach ($colors as $color) {
+                    $result[$i]['size'] = $size;
+                    $result[$i++]['color'] = $color;
+                }
+            }
+            return $result;
+
+        }
+
+
+        function uniteArrays($arr1, $arr2){
+            $result = array();
+            $i=0;
+            foreach ($arr1 as $key=>$value) {
+                $result[$i++] = array_merge($value, $arr2);
+            }
+            return $result;
+        }
+
+
+
+
+    function writeFile($filename,$content) {
+        $f=fopen($filename,"w");
+        # Now UTF-8 - Add byte order mark
+        //fwrite($f, pack("CCC",0xef,0xbb,0xbf));
+        fwrite($f,$content);
+        fclose($f);
+    }
 
     /**
      * @param $productCode

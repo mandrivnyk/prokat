@@ -4,24 +4,28 @@ $forSelect = 0;
 $forCharacterList = 0;
 
 if(isset($_POST['productCode']))
-    $productCode = iconv("UTF-8","windows-1251",trim($_POST['productCode']));
+//    $productCode = iconv("UTF-8","windows-1251",trim($_POST['productCode']));
+    $productCode = trim($_POST['productCode']);
 
 if(isset($_POST['forSelect']))
-    $forSelect = iconv("UTF-8","windows-1251",$_POST['forSelect']);
+//    $forSelect = iconv("UTF-8","windows-1251",$_POST['forSelect']);
+    $forSelect = $_POST['forSelect'];
 
 if(isset($_POST['forCharacterList']))
-    $forCharacterList = iconv("UTF-8","windows-1251",$_POST['forCharacterList']);
+//    $forCharacterList = iconv("UTF-8","windows-1251",$_POST['forCharacterList']);
+    $forCharacterList = $_POST['forCharacterList'];
 
+$sizes = array();
 if(isset($_POST['size_arr'])){
     $sizes = $_POST['size_arr'];
-    array_walk($sizes, 'convert');
+    //array_walk($sizes, 'convert');
 }
 
 //print_r($sizes);
-
+$colors = array();
 if(isset($_POST['colors_arr'])) {
     $colors = $_POST['colors_arr'];
-    array_walk($colors, 'convert');
+//    array_walk($colors, 'convert');
 }
 
 //print_r($colors);
@@ -32,8 +36,10 @@ function convert(&$value, $key){
 
 require_once('../classes/class.sklad.php');
 
+//print_r($productCode);
+//exit();
+if(isset($productCode)) {
 
-if($productCode >0) {
     $sklad = new sklad();
 
     if (strpos($productCode, '/') !== false) {
@@ -45,13 +51,23 @@ if($productCode >0) {
     $result = '';
 
         if($forSelect >0) {
+
             foreach ($productCodes as $key=>$productCode) {
-                if(!$sklad->checkIsFile($productCode)) {
-                    $sklad->setVariantsToFile();
+
+                if(!$sklad->checkIsFile($productCode) && (!empty($sizes) || !empty($colors))) {
+
+                    $data = array(
+                        'sizes' => $sizes,
+                        'colors' => $colors,
+                        'productCode' => $productCode
+                    );
+                    $sklad->setVariantsToFile($data);
                 }
 
-                $result .= '<br><b>Артикул: ' . $productCode . '</b>';
-                $result .= $sklad->createSkladInSelectTag($sklad->getVariantsFromFile($productCode), 1);
+                if($sklad->checkIsFile($productCode)) {
+                    $result .= '<br><b>Артикул: ' . $productCode . '</b>';
+                    $result .= $sklad->createSkladInSelectTag($sklad->getVariantsFromFile($productCode), 1);
+                }
             }
             echo $result.'<br>';
             exit();
