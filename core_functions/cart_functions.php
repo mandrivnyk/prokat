@@ -299,10 +299,10 @@ require_once('./classes/class.sklad.php');
             //echo '2';
             //print_r($_SESSION['gids']);
         //session_start();
-        /*echo '<pre>';
-        print_r($_SESSION);
-    echo '</pre>';*/
-    //print_r($_SESSION);
+//        echo '<pre>';
+//        print_r($_SESSION);
+//    echo '</pre>';
+//    print_r($_SESSION);
             $total_price 	= 0; //total cart value
             $cart_content	= array();
 
@@ -346,7 +346,7 @@ require_once('./classes/class.sklad.php');
                                 );
                             $strOptions= "";
                             if(isset($_SESSION["configurations"][$j][0])) {
-                                $strOptions = GetStrOptions( $variantNum, $r["product_code"] );
+                                $strOptions = GetStrOptions( $_SESSION["configurations"][$j][0], $r["product_code"] );
                             }
 
                             if ( trim($strOptions) != "" )

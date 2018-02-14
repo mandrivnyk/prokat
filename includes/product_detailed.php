@@ -150,7 +150,6 @@
 				echo '</pre>';*/
 				for($i=0;$i<count($extra); $i++)
 				{
-                    print_r($extra[$i]['name']);
 					if(($extra[$i]['name'] == 'Цвет')||($extra[$i]['name'] == 'Цвет внешнего тента'))
 					{
 						//echo $extra[$i]['option_value'];

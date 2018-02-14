@@ -36,8 +36,6 @@ function convert(&$value, $key){
 
 require_once('../classes/class.sklad.php');
 
-//print_r($productCode);
-//exit();
 if(isset($productCode)) {
 
     $sklad = new sklad();
@@ -75,7 +73,8 @@ if(isset($productCode)) {
 
         if($forCharacterList >0) {
             $result .= '<b>';
-            $result .= '<table class="datatableSkladList"><tr><td>Артикул</td><td>Размер</td><td>Цвет</td></tr>';
+            //$result .= '<table class="datatableSkladList"><tr><td>Артикул</td><td>Размер</td><td>Цвет</td></tr>';
+            $result .= '<table class="datatableSkladList"><tr><td>Размер</td><td>Цвет</td></tr>';
             foreach ($productCodes as $productCode) {
                 $result .= $sklad->createSkladInList($sklad->getVariantsFromFile($productCode));
             }

@@ -18,15 +18,15 @@ class sklad
 //        }
 //    }
 
-    public function _convertVariantsTo1251($variant)
-    {
-       // print_r($variant) ;
-        $variant['size'] = iconv("UTF-8","windows-1251",$variant['size']);
-        $variant['color'] = iconv("UTF-8","windows-1251",$variant['color']);
-        $variant['price'] = iconv("UTF-8","windows-1251",$variant['price']);
-        $variant['sklad'] = iconv("UTF-8","windows-1251",$variant['sklad']);
-        return $variant;
-    }
+//    public function _convertVariantsTo1251($variant)
+//    {
+//       // print_r($variant) ;
+//        $variant['size'] = iconv("UTF-8","windows-1251",$variant['size']);
+//        $variant['color'] = iconv("UTF-8","windows-1251",$variant['color']);
+//        $variant['price'] = iconv("UTF-8","windows-1251",$variant['price']);
+//        $variant['sklad'] = iconv("UTF-8","windows-1251",$variant['sklad']);
+//        return $variant;
+//    }
 
     public function utf8_fopen_read($fileName) {
         $fc = file_get_contents($fileName);
@@ -100,7 +100,7 @@ class sklad
                     $content = $this->uniteArrays($data['colors'], $content);
                 }
             }
-            $this->writeFile($this->_getDir().$data['productCode'].'.json', json_encode($content));
+            $this->writeFile($this->_getDir().$data['productCode'].'.json', json_encode($content, JSON_UNESCAPED_UNICODE));
          }
     }
 
@@ -138,6 +138,14 @@ class sklad
         fclose($f);
     }
 
+    function _convertVariantsTo1251(&$value, $key){
+        if(is_string($value) && !is_array($value)){
+            $value = iconv("UTF-8","windows-1251",  $value);
+        }
+    }
+
+
+
     /**
      * @param $productCode
      * @return String $variant
@@ -163,6 +171,7 @@ class sklad
                 $variants = json_decode($variants, true) ;
             }
 
+            array_walk($variants[$variantNum], array($this, '_convertVariantsTo1251'));
             $result = 'артикул: '.$variants[$variantNum]['productCode'].', размер: '.$variants[$variantNum]['size'].', цвет: '.$variants[$variantNum]['color'];
         }
         return $result;
@@ -173,7 +182,8 @@ class sklad
         if(count($variants) > 0) {
             $com_str .= "<select id='select_variants_".$i."' name='select_variants_".$i."'><option value=''>Выберите варианты</option>";
             foreach ($variants as $key=>$variant) {
-                $variant =   $this->_convertVariantsTo1251($variant);
+                //$variant =   $this->_convertVariantsTo1251($variant);
+                array_walk($variant, array($this, '_convertVariantsTo1251'));
                 $com_str .= "<option value='".$key."'>".'размер: '.$variant['size'].' цвет: '.$variant['color']."</option>";
                 //$com_str .= "<option value='".$variant['size']." ".$variant['color']."'>".''.$variant['productCode'].' размер: '.$variant['size'].' '.$variant['color']."</option>";
             }
@@ -187,8 +197,10 @@ class sklad
         if(count($variants) > 0) {
             $com_str = '';
             foreach ($variants as $variant) {
-                $variant =   $this->_convertVariantsTo1251($variant);
-                $com_str .= '<tr><td>'.$variant['productCode'].'</td><td>'.$variant['size'].'</td><td>'.$variant['color'].'</td></tr>';
+                //$variant =   $this->_convertVariantsTo1251($variant);
+                array_walk($variant, array($this, '_convertVariantsTo1251'));
+                //$com_str .= '<tr><td>'.$variant['productCode'].'</td><td>'.$variant['size'].'</td><td>'.$variant['color'].'</td></tr>';
+                $com_str .= '<tr><td>'.$variant['size'].'</td><td>'.$variant['color'].'</td></tr>';
             }
             //$com_str = substr($com_str, 0, -4);
         }

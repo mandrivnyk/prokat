@@ -35,6 +35,11 @@ class Cart
             if ( (isset($_POST["addproduct"]) && $_POST["addproduct"]>0) || (isset($_GET["addproduct"]) && $_GET["addproduct"]>0))
             {
 
+//                print_r($_POST);
+//                print_r($_GET);
+//                print_r($_SESSION);
+
+
                 $productID = (isset($_POST["addproduct"])?$_POST["addproduct"]:$_GET["addproduct"]);
 //                if (isset($_SESSION["variants"]))
 //                {
