@@ -41,6 +41,9 @@ class Cart
 
 
                 $productID = (isset($_POST["addproduct"])?$_POST["addproduct"]:$_GET["addproduct"]);
+
+                $productIDArr[] = $productID;
+
 //                if (isset($_SESSION["variants"]))
 //                {
 //                    $variants=$_SESSION["variants"];
@@ -102,7 +105,9 @@ class Cart
                     $_SESSION["variants"]=$variants;
 
 //                    $this->shoppingCart((int)$_POST["addproduct"]);
+
                     cartAddToCart( $productID, $variants );
+
             }
 
                 //Redirect( $cart_php_file."?shopping_cart=yes" );

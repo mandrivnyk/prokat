@@ -100,15 +100,30 @@ require_once('./classes/class.sklad.php');
             "values( '".regGetIdByLogin($_SESSION["log"])."', '".$itemID."', 1 )" );
     }
 
-    function GetStrOptions($variantNum, $productCode)
+    function GetStrOptions($variantNumArr, $productCode)
     {
+        $res = "";
         $sklad = new sklad();
 
 //        $first_flag=true;
 //        $res = "";
 //        foreach( $variants as $var )
 //        {
-        $res = $sklad->getVariantStringFromFile($productCode, $variantNum);
+        //print_r($productCode);
+        if (strpos($productCode, '/') !== false) {
+            $productCodeArr = explode("/", $productCode);
+        }
+        else {
+            $productCodeArr[] = $productCode;
+        }
+
+        foreach ($productCodeArr as $key=>$productCode){
+            if($key == 1){
+                $res .= "<br>";
+            }
+             $res .= $sklad->getVariantStringFromFile($productCode, $variantNumArr[$key]);
+        }
+
 //            $q=db_query("select option_value from ".
 //                PRODUCTS_OPTIONS_VALUES_VARIANTS_TABLE.
 //                    " where variantID='".$var."'" );
@@ -346,11 +361,18 @@ require_once('./classes/class.sklad.php');
                                 );
                             $strOptions= "";
                             if(isset($_SESSION["configurations"][$j][0])) {
-                                $strOptions = GetStrOptions( $_SESSION["configurations"][$j][0], $r["product_code"] );
+//                                    echo '<pre>';
+//                                        print_r($_SESSION);
+//                                    echo '</pre>';
+//                                    echo '<pre>';
+//                                        print_r($_SESSION["configurations"][$j]);
+//                                    echo '</pre>';
+//                                    exit();
+                                $strOptions = GetStrOptions( $_SESSION["configurations"][$j], $r["product_code"] );
                             }
 
                             if ( trim($strOptions) != "" )
-                                $tmp["name"].="  (".$strOptions.")";
+                                $tmp["name"].="<br>(".$strOptions.")";
 
 
                             $q_product = db_query( "select min_order_amount, shipping_freight from ".PRODUCTS_TABLE.

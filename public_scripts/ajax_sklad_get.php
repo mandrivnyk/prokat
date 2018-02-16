@@ -64,7 +64,7 @@ if(isset($productCode)) {
 
                 if($sklad->checkIsFile($productCode)) {
                     $result .= '<br><b>Артикул: ' . $productCode . '</b>';
-                    $result .= $sklad->createSkladInSelectTag($sklad->getVariantsFromFile($productCode), 1);
+                    $result .= $sklad->createSkladInSelectTag($sklad->getVariantsFromFile($productCode), $key);
                 }
             }
             echo $result.'<br>';

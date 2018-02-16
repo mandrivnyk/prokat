@@ -73,11 +73,8 @@
 
 		<tr bgcolor=white>
 			<td>
-				{if $this_is_a_popup_cart_window}
-					<b>{$cart_content[i].name}</b>
-				{else}
+
 					<a href='{$cart_php_file}?productID={$cart_content[i].productID}'>{$cart_content[i].name}</a>
-				{/if}
 			</td>
 
 			<td align=center>
@@ -254,39 +251,9 @@ function adjust_cart_window(counter)
 {literal}
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+{/literal}
 </script>
 
-<script type="text/javascript">
-{literal}
-var pageTracker = _gat._getTracker("UA-4895657-1");
-pageTracker._initData();
-pageTracker._trackPageview();
-{/literal}
-</script><br>
-<br>
-<br>
-<br>
-
-<!-- MyCounter --><div style="display:block">
-									<script language="JavaScript" type="text/javascript"><!--
-									{literal}
-									my_id = 98357;
-									my_width = 1;
-									my_height = 1;
-									my_alt = "MyCounter - счётчик и статистика (посетителей и хитов сегодня)";
-									//--></script>
-									<script type="text/javascript"
-									  src="http://scripts.mycounter.ua/counter2.0.js">
-									</script><noscript>
-									<a target="_blank" href="http://mycounter.ua/"><img
-									src="http://get.mycounter.ua/counter.php?id=98357"
-									title="MyCounter - счётчик и статистика (посетителей и хитов сегодня)"
-									alt="MyCounter - счётчик и статистика (посетителей и хитов сегодня)"
-									width="1" height="1" border="0" /></a>
-									{/literal}
-									</noscript>
-
-							</div><!-- End MyCounter code -->
 
 </body>
 </html>
