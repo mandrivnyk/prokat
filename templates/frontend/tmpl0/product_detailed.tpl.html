@@ -271,8 +271,8 @@
                                         {if !$printable_version}
 
                                           <form action="index.php?productID={$product_info.productID}" method=post name="HiddenFieldsForm">
-                                              {include file="sklad.tpl.html" productCode=$product_info.product_code  productID=$product_info.productID size_arr=$size_arr colors_arr=$colors_arr}
-                                              <div id="sklad" style="display: none">{$smarty.const.IN_SKLAD} <span id="skladContent"></span></div>
+                                              {include file="sklad.tpl.html" in_stock=$product_info.in_stock productCode=$product_info.product_code productID=$product_info.productID size_arr=$size_arr colors_arr=$colors_arr}
+                                              <div id="sklad" style="display: none"><span id="skladContent"></span></div>
                                           {if $smarty.const.CONF_OPEN_SHOPPING_CART_IN_NEW_WINDOW eq 0}
 
                                                 {* shopping cart page is shown in the same window - in this cart 'add to cart' button is a form submit button *}

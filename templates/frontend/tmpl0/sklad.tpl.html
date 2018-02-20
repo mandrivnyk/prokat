@@ -3,7 +3,11 @@
 
     $(document).ready(function(){
         var productCodeString = "{/literal}{$productCode}{literal}";
-        getSkladJsonPhp(productCodeString);
+        var productInStock = "{/literal}{$in_stock}{literal}";
+
+        if(productInStock > 0) {
+            getSkladJsonPhp(productCodeString);
+        }
     });
 
 
