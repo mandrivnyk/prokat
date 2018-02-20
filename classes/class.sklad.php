@@ -182,10 +182,8 @@ class sklad
         if(count($variants) > 0) {
             $com_str .= "<select id='select_variants_".$i."' name='select_variants_".$i."'><option value=''>Выберите варианты</option>";
             foreach ($variants as $key=>$variant) {
-                //$variant =   $this->_convertVariantsTo1251($variant);
                 array_walk($variant, array($this, '_convertVariantsTo1251'));
                 $com_str .= "<option value='".$key."'>".'размер: '.$variant['size'].' цвет: '.$variant['color']."</option>";
-                //$com_str .= "<option value='".$variant['size']." ".$variant['color']."'>".''.$variant['productCode'].' размер: '.$variant['size'].' '.$variant['color']."</option>";
             }
             $com_str .= "</select><br>";
         }
@@ -194,15 +192,19 @@ class sklad
 
     public function createSkladInList($variants){
         $com_str = '';
-        if(count($variants) > 0) {
+        $variantsLength = count($variants);
+        if($variantsLength > 0) {
             $com_str = '';
+            $i = 0;
             foreach ($variants as $variant) {
-                //$variant =   $this->_convertVariantsTo1251($variant);
                 array_walk($variant, array($this, '_convertVariantsTo1251'));
-                //$com_str .= '<tr><td>'.$variant['productCode'].'</td><td>'.$variant['size'].'</td><td>'.$variant['color'].'</td></tr>';
-                $com_str .= '<tr><td>'.$variant['size'].'</td><td>'.$variant['color'].'</td></tr>';
+                $com_str .= '<tr>';
+                if($i == 0) {
+                    $com_str .= '<td rowspan='.$variantsLength.'>'.$variant['productCode'].'</td>';
+                }
+                $com_str .= '<td>'.$variant['size'].'</td><td>'.$variant['color'].'</td></tr>';
+                $i++;
             }
-            //$com_str = substr($com_str, 0, -4);
         }
         return $com_str;
     }
