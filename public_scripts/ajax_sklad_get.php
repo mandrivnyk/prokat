@@ -28,7 +28,7 @@ if(isset($_POST['colors_arr'])) {
 //    array_walk($colors, 'convert');
 }
 
-//print_r($colors);
+
 
 function convert(&$value, $key){
     $value = iconv("UTF-8","windows-1251",  $value);
@@ -53,12 +53,12 @@ if(isset($productCode)) {
             foreach ($productCodes as $key=>$productCode) {
 
                 if(!$sklad->checkIsFile($productCode) && (!empty($sizes) || !empty($colors))) {
-
                     $data = array(
                         'sizes' => $sizes,
                         'colors' => $colors,
                         'productCode' => $productCode
                     );
+
                     $sklad->setVariantsToFile($data);
                 }
 
@@ -73,8 +73,16 @@ if(isset($productCode)) {
 
         if($forCharacterList >0) {
             $result .= '<b>';
-            $result .= '<table class="datatableSkladList"><tr><td>Артикул</td><td>Размер</td><td>Цвет</td></tr>';
-            //$result .= '<table class="datatableSkladList"><tr><td>Размер</td><td>Цвет</td></tr>';
+            $result .= '<table class="datatableSkladList"><tr><td>Артикул</td>';
+            if(!empty($sizes)){
+                $result .='<td>Размер</td>';
+            }
+            if(!empty($colors)){
+                $result .='<td>Цвет</td>';
+            }
+
+            $result .= '</tr>';
+
             foreach ($productCodes as $productCode) {
                 $result .= $sklad->createSkladInList($sklad->getVariantsFromFile($productCode));
             }

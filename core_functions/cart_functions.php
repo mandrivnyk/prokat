@@ -105,11 +105,6 @@ require_once('./classes/class.sklad.php');
         $res = "";
         $sklad = new sklad();
 
-//        $first_flag=true;
-//        $res = "";
-//        foreach( $variants as $var )
-//        {
-        //print_r($productCode);
         if (strpos($productCode, '/') !== false) {
             $productCodeArr = explode("/", $productCode);
         }
@@ -118,27 +113,16 @@ require_once('./classes/class.sklad.php');
         }
 
         foreach ($productCodeArr as $key=>$productCode){
-            if($key == 1){
-                $res .= "<br>";
+
+
+            if(trim($variantNumArr[$key]) !== ""){
+                if($key == 1){
+                    $res .= "<br>";
+                }
+                $res .= $sklad->getVariantStringFromFile($productCode, $variantNumArr[$key]);
             }
-             $res .= $sklad->getVariantStringFromFile($productCode, $variantNumArr[$key]);
         }
 
-//            $q=db_query("select option_value from ".
-//                PRODUCTS_OPTIONS_VALUES_VARIANTS_TABLE.
-//                    " where variantID='".$var."'" );
-//            if ( $r=db_fetch_row($q) )
-//            {
-//                if ( $first_flag )
-//                {
-//                    $res.=$r["option_value"];
-//                    $first_flag = false;
-//                }
-//                else
-//                    $res.=", ".$r["option_value"];
-//            }
-//            $res.=$var;
-//        }
         return $res;
     }
 
@@ -371,8 +355,9 @@ require_once('./classes/class.sklad.php');
                                 $strOptions = GetStrOptions( $_SESSION["configurations"][$j], $r["product_code"] );
                             }
 
-                            if ( trim($strOptions) != "" )
+                            if (  !empty($strOptions)){
                                 $tmp["name"].="<br>(".$strOptions.")";
+                            }
 
 
                             $q_product = db_query( "select min_order_amount, shipping_freight from ".PRODUCTS_TABLE.

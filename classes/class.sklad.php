@@ -93,11 +93,11 @@ class sklad
             }
             else {
                 if(count($data['sizes']) > 0) {
-                    $content = $this->uniteArrays($data['sizes'], $content);
+                    $content = $this->uniteArrays($data['sizes'], $content,'size');
                 }
 
                 if(count($data['colors']) > 0){
-                    $content = $this->uniteArrays($data['colors'], $content);
+                    $content = $this->uniteArrays($data['colors'], $content,'color');
                 }
             }
             $this->writeFile($this->_getDir().$data['productCode'].'.json', json_encode($content, JSON_UNESCAPED_UNICODE));
@@ -118,10 +118,14 @@ class sklad
         }
 
 
-        function uniteArrays($arr1, $arr2){
+        function uniteArrays($arr1, $arr2, $name = ''){
             $result = array();
             $i=0;
             foreach ($arr1 as $key=>$value) {
+                if(!is_array($value)){
+                    $value = array($name => $value);
+                }
+
                 $result[$i++] = array_merge($value, $arr2);
             }
             return $result;
@@ -183,7 +187,14 @@ class sklad
             $com_str .= "<select id='select_variants_".$i."' name='select_variants_".$i."'><option value=''>Выберите варианты</option>";
             foreach ($variants as $key=>$variant) {
                 array_walk($variant, array($this, '_convertVariantsTo1251'));
-                $com_str .= "<option value='".$key."'>".'размер: '.$variant['size'].' цвет: '.$variant['color']."</option>";
+                $com_str .= "<option value='".$key."'>";
+                if(isset($variant['size']) && $variant['size'] !== '') {
+                    $com_str .=  "размер: ".$variant['size'];
+                }
+                if(isset($variant['color']) && $variant['color'] !== '') {
+                    $com_str .=  " цвет: ".$variant['color'];
+                }
+                $com_str .=  "</option>";
             }
             $com_str .= "</select><br>";
         }
@@ -200,9 +211,15 @@ class sklad
                 array_walk($variant, array($this, '_convertVariantsTo1251'));
                 $com_str .= '<tr>';
                 if($i == 0) {
-                    $com_str .= '<td rowspan='.$variantsLength.'>'.$variant['productCode'].'</td>';
+                    $com_str .= '<td rowspan='.$variantsLength.' valign="top">'.$variant['productCode'].'</td>';
                 }
-                $com_str .= '<td>'.$variant['size'].'</td><td>'.$variant['color'].'</td></tr>';
+                if(isset($variant['size']) && $variant['size'] !== '') {
+                    $com_str .=  '<td>'.$variant['size'].'</td>';
+                }
+                if(isset($variant['color']) && $variant['color'] !== '') {
+                    $com_str .=  '<td>'.$variant['color'].'</td>';
+                }
+                $com_str .= '</tr>';
                 $i++;
             }
         }

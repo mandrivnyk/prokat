@@ -372,22 +372,15 @@ function _sendOrderNotifycationToCustomer( $orderID, &$smarty_mail, $email, $log
 		$q = db_query( $sql );
 		$product = db_fetch_row($q);
 		
-	
-		
-		
-		
-		
-		
 		$content[$i]["product_code"] = $product["product_code"];
 		$variants	= GetConfigurationByItemId( $content[$i]["itemID"] );
-		//$options	= GetStrOptions( $variants );
+		$options	= GetStrOptions( $variants, $product["product_code"]);
 
-		
-	/*	
+
 		if ( $options != "" )
-			$content[$i]["name"] = $product["name"]."(".$options.")";
+			$content[$i]["name"] = $product["name"]." (".$options.")";
 		else
-			$content[$i]["name"] = $product["name"];*/
+			$content[$i]["name"] = $product["name"];
 		$content[$i]["Price"] = ( RoundFloatValueStr($order["currency_value"]*$content[$i]["Price"]) )." ".$order["currency_code"];
 		if ( strlen($product["eproduct_filename"])>0 && file_exists("product_files/".$product["eproduct_filename"]) )
 		{
@@ -411,14 +404,14 @@ function _sendOrderNotifycationToCustomer( $orderID, &$smarty_mail, $email, $log
 			$content[$i]["getFileParam"] = 
 				cryptFileParamCrypt( $content[$i]["getFileParam"], null );
 		}
-		$content[$i]["name"] = $content[$i][0];
+		//$content[$i]["name"] = $content[$i][0];
 	}
 	
 	$smarty_mail->assign( "content", $content );
-/*echo '<pre>';
-	print_r($content);
-echo '</pre>';*/
-	
+//echo '<pre>';
+//	print_r($content);
+//echo '</pre>';
+//
 //exit();
 	$html = $smarty_mail->fetch( "order_notification.txt" );
 	$res = ss_mail( $email, "Order #".$orderID, 
@@ -480,14 +473,18 @@ function _sendOrderNotifycationToAdmin( $orderID, &$smarty_mail, $tax )
 		$variants	= GetConfigurationByItemId( $content[$i]["itemID"] );
 		$options	= GetStrOptions( $variants[0], $product["product_code"] );
 		if ( $options != "" )
-			$content[$i]["name"] = $product["name"]."(".$options.")";
+			$content[$i]["name"] = $product["name"]." (".$options.")";
 		else
 			$content[$i]["name"] = $product["name"];
-		$content[$i]["Price"] = $order["currency_code"]." ".( 
-			RoundFloatValueStr($order["currency_value"]*$content[$i]["Price"])  );
-		$content[$i]["name"] = $content[$i][0];
+		$content[$i]["Price"] = $order["currency_code"]." ".(
+			RoundFloatValueStr($order["currency_value"]*$content[$i]["Price"]));
+		//$content[$i]["name"] = $content[$i][0];
 	}
-	
+//    echo '<pre>';
+//    print_r($content);
+//    echo '</pre>';
+//
+//    exit();
 	$smarty_mail->assign( "content", $content );
 	$html = $smarty_mail->fetch( "admin_order_notification.txt" );
 	$res = ss_mail( CONF_ORDERS_EMAIL, "Order #".$orderID,

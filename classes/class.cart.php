@@ -12,9 +12,6 @@ class Cart
 
     
     public function shoppingCart(){
-        // shopping cart
-
-        //session_start();
 
         if ((int)CONF_SMARTY_FORCE_COMPILE) //this forces Smarty to recompile templates each time someone runs cart.php
         {
@@ -28,9 +25,6 @@ class Cart
             $this->smarty->assign("cart_php_file", $cart_php_file);
 
 
-//            if ( isset($_GET["make_more_exact_cart_content"]) )
-//                $this->smarty->assign( "make_more_exact_cart_content", 1 );
-
             //add product to cart with productID=$add
             if ( (isset($_POST["addproduct"]) && $_POST["addproduct"]>0) || (isset($_GET["addproduct"]) && $_GET["addproduct"]>0))
             {
@@ -39,35 +33,11 @@ class Cart
 //                print_r($_GET);
 //                print_r($_SESSION);
 
-
                 $productID = (isset($_POST["addproduct"])?$_POST["addproduct"]:$_GET["addproduct"]);
-
                 $productIDArr[] = $productID;
 
-//                if (isset($_SESSION["variants"]))
-//                {
-//                    $variants=$_SESSION["variants"];
-//                    unset($_SESSION["variants"]);
-//                    //session_unregister("variants"); //calling session_unregister() is required since unset() may not work on some systems
-//                }
-//                else
-//                {
-//                    $variants = array();
-//                }
-                //should we add products to cart?
-//                if ( isset($_POST["addproduct"]) )
-//                {
                     $variants=array();
-                    //            foreach( $_POST as $key => $val )
-                    //            {
-                    //                if(strstr($key, "option_select_hidden_"))
-                    //                    $variants[]=$val;
-                    //            }
 
-
-
-                    //            print_r($_GET);
-                    //            print_r($variants);
                     if(isset($_POST["select_variants_0"]))
                     {
                         $select_variants_0 =  @iconv("UTF-8","windows-1251",$_POST['select_variants_0']);
@@ -100,19 +70,12 @@ class Cart
                         $variants[$variants_length] =  str_replace(" ","+", ' Цвет: '.$color_sel);
                     }
 
-
                     unset( $_SESSION["variants"] );
                     $_SESSION["variants"]=$variants;
-
-//                    $this->shoppingCart((int)$_POST["addproduct"]);
 
                     cartAddToCart( $productID, $variants );
 
             }
-
-                //Redirect( $cart_php_file."?shopping_cart=yes" );
-
-
 
             if (isset($_GET["remove"]) && $_GET["remove"] > 0) //remove from cart product with productID == $remove
             {
