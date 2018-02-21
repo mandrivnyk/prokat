@@ -352,7 +352,9 @@ require_once('./classes/class.sklad.php');
 //                                        print_r($_SESSION["configurations"][$j]);
 //                                    echo '</pre>';
 //                                    exit();
-                                $strOptions = GetStrOptions( $_SESSION["configurations"][$j], $r["product_code"] );
+                                if(!empty($r["product_code"])){
+                                    $strOptions = GetStrOptions( $_SESSION["configurations"][$j], $r["product_code"] );
+                                }
                             }
 
                             if (  !empty($strOptions)){

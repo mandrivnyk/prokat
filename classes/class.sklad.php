@@ -176,6 +176,10 @@ class sklad
             }
 
             array_walk($variants[$variantNum], array($this, '_convertVariantsTo1251'));
+//            echo '<pre>';
+//                print_r($variants);
+//            echo '</pre>';
+//            exit();
             $result = 'артикул: '.$variants[$variantNum]['productCode'].', размер: '.$variants[$variantNum]['size'].', цвет: '.$variants[$variantNum]['color'];
         }
         return $result;
