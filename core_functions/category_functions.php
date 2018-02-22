@@ -14,15 +14,15 @@ function catInstall()
 
 {
 
-	db_query("insert into ".CATEGORIES_TABLE."( name, parent, categoryID )".
+    db_query("insert into ".CATEGORIES_TABLE."( name, parent, categoryID )".
 
-			"values( 'ROOT', NULL, 1 )");
+        "values( 'ROOT', NULL, 1 )");
 
 }
 
 
 
-	//frequently used category tree functions
+//frequently used category tree functions
 
 
 
@@ -30,85 +30,85 @@ function processCategories($level, $path, $sel)
 
 {
 
-	//returns an array of categories, that will be presented by the category_navigation.tpl template
+    //returns an array of categories, that will be presented by the category_navigation.tpl template
 
 
 
-	//$categories[] - categories array
+    //$categories[] - categories array
 
-	//$level - current level: 0 for main categories, 1 for it's subcategories, etc.
+    //$level - current level: 0 for main categories, 1 for it's subcategories, etc.
 
-	//$path - path from root to the selected category (calculated by calculatePath())
+    //$path - path from root to the selected category (calculated by calculatePath())
 
-	//$sel -- categoryID of a selected category
-
-
-
-	//returns an array of (categoryID, name, level)
+    //$sel -- categoryID of a selected category
 
 
 
-	//category tree is being rolled out "by the path", not fully
+    //returns an array of (categoryID, name, level)
 
 
 
-	$out = array();
-
-	$cnt = 0;
+    //category tree is being rolled out "by the path", not fully
 
 
 
-	$parent = $path[$level]["parent"];
+    $out = array();
 
-	if ( $parent == "" || $parent == null )
-
-		$parent = "NULL";
-
-	$q = db_query("select categoryID, name from ".CATEGORIES_TABLE.
-
-		" where parent=".$path[$level]["parent"]." order by sort_order, name")
-
-			or die (db_error());
-
-	while ($row = db_fetch_row($q))
-
-	{
-
-		$out[$cnt][0] = $row["categoryID"];
-
-		$out[$cnt][1] = $row["name"];
-
-		$out[$cnt][2] = $level;
-
-		$cnt++;
+    $cnt = 0;
 
 
 
-		//process subcategories?
+    $parent = $path[$level]["parent"];
 
-		if ($level+1<count($path) && $row["categoryID"] == $path[$level+1])
+    if ( $parent == "" || $parent == null )
 
-		{
+        $parent = "NULL";
 
-			$sub_out = processCategories($level+1,$path,$sel);
+    $q = db_query("select categoryID, name from ".CATEGORIES_TABLE.
 
-			//add $sub_out to the end of $out
+        " where parent=".$path[$level]["parent"]." order by sort_order, name")
 
-			for ($j=0; $j<count($sub_out); $j++)
+    or die (db_error());
 
-			{
+    while ($row = db_fetch_row($q))
 
-				$out[] = $sub_out[$j];
+    {
 
-				$cnt++;
+        $out[$cnt][0] = $row["categoryID"];
 
-			}
+        $out[$cnt][1] = $row["name"];
 
-		}
+        $out[$cnt][2] = $level;
 
-	}
+        $cnt++;
 
-	return $out;
+
+
+        //process subcategories?
+
+        if ($level+1<count($path) && $row["categoryID"] == $path[$level+1])
+
+        {
+
+            $sub_out = processCategories($level+1,$path,$sel);
+
+            //add $sub_out to the end of $out
+
+            for ($j=0; $j<count($sub_out); $j++)
+
+            {
+
+                $out[] = $sub_out[$j];
+
+                $cnt++;
+
+            }
+
+        }
+
+    }
+
+    return $out;
 
 } //processCategories
 
@@ -120,37 +120,37 @@ function fillTheCList($parent,$level) //completely expand category tree
 
 
 
-	$q = db_query("SELECT categoryID, name, products_count, products_count_admin, parent FROM ".
+    $q = db_query("SELECT categoryID, name, products_count, products_count_admin, parent FROM ".
 
-		CATEGORIES_TABLE." WHERE categoryID<>0 and parent=$parent ORDER BY sort_order, name") or die (db_error());
+        CATEGORIES_TABLE." WHERE categoryID<>0 and parent=$parent ORDER BY sort_order, name") or die (db_error());
 
-	$a = array(); //parents
+    $a = array(); //parents
 
-	while ($row = db_fetch_row($q))
+    while ($row = db_fetch_row($q))
 
-	{
+    {
 
-		$row[5] = $level;
+        $row[5] = $level;
 
-		$a[] = $row;
+        $a[] = $row;
 
-		//process subcategories
+        //process subcategories
 
-		$b = fillTheCList($row[0],$level+1);
+        $b = fillTheCList($row[0],$level+1);
 
-		//add $b[] to the end of $a[]
+        //add $b[] to the end of $a[]
 
-		for ($j=0; $j<count($b); $j++)
+        for ($j=0; $j<count($b); $j++)
 
-		{
+        {
 
-			$a[] = $b[$j];
+            $a[] = $b[$j];
 
-		}
+        }
 
-	}
+    }
 
-	return $a;
+    return $a;
 
 
 
@@ -162,49 +162,49 @@ function _recursiveGetCategoryCompactCList( $path, $level )
 
 {
 
-	$q = db_query( "select categoryID, parent, url_name, name, enable, picture from ".CATEGORIES_TABLE.
+    $q = db_query( "select categoryID, parent, url_name, name, enable, picture from ".CATEGORIES_TABLE.
 
-				" where parent=".$path[$level-1]["categoryID"]." AND enable=1 order by sort_order, name " );
+        " where parent=".$path[$level-1]["categoryID"]." AND enable=1 order by sort_order, name " );
 
-	$res = array();
+    $res = array();
 
-	$selectedCategoryID = null;
+    $selectedCategoryID = null;
 
-	while( $row=db_fetch_row($q) )
+    while( $row=db_fetch_row($q) )
 
-	{
-
-
-
-		$row["level"] = $level;
-
-		$res[] = $row;
-
-		if ( $level <= count($path)-1 )
-
-		{
-
-			if ( (int)$row["categoryID"] == (int)$path[$level]["categoryID"] )
-
-			{
-
-				$selectedCategoryID = $row["categoryID"];
-
-				$array = _recursiveGetCategoryCompactCList( $path, $level+1 );
-
-				foreach( $array as $val )
-
-					$res[] = $val;
-
-			}
-
-		}
-
-	}
+    {
 
 
 
- 	return $res;
+        $row["level"] = $level;
+
+        $res[] = $row;
+
+        if ( $level <= count($path)-1 )
+
+        {
+
+            if ( (int)$row["categoryID"] == (int)$path[$level]["categoryID"] )
+
+            {
+
+                $selectedCategoryID = $row["categoryID"];
+
+                $array = _recursiveGetCategoryCompactCList( $path, $level+1 );
+
+                foreach( $array as $val )
+
+                    $res[] = $val;
+
+            }
+
+        }
+
+    }
+
+
+
+    return $res;
 
 }
 
@@ -216,23 +216,23 @@ function catExpandCategory( $categoryID, $sessionArrayName )
 
 {
 
-	$existFlag = false;
+    $existFlag = false;
 
-	foreach( $_SESSION[$sessionArrayName] as $key => $value )
+    foreach( $_SESSION[$sessionArrayName] as $key => $value )
 
-		if ( $value == $categoryID )
+        if ( $value == $categoryID )
 
-		{
+        {
 
-			$existFlag = true;
+            $existFlag = true;
 
-			break;
+            break;
 
-		}
+        }
 
-	if ( !$existFlag )
+    if ( !$existFlag )
 
-		$_SESSION[$sessionArrayName][] = $categoryID;
+        $_SESSION[$sessionArrayName][] = $categoryID;
 
 
 
@@ -244,15 +244,15 @@ function catShrinkCategory( $categoryID, $sessionArrayName )
 
 {
 
-	foreach( $_SESSION[$sessionArrayName] as $key => $value )
+    foreach( $_SESSION[$sessionArrayName] as $key => $value )
 
-	{
+    {
 
-		if ( $value == $categoryID )
+        if ( $value == $categoryID )
 
-			unset( $_SESSION[$sessionArrayName][$key] );
+            unset( $_SESSION[$sessionArrayName][$key] );
 
-	}
+    }
 
 }
 
@@ -264,51 +264,51 @@ function catGetCategoryCompactCList( $selectedCategoryID )
 
 {
 
-	$path = catCalculatePathToCategory( $selectedCategoryID );
+    $path = catCalculatePathToCategory( $selectedCategoryID );
 
-	$res = array();
+    $res = array();
 
-	$res[] = array( "categoryID" => 1, "parent" => null,
+    $res[] = array( "categoryID" => 1, "parent" => null,
 
-					"name" => ADMIN_CATEGORY_ROOT, "level" => 0 );
+        "name" => ADMIN_CATEGORY_ROOT, "level" => 0 );
 
-	$q = db_query( "select categoryID,  parent,url_name,  name, picture from ".CATEGORIES_TABLE.
+    $q = db_query( "select categoryID,  parent,url_name,  name, picture from ".CATEGORIES_TABLE.
 
-				" where parent=1 AND enable =1 ".
+        " where parent=1 AND enable =1 ".
 
-				" order by sort_order, name " );
+        " order by sort_order, name " );
 
 
 
-	while( $row = db_fetch_row($q) )
+    while( $row = db_fetch_row($q) )
 
-	{
+    {
 
-		$row["level"] = 1;
+        $row["level"] = 1;
 
-		$res[] = $row;
+        $res[] = $row;
 
-		if ( count($path) > 1 )
+        if ( count($path) > 1 )
 
-		{
+        {
 
-			if ( $row["categoryID"] == $path[1]["categoryID"] )
+            if ( $row["categoryID"] == $path[1]["categoryID"] )
 
-			{
+            {
 
-				$array = _recursiveGetCategoryCompactCList( $path, 2 );
+                $array = _recursiveGetCategoryCompactCList( $path, 2 );
 
-				foreach( $array as $val )
+                foreach( $array as $val )
 
-					$res[] = $val;
+                    $res[] = $val;
 
-			}
+            }
 
-		}
+        }
 
-	}
+    }
 
-	return $res;
+    return $res;
 
 }
 
@@ -352,129 +352,129 @@ function _recursiveGetCategoryCList( $parent, $level, $expandedCategoryID_Array,
 
 {
 
-	$q = db_query("SELECT categoryID, name, products_count, ".
+    $q = db_query("SELECT categoryID, name, products_count, ".
 
-			"products_count_admin, parent, enable FROM ".
+        "products_count_admin, parent, enable FROM ".
 
-			CATEGORIES_TABLE.
+        CATEGORIES_TABLE.
 
-			" WHERE parent=$parent ORDER BY sort_order, name") or die (db_error());
+        " WHERE parent=$parent ORDER BY sort_order, name") or die (db_error());
 
-	$result = array(); //parents
+    $result = array(); //parents
 
-	while ($row = db_fetch_row($q))
+    while ($row = db_fetch_row($q))
 
-	{
+    {
 
-		$row["level"] = $level;
+        $row["level"] = $level;
 
-		$row["ExpandedCategory"] = false;
+        $row["ExpandedCategory"] = false;
 
-		if ( $expandedCategoryID_Array != null )
+        if ( $expandedCategoryID_Array != null )
 
-		{
+        {
 
-			foreach( $expandedCategoryID_Array as $categoryID )
+            foreach( $expandedCategoryID_Array as $categoryID )
 
-			{
+            {
 
-				if ( (int)$categoryID == (int)$row["categoryID"] )
+                if ( (int)$categoryID == (int)$row["categoryID"] )
 
-				{
+                {
 
-					$row["ExpandedCategory"] = true;
+                    $row["ExpandedCategory"] = true;
 
-					break;
+                    break;
 
-				}
+                }
 
-			}
+            }
 
-		}
+        }
 
-		else
+        else
 
-			$row["ExpandedCategory"] = true;
+            $row["ExpandedCategory"] = true;
 
 
 
-		$row["products_count_category"] = catGetCategoryProductCount( $row["categoryID"], $_countEnabledProducts );
+        $row["products_count_category"] = catGetCategoryProductCount( $row["categoryID"], $_countEnabledProducts );
 
 
 
-		$count = db_query("select count(categoryID) from ".CATEGORIES_TABLE.
+        $count = db_query("select count(categoryID) from ".CATEGORIES_TABLE.
 
-				" where categoryID<>0 AND parent=".$row["categoryID"] );
+            " where categoryID<>0 AND parent=".$row["categoryID"] );
 
-		$count = db_fetch_row($count);
+        $count = db_fetch_row($count);
 
-		$count = $count[0];
+        $count = $count[0];
 
 
 
-		$row["ExistSubCategories"] = ( $count != 0 );
+        $row["ExistSubCategories"] = ( $count != 0 );
 
 
 
-		if($_indexType=='NUM')
+        if($_indexType=='NUM')
 
-			$result[] = $row;
+            $result[] = $row;
 
-		elseif ($_indexType=='ASSOC')
+        elseif ($_indexType=='ASSOC')
 
-			$result[$row['categoryID']] = $row;
+            $result[$row['categoryID']] = $row;
 
 
 
 
 
-		if ( $row["ExpandedCategory"] )
+        if ( $row["ExpandedCategory"] )
 
-		{
+        {
 
-			//process subcategories
+            //process subcategories
 
-			$subcategories = _recursiveGetCategoryCList( $row["categoryID"],
+            $subcategories = _recursiveGetCategoryCList( $row["categoryID"],
 
-				$level+1, $expandedCategoryID_Array, $_indexType, $_countEnabledProducts  );
+                $level+1, $expandedCategoryID_Array, $_indexType, $_countEnabledProducts  );
 
 
 
-			if($_indexType=='NUM'){
+            if($_indexType=='NUM'){
 
 
 
-				//add $subcategories[] to the end of $result[]
+                //add $subcategories[] to the end of $result[]
 
-				for ($j=0; $j<count($subcategories); $j++)
+                for ($j=0; $j<count($subcategories); $j++)
 
-					$result[] = $subcategories[$j];
+                    $result[] = $subcategories[$j];
 
-			}
+            }
 
-			elseif ($_indexType=='ASSOC'){
+            elseif ($_indexType=='ASSOC'){
 
 
 
-				//add $subcategories[] to the end of $result[]
+                //add $subcategories[] to the end of $result[]
 
-				foreach ($subcategories as $_sub){
+                foreach ($subcategories as $_sub){
 
 
 
-					$result[$_sub['categoryID']] = $_sub;
+                    $result[$_sub['categoryID']] = $_sub;
 
-				}
+                }
 
-			}
+            }
 
 
 
-		}
+        }
 
-	}
+    }
 
-	return $result;
+    return $result;
 
 }
 
@@ -496,7 +496,7 @@ function catGetCategoryCList( $expandedCategoryID_Array = null, $_indexType='NUM
 
 {
 
-	return _recursiveGetCategoryCList( 1, 0, $expandedCategoryID_Array, $_indexType, $_countEnabledProducts );
+    return _recursiveGetCategoryCList( 1, 0, $expandedCategoryID_Array, $_indexType, $_countEnabledProducts );
 
 }
 
@@ -520,15 +520,15 @@ function catGetCategoryProductCount( $categoryID, $_countEnabledProducts = false
 
 {
 
-	$categoryID = (int)$categoryID;
+    $categoryID = (int)$categoryID;
 
-	if (!$categoryID) return 0;
+    if (!$categoryID) return 0;
 
 
 
-	$res = 0;
+    $res = 0;
 
-	$sql = "
+    $sql = "
 
 		SELECT count(*) FROM ".PRODUCTS_TABLE."
 
@@ -536,15 +536,15 @@ function catGetCategoryProductCount( $categoryID, $_countEnabledProducts = false
 
 	";
 
-	$q = db_query($sql);
+    $q = db_query($sql);
 
-	$t = db_fetch_row($q);
+    $t = db_fetch_row($q);
 
-	$res += $t[0];
+    $res += $t[0];
 
-	if($_countEnabledProducts)
+    if($_countEnabledProducts)
 
-		$sql = "
+        $sql = "
 
 			SELECT COUNT(*) FROM ".PRODUCTS_TABLE." AS prot
 
@@ -556,23 +556,23 @@ function catGetCategoryProductCount( $categoryID, $_countEnabledProducts = false
 
 		";
 
-	else
+    else
 
-		$sql = "
+        $sql = "
 
 			select count(*) from ".CATEGORIY_PRODUCT_TABLE.
 
-			" where categoryID=$categoryID
+            " where categoryID=$categoryID
 
 		";
 
-	$q1 = db_query($sql);
+    $q1 = db_query($sql);
 
-	$row = db_fetch_row($q1);
+    $row = db_fetch_row($q1);
 
-	$res += $row[0];
+    $res += $row[0];
 
-	return $res;
+    return $res;
 
 }
 
@@ -586,125 +586,125 @@ function update_products_Count_Value_For_Categories($parent)
 
 
 
-	$q = db_query("SELECT categoryID FROM ".CATEGORIES_TABLE.
+    $q = db_query("SELECT categoryID FROM ".CATEGORIES_TABLE.
 
-		" WHERE parent=$parent AND categoryID<>1") or die (db_error());
+        " WHERE parent=$parent AND categoryID<>1") or die (db_error());
 
-	$cnt = array();
+    $cnt = array();
 
-	$cnt["admin_count"] = 0;
+    $cnt["admin_count"] = 0;
 
-	$cnt["customer_count"] = 0;
+    $cnt["customer_count"] = 0;
 
 
 
-	// process subcategories
+    // process subcategories
 
-	while( $row=db_fetch_row($q) )
+    while( $row=db_fetch_row($q) )
 
-	{
+    {
 
-		$t = update_products_Count_Value_For_Categories( $row["categoryID"] );
+        $t = update_products_Count_Value_For_Categories( $row["categoryID"] );
 
-		$cnt["admin_count"]		+= $t["admin_count"];
+        $cnt["admin_count"]		+= $t["admin_count"];
 
-		$cnt["customer_count"]  += $t["customer_count"];
+        $cnt["customer_count"]  += $t["customer_count"];
 
-	}
+    }
 
 
 
-	// to administrator
+    // to administrator
 
-	$q = db_query("SELECT count(*) FROM ".PRODUCTS_TABLE.
+    $q = db_query("SELECT count(*) FROM ".PRODUCTS_TABLE.
 
-			" WHERE categoryID=$parent");
+        " WHERE categoryID=$parent");
 
-	$t = db_fetch_row($q);
+    $t = db_fetch_row($q);
 
-	$cnt["admin_count"] += $t[0];
+    $cnt["admin_count"] += $t[0];
 
 
 
-	// to customer
+    // to customer
 
-	$q = db_query("SELECT count(*) FROM ".PRODUCTS_TABLE.
+    $q = db_query("SELECT count(*) FROM ".PRODUCTS_TABLE.
 
-			" WHERE categoryID=$parent AND enabled=1");
+        " WHERE categoryID=$parent AND enabled=1");
 
-	$t = db_fetch_row($q);
+    $t = db_fetch_row($q);
 
-	$cnt["customer_count"] += $t[0];
+    $cnt["customer_count"] += $t[0];
 
-	$q1 = db_query("select productID, categoryID from ".CATEGORIY_PRODUCT_TABLE.
+    $q1 = db_query("select productID, categoryID from ".CATEGORIY_PRODUCT_TABLE.
 
-			" where categoryID=$parent");
+        " where categoryID=$parent");
 
 
 
-	$admin_plus = 0;
+    $admin_plus = 0;
 
-	while( $row = db_fetch_row($q1) )
+    while( $row = db_fetch_row($q1) )
 
-	{
+    {
 
 
 
-		$q2 = db_query("select productID, categoryID from ".PRODUCTS_TABLE.
+        $q2 = db_query("select productID, categoryID from ".PRODUCTS_TABLE.
 
-				" where productID=".$row["productID"]." AND enabled=1 " );
+            " where productID=".$row["productID"]." AND enabled=1 " );
 
-		$res = db_fetch_row($q2);
+        $res = db_fetch_row($q2);
 
 
 
-		if(!$res){
+        if(!$res){
 
 
 
-			if ($res['categoryID'] == $parent)$admin_plus++;
+            if ($res['categoryID'] == $parent)$admin_plus++;
 
-			continue;
+            continue;
 
-		}
+        }
 
 
 
-		if ($res['categoryID'] == $parent){
+        if ($res['categoryID'] == $parent){
 
 
 
-			$cnt["admin_count"]++;
+            $cnt["admin_count"]++;
 
-			$cnt["customer_count"] ++;
+            $cnt["customer_count"] ++;
 
-		}
+        }
 
 
 
-	}
+    }
 
 
 
-	$cnt["admin_count"] += $admin_plus;
+    $cnt["admin_count"] += $admin_plus;
 
 
 
-	$sql = "UPDATE ".CATEGORIES_TABLE.
+    $sql = "UPDATE ".CATEGORIES_TABLE.
 
-			" SET products_count=".$cnt["customer_count"].", products_count_admin=".
+        " SET products_count=".$cnt["customer_count"].", products_count_admin=".
 
-				$cnt["admin_count"]." ".
+        $cnt["admin_count"]." ".
 
-			" WHERE categoryID=".$parent;
+        " WHERE categoryID=".$parent;
 
-	db_query($sql) or die (db_error());
+    db_query($sql) or die (db_error());
 
-	catCountProductDuplicates($parent);
+    catCountProductDuplicates($parent);
 
 
 
-	return $cnt;
+    return $cnt;
 
 }
 
@@ -714,55 +714,116 @@ function update_products_Count_Value_For_Categories($parent)
 
 function update_parent_products_skidka($_CategoryID, $skidka_old, $skidka)
 {
-	//--------------��������� ���� "������" ��� �������-----------------------
-	$sql = "UPDATE ".PRODUCTS_TABLE."
+    //-------------
+    $sql = "UPDATE ".PRODUCTS_TABLE."
 			SET skidka=".$skidka."
 			WHERE in_stock>0 AND categoryID=".intval($_CategoryID)." ";
-	db_query($sql);
+    db_query($sql);
 
 
-	if(($skidka >0) AND ($skidka_old>0))
-	{
-		//------������� ���� �� ������ ������-----------------
-		$sql = "UPDATE ".PRODUCTS_TABLE."
+    $sql = "UPDATE ".PRODUCTS_TABLE." u 
+                    inner join ".CATEGORIY_PRODUCT_TABLE." s on
+                        u.productID = s.productID 
+                    AND s.categoryID = ".intval($_CategoryID)."
+                    AND u.in_stock>0
+                    set u.skidka=".$skidka." ";
+    echo $sql;
+    db_query($sql);
+
+
+    if(($skidka >0) AND ($skidka_old>0))
+    {
+        //------
+        $sql = "UPDATE ".PRODUCTS_TABLE."
 				SET Price=list_price, list_price =0
 				WHERE list_price<>0 AND categoryID=".intval($_CategoryID)." ";
-		db_query($sql);
-	}
-	
+        db_query($sql);
 
-	if($skidka >0)
-	{
-		//--------------��������� �������������� ���� ������ � ���� list_price ��� ��� ������� ������� ���� ��� ������
-		$sql = "UPDATE ".PRODUCTS_TABLE."
+
+        $sql = "UPDATE ".PRODUCTS_TABLE." u 
+                    inner join ".CATEGORIY_PRODUCT_TABLE." s on
+                        u.productID = s.productID 
+                    AND s.categoryID = ".intval($_CategoryID)."
+                    AND u.list_price<>0
+                    set u.Price=u.list_price,list_price =0";
+        db_query($sql);
+
+
+    }
+
+
+    if($skidka >0)
+    {
+
+        //--------------
+        $sql = "UPDATE ".PRODUCTS_TABLE."
 				SET list_price=Price
-				WHERE in_stock>0 AND list_price=0 AND  categoryID=".intval($_CategoryID)." AND producer = 'Craft' ";
-				//WHERE in_stock>0 AND list_price=0 AND producer='Craft' AND  categoryID=".intval($_CategoryID)." ";
-		db_query($sql);
-		//--------------������������ ���� ������ � ������ ������ � ������ ��� � ���� !! ���������� ���� �� �������  ����� ������� �����!!!
-		$sql = "UPDATE ".PRODUCTS_TABLE."
+				WHERE in_stock>0 AND list_price=0 AND  categoryID=".intval($_CategoryID)." AND producer in ('Craft', 'Lasting', 'X-Bionic', 'Alpine pro') ";
+        //WHERE in_stock>0 AND list_price=0 AND producer='Craft' AND  categoryID=".intval($_CategoryID)." ";
+        db_query($sql);
+        //--------------
+        $sql = "UPDATE ".PRODUCTS_TABLE."
 				SET Price=CEILING((Price*(100-skidka))/100)
-				WHERE in_stock>0 AND categoryID=".intval($_CategoryID)." AND producer = 'Craft'";
-		db_query($sql);
-			/*WHERE in_stock>0 AND categoryID=".intval($_CategoryID)." AND producer <> 'Craft' ";
-		db_query($sql);
-		$sql = "UPDATE ".PRODUCTS_TABLE."
-				SET Price=CEILING((Price*95)/100)
-				WHERE in_stock>0 AND categoryID=".intval($_CategoryID)." AND producer = 'Craft' ";
-		db_query($sql);*/
-	}
-	elseif ($skidka == 0) 
-	{
-		$sql = "UPDATE ".PRODUCTS_TABLE."
+				WHERE in_stock>0 AND categoryID=".intval($_CategoryID)." AND producer in ('Craft', 'Lasting', 'X-Bionic', 'Alpine pro')";
+        $result = db_query($sql);
+
+
+        //--------------- esli category_id = dopolniteljnaya
+
+        $sql = "UPDATE ".PRODUCTS_TABLE." u 
+                    inner join ".CATEGORIY_PRODUCT_TABLE." s on
+                        u.productID = s.productID 
+                    AND s.categoryID = ".intval($_CategoryID)."
+                    AND u.in_stock>0
+                    set u.list_price=u.Price";
+        db_query($sql);
+
+        $sql = "UPDATE ".PRODUCTS_TABLE." u 
+                    inner join ".CATEGORIY_PRODUCT_TABLE." s on
+                        u.productID = s.productID 
+                    AND s.categoryID = ".intval($_CategoryID)."
+                    AND u.in_stock>0
+                    set u.Price=(u.Price*(100-u.skidka))/100";
+        echo $sql;
+        db_query($sql);
+
+
+        $sql = "UPDATE ".PRODUCTS_TABLE."
+				SET Price=CEILING(Price)";
+        echo $sql;
+        db_query($sql);
+
+        //exit();
+
+
+
+
+
+
+    }
+    elseif ($skidka == 0)
+    {
+        $sql = "UPDATE ".PRODUCTS_TABLE."
 				SET Price=list_price, list_price =0
 				WHERE list_price<>0 AND categoryID=".intval($_CategoryID)." ";
-		db_query($sql);
-	}
-	//  {math equation="ceil((x*(100-y))/100)" x=$product_info.PriceWithOutUnit  y=$product_info.skidka} ���
-	//echo $sql;
+        db_query($sql);
 
-	//die();	
+        $sql = "UPDATE ".PRODUCTS_TABLE." u 
+                    inner join ".CATEGORIY_PRODUCT_TABLE." s on
+                        u.productID = s.productID 
+                    AND s.categoryID = ".intval($_CategoryID)."
+                    AND u.in_stock>0
+                    set u.Price=u.list_price,list_price =0";
+        db_query($sql);
+    }
+    //  {math equation="ceil((x*(100-y))/100)" x=$product_info.PriceWithOutUnit  y=$product_info.skidka} ���
+    //echo $sql;
+
+    //die();
 }
+
+
+
 
 
 
@@ -770,11 +831,11 @@ function catCountProductDuplicates ($_CategoryID){
 
 
 
-	$SubCategories = catGetSubCategories($_CategoryID);
+    $SubCategories = catGetSubCategories($_CategoryID);
 
-	$SubCategories[] = $_CategoryID;
+    $SubCategories[] = $_CategoryID;
 
-	$sql = "
+    $sql = "
 
 		SELECT prod.enabled, count(distinct prod.productID) FROM ".CATEGORIY_PRODUCT_TABLE." as catprod
 
@@ -786,39 +847,39 @@ function catCountProductDuplicates ($_CategoryID){
 
 	";
 
-	$Result = db_query($sql);
+    $Result = db_query($sql);
 
 
 
-	$cntA = 0;
+    $cntA = 0;
 
-	$cntU = 0;
-
-
-
-	while ($Row = db_fetch_row($Result)){
+    $cntU = 0;
 
 
 
-		if(intval($Row[0])>0)
-
-			$cntU = $Row[1];
-
-		else
-
-			$cntA = $Row[1];
-
-	}
-
-	$cntA += $cntU;
+    while ($Row = db_fetch_row($Result)){
 
 
 
-	if($cntA || $cntU){
+        if(intval($Row[0])>0)
+
+            $cntU = $Row[1];
+
+        else
+
+            $cntA = $Row[1];
+
+    }
+
+    $cntA += $cntU;
 
 
 
-		$sql = "
+    if($cntA || $cntU){
+
+
+
+        $sql = "
 
 			UPDATE ".CATEGORIES_TABLE."
 
@@ -828,9 +889,9 @@ function catCountProductDuplicates ($_CategoryID){
 
 		";
 
-		db_query($sql);
+        db_query($sql);
 
-	}
+    }
 
 }
 
@@ -854,21 +915,21 @@ function catUpdateProductCount($_ProductID, $_ProdAddCat, $_State = 1, $_SourceC
 
 
 
-	$Product = GetProduct ($_ProductID);
+    $Product = GetProduct ($_ProductID);
 
-	$subCategories = catGetSubCategories ($_ProdAddCat);
+    $subCategories = catGetSubCategories ($_ProdAddCat);
 
-	$subCategories[] = 1;
+    $subCategories[] = 1;
 
-	if($_SourceCategoryID)
+    if($_SourceCategoryID)
 
-		$subCategories[] = $_ProdAddCat;
+        $subCategories[] = $_ProdAddCat;
 
-	$_State = intval($_State);
+    $_State = intval($_State);
 
 
 
-	$sql = "
+    $sql = "
 
 		SELECT 1 FROM ".CATEGORIY_PRODUCT_TABLE."
 
@@ -876,11 +937,11 @@ function catUpdateProductCount($_ProductID, $_ProdAddCat, $_State = 1, $_SourceC
 
 	";
 
-	if(!db_fetch_row(db_query($sql)) && !in_array($Product['categoryID'], $subCategories)){
+    if(!db_fetch_row(db_query($sql)) && !in_array($Product['categoryID'], $subCategories)){
 
 
 
-		$sql = "
+        $sql = "
 
 			UPDATE ".CATEGORIES_TABLE."
 
@@ -890,19 +951,19 @@ function catUpdateProductCount($_ProductID, $_ProdAddCat, $_State = 1, $_SourceC
 
 		";
 
-		db_query($sql);
+        db_query($sql);
 
 
 
-		$Category = catGetCategoryById($_ProdAddCat);
+        $Category = catGetCategoryById($_ProdAddCat);
 
-		if($_SourceCategoryID == 0)
+        if($_SourceCategoryID == 0)
 
-			$_SourceCategoryID = $_ProdAddCat;
+            $_SourceCategoryID = $_ProdAddCat;
 
-		catUpdateProductCount($_ProductID, $Category['parent'], $_State, $_SourceCategoryID);
+        catUpdateProductCount($_ProductID, $Category['parent'], $_State, $_SourceCategoryID);
 
-	}
+    }
 
 }
 
@@ -924,25 +985,25 @@ function catGetSubCategories( $categoryID )
 
 {
 
-	$q = db_query("select categoryID from ".CATEGORIES_TABLE.
+    $q = db_query("select categoryID from ".CATEGORIES_TABLE.
 
-		" where categoryID<>0 and parent='$categoryID'") or die (db_error());
+        " where categoryID<>0 and parent='$categoryID'") or die (db_error());
 
-	$r = array();
+    $r = array();
 
-	while ($row = db_fetch_row($q))
+    while ($row = db_fetch_row($q))
 
-	{
+    {
 
-		$a = catGetSubCategories($row[0]);
+        $a = catGetSubCategories($row[0]);
 
-		for ($i=0;$i<count($a);$i++) $r[] = $a[$i];
+        for ($i=0;$i<count($a);$i++) $r[] = $a[$i];
 
-		$r[] = $row[0];
+        $r[] = $row[0];
 
-	}
+    }
 
-	return $r;
+    return $r;
 
 }
 
@@ -966,17 +1027,17 @@ function catGetSubCategoriesSingleLayer( $categoryID )
 
 {
 
-	$q = db_query("SELECT categoryID, name, products_count FROM ".
+    $q = db_query("SELECT categoryID, name, products_count FROM ".
 
-			CATEGORIES_TABLE." WHERE parent='$categoryID' order by sort_order, name");
+        CATEGORIES_TABLE." WHERE parent='$categoryID' order by sort_order, name");
 
-	$result = array();
+    $result = array();
 
-	while ($row = db_fetch_row($q))
+    while ($row = db_fetch_row($q))
 
-		$result[] = $row;
+        $result[] = $row;
 
-	return $result;
+    return $result;
 
 }
 
@@ -1002,23 +1063,23 @@ function catGetCategoryById($categoryID)
 
 {
 
-	$categoryID = (int)$categoryID;
+    $categoryID = (int)$categoryID;
 
-	$q = db_query("select categoryID, url_name, title_one, title_two, name, head_text,seo_text, parent, products_count, description, picture, ".
+    $q = db_query("select categoryID, url_name, title_one, title_two, name, head_text,seo_text, parent, products_count, description, picture, ".
 
-		" products_count_admin, sort_order, skidka, viewed_times".
+        " products_count_admin, sort_order, skidka, viewed_times".
 
-		", allow_products_comparison".
+        ", allow_products_comparison".
 
-		", allow_products_search".
+        ", allow_products_search".
 
-		", show_subcategories_products, meta_description, meta_keywords ".
+        ", show_subcategories_products, meta_description, meta_keywords ".
 
-		"  from ".CATEGORIES_TABLE.
+        "  from ".CATEGORIES_TABLE.
 
-		" where categoryID=$categoryID");
+        " where categoryID=$categoryID");
 
-	return db_fetch_row($q);
+    return db_fetch_row($q);
 
 }
 
@@ -1040,67 +1101,67 @@ function catGetMetaTags($categoryID)
 
 {
 
-	$categoryID = (int) $categoryID;
+    $categoryID = (int) $categoryID;
 
 
 
-	$q = db_query( "select meta_description, meta_keywords from ".
+    $q = db_query( "select meta_description, meta_keywords from ".
 
-		CATEGORIES_TABLE." where categoryID=".$categoryID );
+        CATEGORIES_TABLE." where categoryID=".$categoryID );
 
-	$row = db_fetch_row($q);
+    $row = db_fetch_row($q);
 
-	$meta_description	= TransformDataBaseStringToText( trim($row["meta_description"]) );
+    $meta_description	= TransformDataBaseStringToText( trim($row["meta_description"]) );
 
-	$meta_keywords		= TransformDataBaseStringToText( trim($row["meta_keywords"]) );
-
-
-
-	$res = "";
-
-	
-
-if(isset($_GET['offset']))
-
-	$offset = ' offset'.$_GET['offset'];
-
-elseif (isset($_GET['show_all'])) 	
-
-{
-
-	//exit();
-
-	$offset = ' show all';
-
-}
-
-elseif(isset($_GET['sort']))
-
-{
-
-	$offset = ' sort '.$_GET['direction'];
-
-	
-
-}
-
-else 
-
-	$offset = '';
+    $meta_keywords		= TransformDataBaseStringToText( trim($row["meta_keywords"]) );
 
 
 
-	if  ( $meta_description != "" )
-
-		$res .= "<meta name=\"Description\" content=\"".str_replace("\"","&quot;",$meta_description). $offset." \">\n";
-
-	if  ( $meta_keywords != "" )
-
-		$res .= "<meta name=\"KeyWords\" content=\"".str_replace("\"","&quot;",$meta_keywords). $offset."\" >\n";
+    $res = "";
 
 
 
-	return $res;
+    if(isset($_GET['offset']))
+
+        $offset = ' offset'.$_GET['offset'];
+
+    elseif (isset($_GET['show_all']))
+
+    {
+
+        //exit();
+
+        $offset = ' show all';
+
+    }
+
+    elseif(isset($_GET['sort']))
+
+    {
+
+        $offset = ' sort '.$_GET['direction'];
+
+
+
+    }
+
+    else
+
+        $offset = '';
+
+
+
+    if  ( $meta_description != "" )
+
+        $res .= "<meta name=\"Description\" content=\"".str_replace("\"","&quot;",$meta_description). $offset." \">\n";
+
+    if  ( $meta_keywords != "" )
+
+        $res .= "<meta name=\"KeyWords\" content=\"".str_replace("\"","&quot;",$meta_keywords). $offset."\" >\n";
+
+
+
+    return $res;
 
 }
 
@@ -1128,21 +1189,21 @@ function catGetAppendedCategoriesToProduct( $productID )
 
 {
 
- 	$q = db_query( "select ".CATEGORIES_TABLE.".categoryID as categoryID, name as category_name ".
+    $q = db_query( "select ".CATEGORIES_TABLE.".categoryID as categoryID, name as category_name ".
 
-		" from ".CATEGORIY_PRODUCT_TABLE.", ".CATEGORIES_TABLE." ".
+        " from ".CATEGORIY_PRODUCT_TABLE.", ".CATEGORIES_TABLE." ".
 
-		" where ".CATEGORIY_PRODUCT_TABLE.".categoryID = ".CATEGORIES_TABLE.".categoryID ".
+        " where ".CATEGORIY_PRODUCT_TABLE.".categoryID = ".CATEGORIES_TABLE.".categoryID ".
 
-		" AND productID = $productID"  );
+        " AND productID = $productID"  );
 
-	$data = array();
+    $data = array();
 
-	while( $row = db_fetch_row( $q ) )
+    while( $row = db_fetch_row( $q ) )
 
-		$data[] = $row;
+        $data[] = $row;
 
-	return $data;
+    return $data;
 
 }
 
@@ -1166,43 +1227,43 @@ function catAddProductIntoAppendedCategory($productID, $categoryID)
 
 {
 
-	$q = db_query("select count(*) from ".CATEGORIY_PRODUCT_TABLE.
+    $q = db_query("select count(*) from ".CATEGORIY_PRODUCT_TABLE.
 
-		" where productID=$productID AND categoryID=$categoryID");
+        " where productID=$productID AND categoryID=$categoryID");
 
-	$row = db_fetch_row( $q );
-
-
-
- 	$q1 = db_query( "select categoryID from ".PRODUCTS_TABLE.
-
-			" where productID=$productID");
-
-	$row1 = db_fetch_row( $q1 );
-
-	$basic_categoryID = $row1["categoryID"];
+    $row = db_fetch_row( $q );
 
 
 
-	if ( !$row[0] && $basic_categoryID != $categoryID )
+    $q1 = db_query( "select categoryID from ".PRODUCTS_TABLE.
 
-	{
+        " where productID=$productID");
 
-		db_query("insert into ".CATEGORIY_PRODUCT_TABLE.
+    $row1 = db_fetch_row( $q1 );
 
-			"( productID, categoryID ) ".
+    $basic_categoryID = $row1["categoryID"];
 
-			"values( $productID, $categoryID )" );
-			
-echo "insert into ".CATEGORIY_PRODUCT_TABLE."( productID, categoryID ) "."values( $productID, $categoryID )";
 
-	return true;
 
-	}
+    if ( !$row[0] && $basic_categoryID != $categoryID )
 
-	else
+    {
 
-		return false;
+        db_query("insert into ".CATEGORIY_PRODUCT_TABLE.
+
+            "( productID, categoryID ) ".
+
+            "values( $productID, $categoryID )" );
+
+        echo "insert into ".CATEGORIY_PRODUCT_TABLE."( productID, categoryID ) "."values( $productID, $categoryID )";
+
+        return true;
+
+    }
+
+    else
+
+        return false;
 
 }
 
@@ -1226,13 +1287,13 @@ function catRemoveProductFromAppendedCategory($productID, $categoryID)
 
 {
 
-	$productID = (int) $productID;
+    $productID = (int) $productID;
 
-	$categoryID = (int) $categoryID;
+    $categoryID = (int) $categoryID;
 
-	db_query("delete from ".CATEGORIY_PRODUCT_TABLE.
+    db_query("delete from ".CATEGORIY_PRODUCT_TABLE.
 
-		" where productID = $productID AND categoryID = $categoryID");
+        " where productID = $productID AND categoryID = $categoryID");
 
 
 
@@ -1254,69 +1315,69 @@ function catCalculatePathToCategory( $categoryID )
 
 {
 
-	$categoryID = (int)$categoryID;
+    $categoryID = (int)$categoryID;
 
-	if (!$categoryID) return NULL;
-
-
-
-	$path = array();
+    if (!$categoryID) return NULL;
 
 
 
-	$q = db_query("select count(*) from ".CATEGORIES_TABLE.
-
-			" where categoryID=$categoryID ");
-
- 	$row = db_fetch_row($q);
-
-	if ( $row[0] == 0 )
-
-		return $path;
+    $path = array();
 
 
 
-	$curr = $categoryID;
+    $q = db_query("select count(*) from ".CATEGORIES_TABLE.
 
-	do
+        " where categoryID=$categoryID ");
 
-	{
+    $row = db_fetch_row($q);
 
-		$q = db_query("SELECT categoryID, parent, url_name, name FROM ".
+    if ( $row[0] == 0 )
 
-			CATEGORIES_TABLE.
-
-			" WHERE categoryID='$curr'") or die (db_error());
-
-		$row = db_fetch_row($q);
-
-		$path[] = $row;
+        return $path;
 
 
 
-	 	if ( $curr == 1 )
+    $curr = $categoryID;
 
-			break;
+    do
+
+    {
+
+        $q = db_query("SELECT categoryID, parent, url_name, name FROM ".
+
+            CATEGORIES_TABLE.
+
+            " WHERE categoryID='$curr'") or die (db_error());
+
+        $row = db_fetch_row($q);
+
+        $path[] = $row;
 
 
 
-		$curr = $row["parent"];
+        if ( $curr == 1 )
 
-	}
+            break;
 
-	while ( 1 );
 
-	//now reverse $path
 
-	$path = array_reverse($path);
+        $curr = $row["parent"];
 
-	/*echo '<pre>';
+    }
 
-		print_r($path);
+    while ( 1 );
 
-	echo '</pre>';*/
+    //now reverse $path
 
-	return $path;
+    $path = array_reverse($path);
+
+    /*echo '<pre>';
+
+        print_r($path);
+
+    echo '</pre>';*/
+
+    return $path;
 
 }
 
@@ -1330,39 +1391,39 @@ function _deleteSubCategories( $parent )
 
 {
 
-	// move all product of this category to the root category
+    // move all product of this category to the root category
 
-	db_query("UPDATE ".PRODUCTS_TABLE.
+    db_query("UPDATE ".PRODUCTS_TABLE.
 
-			" SET categoryID=1 WHERE categoryID=$parent") or die (db_error());
-
-
-
-	$q = db_query("SELECT picture FROM ".CATEGORIES_TABLE.
-
-			" WHERE categoryID='".$parent."' and categoryID<>0");
-
-	$r = db_fetch_row($q);
-
-	if ($r["picture"] && file_exists("./products_pictures/".$r["picture"]))
-
-		unlink("./products_pictures/".$r["picture"]);
+        " SET categoryID=1 WHERE categoryID=$parent") or die (db_error());
 
 
 
+    $q = db_query("SELECT picture FROM ".CATEGORIES_TABLE.
+
+        " WHERE categoryID='".$parent."' and categoryID<>0");
+
+    $r = db_fetch_row($q);
+
+    if ($r["picture"] && file_exists("./products_pictures/".$r["picture"]))
+
+        unlink("./products_pictures/".$r["picture"]);
 
 
-	$q = db_query("SELECT categoryID FROM ".CATEGORIES_TABLE.
 
-				" WHERE parent=$parent and categoryID<>0") or die (db_error());
 
-	while ($row = db_fetch_row($q))
 
-		_deleteSubCategories( $row["categoryID"] );
+    $q = db_query("SELECT categoryID FROM ".CATEGORIES_TABLE.
 
-	db_query("DELETE FROM ".CATEGORIES_TABLE.
+        " WHERE parent=$parent and categoryID<>0") or die (db_error());
 
-		" WHERE parent=$parent and categoryID<>0") or die (db_error());
+    while ($row = db_fetch_row($q))
+
+        _deleteSubCategories( $row["categoryID"] );
+
+    db_query("DELETE FROM ".CATEGORIES_TABLE.
+
+        " WHERE parent=$parent and categoryID<>0") or die (db_error());
 
 
 
@@ -1388,33 +1449,33 @@ function catDeleteCategory( $categoryID )
 
 {
 
-	_deleteSubCategories( $categoryID );
+    _deleteSubCategories( $categoryID );
 
 
 
-	db_query("UPDATE ".PRODUCTS_TABLE.
+    db_query("UPDATE ".PRODUCTS_TABLE.
 
-			" SET categoryID=1 WHERE categoryID=$categoryID");
+        " SET categoryID=1 WHERE categoryID=$categoryID");
 
-	db_query("DELETE FROM ".CATEGORIES_TABLE.
+    db_query("DELETE FROM ".CATEGORIES_TABLE.
 
-		" WHERE parent=$categoryID and categoryID<>0") or die (db_error());
+        " WHERE parent=$categoryID and categoryID<>0") or die (db_error());
 
-	$q = db_query("SELECT picture FROM ".CATEGORIES_TABLE.
+    $q = db_query("SELECT picture FROM ".CATEGORIES_TABLE.
 
-			" WHERE categoryID='".$categoryID."' and categoryID<>0");
+        " WHERE categoryID='".$categoryID."' and categoryID<>0");
 
-	$r = db_fetch_row($q);
+    $r = db_fetch_row($q);
 
-	if ($r["picture"] && file_exists("./products_pictures/".$r["picture"]))
+    if ($r["picture"] && file_exists("./products_pictures/".$r["picture"]))
 
-		unlink("./products_pictures/".$r["picture"]);
+        unlink("./products_pictures/".$r["picture"]);
 
 
 
-	db_query("DELETE FROM ".CATEGORIES_TABLE.
+    db_query("DELETE FROM ".CATEGORIES_TABLE.
 
-		" WHERE categoryID=$categoryID and categoryID<>0") or die (db_error());
+        " WHERE categoryID=$categoryID and categoryID<>0") or die (db_error());
 
 }
 
@@ -1424,7 +1485,7 @@ function catBuildProductTree(){
 
 
 
-	$sql = "
+    $sql = "
 
 		SELECT
 
