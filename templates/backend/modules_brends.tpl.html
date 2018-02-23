@@ -7,96 +7,105 @@
 
 
 
-function saveKurs(id)
-{
-	//alert (id);
-	var kurs = $("#"+id).val();
-	var valuta = $("#"+id+"_valuta :selected").val();
-	//alert(valuta);
-	if(kurs >0 && valuta !== '')
-	{	
-		$.ajax({
-		    type: "GET",
-		    url: "./public_scripts/kurs_reload.php",
-		    data: "id="+id+"&kurs="+kurs+"&valuta="+valuta+"&action=1",    
-		    success: function(responseText){
-		       
-		            $("#"+id+"_result").html(responseText);
-		            
-		    }
-		  });
-	}
-}
+    function saveKurs(id)
+    {
+        //alert (id);
+        var kurs = $("#"+id).val();
+        var warranty = $("#"+id+"_warranty").val();
+        var valuta = $("#"+id+"_valuta :selected").val();
+        //alert(valuta);
+        if(kurs >0 && valuta !== '')
+        {
+            $.ajax({
+                type: "GET",
+                url: "./public_scripts/kurs_reload.php",
+                data: "id="+id+"&kurs="+kurs+"&valuta="+valuta+"&warranty="+warranty+"&action=1",
+                success: function(responseText){
 
-function recountPrice(id, brend)
-{
-	//alert (id);
-	var kurs = $("#"+id).val();
-	var valuta = $("#"+id+"_valuta :selected").val();
-	//alert(valuta);
-	if(kurs >0)
-	{	
-		$.ajax({
-		    type: "GET",
-		    url: "./public_scripts/kurs_reload.php",
-		    data: "id="+id+"&kurs="+kurs+"&brend="+brend+"&valuta="+valuta+"&action=2",    
-		    success: function(responseText){
-		       
-		            $("#"+id+"_result").html(responseText);
-		            
-		    }
-		  });
-	}
-}
+                    $("#"+id+"_result").html(responseText);
+
+                }
+            });
+        }
+    }
+
+    function recountPrice(id, brend)
+    {
+        //alert (id);
+        var kurs = $("#"+id).val();
+
+        var valuta = $("#"+id+"_valuta :selected").val();
+        //alert(valuta);
+        if(kurs >0)
+        {
+            $.ajax({
+                type: "GET",
+                url: "./public_scripts/kurs_reload.php",
+                data: "id="+id+"&kurs="+kurs+"&brend="+brend+"&valuta="+valuta+"&action=2",
+                success: function(responseText){
+
+                    $("#"+id+"_result").html(responseText);
+
+                }
+            });
+        }
+    }
 
 
 </script>
 {/literal}
 <table cellpadding="0" cellspacing="0" border="0" class="datatable">
-<tr>
-<td> Название бренда </td>
-<td> Лого</td>
-<td> Курс </td>
-<td> Валюта </td>
-<td> Действия </td>
-</tr>
+	<tr>
+		<td> Название бренда </td>
+		<td> Лого</td>
+		<td> Курс </td>
+		<td> Валюта </td>
+		<td> Гарантия (месяцы) <br>
+			0 - стандартная 14 дней
 
-<form enctype="multipart/form-data" action="admin.php?dpt=modules&sub=brends" method="post" name="BRENDSform">
-{section name=i loop=$brendsAll}
-<tr  bgcolor="{cycle values='white,#FFF7EA'}">
-	<td>{$brendsAll[i].name}</td>
-	<td>{if $brendsAll[i].filename neq ''} <img src="/images/brends/{$brendsAll[i].filename}">{else if} <input type="file" name="img_{$brendsAll[i].id}" width=15><br>{/if}</td>
- 	<td><input type="text" value="{if $brendsAll[i].kurs neq ''}{$brendsAll[i].kurs}{/if}" size="5" name="" id="{$brendsAll[i].id}"></td>
- 	<td>
-	 	<select size="1"  name="valuta" id="{$brendsAll[i].id}_valuta">
-		    <option disabled selected>Выберите</option>
-		    <option value="USD" {if $brendsAll[i].valuta eq 'USD'}selected{/if}>USD</option>
-		    <option value="EUR" {if $brendsAll[i].valuta eq 'EUR'}selected{/if}>EUR</option>
-		    <option value="UAH" {if $brendsAll[i].valuta eq 'UAH'}selected{/if}>UAH</option>
-	    </select>
- 	</td>
-	<td><div id="{$brendsAll[i].id}_result"></div>	
-		<div style="background: #fc0;cursor:pointer;" onclick="saveKurs({$brendsAll[i].id})">Save kurs</div> <br>
-		<div style="background: #ccc;cursor:pointer;"   onclick="recountPrice({$brendsAll[i].id},'{$brendsAll[i].name}')">Recount price</div><br>
-		
-	
- 			<a href="javascript:confirmDelete({$brendsAll[i].id},'Удалить {$brendsAll[i].filename}?','admin.php?dpt=modules&amp;sub=brends&amp;brendID=');">
-						<img border="0" alt="Удалить" src="images/backend/button_delete.gif">
-					</a>
-	</td>
-		
-{/section}
-<br>
-<hr>
+		</td>
+		<td> Действия </td>
+	</tr>
 
-<tr>
-	<td colspan="5" align="center"><input type=submit name="save_pictures" value="СОХРАНИТЬ"></td>
-
-</tr>
- 
-  
+	<form enctype="multipart/form-data" action="admin.php?dpt=modules&sub=brends" method="post" name="BRENDSform">
+		{section name=i loop=$brendsAll}
+		<tr  bgcolor="{cycle values='white,#FFF7EA'}">
+			<td>{$brendsAll[i].name}</td>
+			<td>{if $brendsAll[i].filename neq ''} <img src="/images/brends/{$brendsAll[i].filename}">{else if} <input type="file" name="img_{$brendsAll[i].id}" width=15><br>{/if}</td>
+			<td><input type="text" value="{if $brendsAll[i].kurs neq ''}{$brendsAll[i].kurs}{/if}" size="5" name="" id="{$brendsAll[i].id}"></td>
+			<td>
+				<select size="1"  name="valuta" id="{$brendsAll[i].id}_valuta">
+					<option disabled selected>Выберите</option>
+					<option value="USD" {if $brendsAll[i].valuta eq 'USD'}selected{/if}>USD</option>
+					<option value="EUR" {if $brendsAll[i].valuta eq 'EUR'}selected{/if}>EUR</option>
+					<option value="UAH" {if $brendsAll[i].valuta eq 'UAH'}selected{/if}>UAH</option>
+				</select>
+			</td>
+			<td>
+				<input type="text" value="{if $brendsAll[i].warranty neq ''}{$brendsAll[i].warranty}{/if}" size="5" name="" id="{$brendsAll[i].id}_warranty">
+			</td>
+			<td><div id="{$brendsAll[i].id}_result"></div>
+				<div style="background: #fc0;cursor:pointer; padding:5px; margin:5px;" onclick="saveKurs({$brendsAll[i].id})">Save</div> <br>
+				<div style="background: #ccc;cursor:pointer; padding:5px; margin:5px;"   onclick="recountPrice({$brendsAll[i].id},'{$brendsAll[i].name}')">Recount price</div><br>
 
 
-</form>
+				<a href="javascript:confirmDelete({$brendsAll[i].id},'Удалить {$brendsAll[i].filename}?','admin.php?dpt=modules&amp;sub=brends&amp;brendID=');">
+					<img border="0" alt="Удалить" src="images/backend/button_delete.gif">
+				</a>
+			</td>
+
+			{/section}
+			<br>
+			<hr>
+
+		<tr>
+			<td colspan="5" align="center"><input type=submit name="save_pictures" value="СОХРАНИТЬ"></td>
+
+		</tr>
+
+
+
+
+	</form>
 
 </table>

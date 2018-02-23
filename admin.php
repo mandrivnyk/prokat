@@ -177,7 +177,9 @@ function add_department($admin_dpt)
 
 	//connect to database
 	db_connect(DB_HOST,DB_USER,DB_PASS) or die (db_error());
-	db_select_db(DB_NAME) or die (db_error());
+    $q = db_query("SET NAMES CP1251");
+    $q = db_query("SET COLLATION_CONNECTION=CP1251_GENERAL_CI");
+    db_select_db(DB_NAME) or die (db_error());
 
 	settingDefineConstants();
 
