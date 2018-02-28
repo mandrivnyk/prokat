@@ -64,17 +64,26 @@ class comments
 
     public function _getCommentsLast()
     {
-         header('Content-Type: text/html; charset=windows-1251');
-         $files = scandir($this->_getDir());
-         for($i=0; $i<count($files); $i++)
-         {
+        header('Content-Type: text/html; charset=windows-1251');
+        $com_str = '';
+        $files = scandir($this->_getDir());
+
+        $filesCount = count($files);
+
+        if($filesCount <=2) {
+            echo $com_str;
+            exit();
+        }
+
+        for($i=0; $i<count($files); $i++)
+        {
           if(($files[$i] == '.') || ($files[$i] == '..')) continue;
            $comFiles[$i]['name'] =  $files[$i];
            $comFiles[$i]['lastmod'] =  filemtime($this->_getDir().$files[$i]);
-         }
+        }
 
          usort($comFiles, array('comments','cmp'));
-         $com_str = '';
+
          for($y=0;$y<3; $y++)
          {
            $productID = str_replace(".json","",$comFiles[$y]['name']);
@@ -82,9 +91,6 @@ class comments
          }
 
         echo $com_str;
-
-
-         //print_r($comFiles);
     }
 
 

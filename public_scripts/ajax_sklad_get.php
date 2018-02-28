@@ -40,12 +40,22 @@ if(isset($productCode)) {
 
     $sklad = new sklad();
 
-    if (strpos($productCode, '/') !== false) {
+//    $skipWords = ['б\у','б/у', 'Б/У', 'Б\У'];
+//    $res = in_array($productCode, $skipWords);
+//    print_r($productCode);
+//    print_r($skipWords);
+//    print_r($res);
+//    print_r("-------------");
+//exit();
+
+//    print_r($productCode);
+    if ((strpos($productCode, '/') !== false)){
         $productCodes = explode('/', $productCode);
     } else {
         $productCodes[] = $productCode;
     }
-
+//    print_r($productCodes);
+//exit();
     $result = '';
 
         if($forSelect >0) {
@@ -63,7 +73,8 @@ if(isset($productCode)) {
                 }
 
                 if($sklad->checkIsFile($productCode)) {
-                    $result .= '<br><b>Артикул: ' . $productCode . '</b>';
+                    $productCode1251 = iconv("UTF-8","windows-1251",trim($_POST['productCode']));
+                    $result .= '<br><b>Артикул: ' . $productCode1251 . '</b><br>';
                     $result .= $sklad->createSkladInSelectTag($sklad->getVariantsFromFile($productCode), $key);
                 }
             }

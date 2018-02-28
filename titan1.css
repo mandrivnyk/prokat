@@ -630,7 +630,7 @@ div.hr {background: #fff url(myhrimg.gif) no-repeat scroll center; height: 5px}
 
 {
 
-	 border-collapse: collapse;	
+	 border-collapse: collapse;
 
 }
 
@@ -928,7 +928,7 @@ width:130px;
 
 }
 
-.title_car_div 
+.title_car_div
 
 {
 
@@ -946,7 +946,7 @@ width:130px;
 
 }
 
-.box_car_div 
+.box_car_div
 
 {
 
@@ -982,7 +982,7 @@ width:130px;
 
 	margin-top: 5px;
 
-	margin-left: 5px;	
+	margin-left: 5px;
 
 	background-color: white;
 
@@ -1096,7 +1096,7 @@ text-decoration: none;
 
 	text-align:center;
 
-	vertical-align:bottom;	
+	vertical-align:bottom;
 
 }
 
@@ -1176,7 +1176,7 @@ text-decoration: none;
 
 	font-size: 22px;
 
-	color: black;	
+	color: black;
 
 	padding: 25 0 15 0;
 
@@ -1186,11 +1186,11 @@ text-decoration: none;
 
 {
 
-	background:url('/images/percent.jpg') left top no-repeat;	
+	background:url('/images/percent.jpg') left top no-repeat;
 
 	font-size: 22px;
 
-	color: black;	
+	color: black;
 
 	padding: 50 0 15 0;
 
@@ -1202,7 +1202,7 @@ text-decoration: none;
 
 	font-size: 22px;
 
-	color: black;	
+	color: black;
 
 	padding-top: 15px;
 
@@ -1210,11 +1210,11 @@ text-decoration: none;
 
 .cennik-fon-grey
 
-{	
+{
 
 	color: black;
 
-	padding-right: 10px; 
+	padding-right: 10px;
 
 	font-weight: bold;
 
@@ -1226,7 +1226,7 @@ text-decoration: none;
 
 {
 
-	background:url('/images/logo-craft.jpg') center center no-repeat;	
+	background:url('/images/logo-craft.jpg') center center no-repeat;
 
 }
 
@@ -1270,7 +1270,7 @@ text-decoration: none;
 
 .top-sale
 
-{   
+{
 
 	 display: block;
 
@@ -1296,9 +1296,9 @@ text-decoration: none;
 
 {
 
-	font-size: 19px; 
+	font-size: 19px;
 
-	font-weight: bold; 
+	font-weight: bold;
 
 	color:#800080;
 
@@ -1320,7 +1320,7 @@ text-decoration: none;
 
 }
 
-.reviews-add-stars-text {   
+.reviews-add-stars-text {
 
     float: left;
 
@@ -1378,7 +1378,7 @@ text-decoration: none;
 
 .reviews-add-stars-i-sm {
 
-    background: url("/images/star_frame_sm.png") no-repeat;    
+    background: url("/images/star_frame_sm.png") no-repeat;
 
     float: left;
 
@@ -1388,7 +1388,7 @@ text-decoration: none;
 
 }
 
-.reviews-add-stars-text-sm {   
+.reviews-add-stars-text-sm {
 
     float: left;
 
@@ -1404,7 +1404,7 @@ text-decoration: none;
 
 .reviews-add-stars-i-sm.active {
 
-    background: url("/images/star_sm.png") no-repeat;    
+    background: url("/images/star_sm.png") no-repeat;
 
     float: left;
 
@@ -1416,7 +1416,7 @@ text-decoration: none;
 
 .reviews-add-stars-i-sm.activeAdd {
 
-    background: url("/images/star_sm.png") no-repeat;    
+    background: url("/images/star_sm.png") no-repeat;
 
     float: left;
 
@@ -1428,7 +1428,7 @@ text-decoration: none;
 
 .reviews-add-stars-i-sm.activeRm {
 
-    background: url("/images/star_frame_sm.png") no-repeat;    
+    background: url("/images/star_frame_sm.png") no-repeat;
 
     float: left;
 
@@ -1648,7 +1648,7 @@ padding-top: 5px;
 
     font-size:16px;
 
-    cursor:pointer;    
+    cursor:pointer;
 
 }
 
@@ -1658,9 +1658,9 @@ padding-top: 5px;
 
     font-size:16px;
 
-    cursor:pointer;   
+    cursor:pointer;
 
-    margin-top:5px; 
+    margin-top:5px;
 
 }
 
@@ -1670,7 +1670,7 @@ padding-top: 5px;
 
 {
 
-   text-decoration: none; 
+   text-decoration: none;
 
 }
 
@@ -1700,7 +1700,7 @@ padding-top: 5px;
 
 .err404
 {
-    text-align: center;    
+    text-align: center;
 }
 
 .close_open
@@ -1714,4 +1714,11 @@ padding-top: 5px;
 .arrow_up_down
 {
     padding-top:5px;
+}
+
+.cart {
+
+    background-image: url(/images/cart_big_navy.gif);
+    width: 112px;
+    height: 30px;
 }

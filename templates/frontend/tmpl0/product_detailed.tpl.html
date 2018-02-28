@@ -272,16 +272,17 @@
 
                                           <form action="index.php?productID={$product_info.productID}" method=post name="HiddenFieldsForm">
                                               {include file="sklad.tpl.html" in_stock=$product_info.in_stock productCode=$product_info.product_code productID=$product_info.productID size_arr=$size_arr colors_arr=$colors_arr}
-                                              <div id="sklad" style="display: none"><span id="skladContent"></span></div>
+
                                           {if $smarty.const.CONF_OPEN_SHOPPING_CART_IN_NEW_WINDOW eq 0}
 
                                                 {* shopping cart page is shown in the same window - in this cart 'add to cart' button is a form submit button *}
 
                                                 {if $product_info.Price>0 && ( $smarty.const.CONF_SHOW_ADD2CART eq 1 ) &&
                                                     ( $smarty.const.CONF_CHECKSTOCK==0 || $product_info.in_stock > 0 ) }
+                                                    <div id="sklad" style="display: none"><span id="skladContent"></span></div>
                                                     <input type="hidden" name="addproduct" value="{$product_info.productID}">
                                                     <input type="hidden" name="shopping_cart" value="yes">
-                                                    <input name='cart' type=submit  src="images/cart_big_navy.gif" alt="{$smarty.const.ADD_TO_CART_STRING}">
+                                                    <input name='cart' type=submit  class="cart" style="background:url(images/cart_big_navy.gif) no-repeat; width: 112px; height: 30px; border:none;" value="" alt="{$smarty.const.ADD_TO_CART_STRING}">
                                                 {else}
                                                     &nbsp;
                                                 {/if}

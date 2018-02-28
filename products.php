@@ -1,50 +1,50 @@
 <?php
-****
-	//ADMIN :: products managment
 
-	include("./cfg/connect.inc.php");
+//ADMIN :: products managment
 
-	include("./includes/database/".DBMS.".php");
+include("./cfg/connect.inc.php");
 
-	include("./core_functions/category_functions.php");
+include("./includes/database/".DBMS.".php");
 
-	include("./core_functions/product_functions.php");
+include("./core_functions/category_functions.php");
 
-	include("./core_functions/picture_functions.php");
+include("./core_functions/product_functions.php");
 
-	include("./core_functions/configurator_functions.php");
+include("./core_functions/picture_functions.php");
 
-	include("./core_functions/datetime_functions.php");
+include("./core_functions/configurator_functions.php");
 
-	include("./core_functions/tax_function.php");
+include("./core_functions/datetime_functions.php");
 
-	include("./core_functions/setting_functions.php" );
+include("./core_functions/tax_function.php");
 
-	include( "./core_functions/functions.php" );
+include("./core_functions/setting_functions.php" );
 
-	include_once("./js/fckeditor/fckeditor.php");
+include( "./core_functions/functions.php" );
 
-	include_once("./resizeimage.inc.php");
+include_once("./js/fckeditor/fckeditor.php");
 
-	include_once( "./core_functions/url_function.php" );
+include_once("./resizeimage.inc.php");
 
-	//authorized access check
+include_once( "./core_functions/url_function.php" );
 
-	session_start();
+//authorized access check
 
-	@set_time_limit(0);
+session_start();
 
-	MagicQuotesRuntimeSetting();
+@set_time_limit(0);
 
-	//connect 2 database
+MagicQuotesRuntimeSetting();
 
-	db_connect(DB_HOST,DB_USER,DB_PASS) or die (db_error());
-	$q = db_query("SET NAMES CP1251");
-    $q = db_query("SET COLLATION_CONNECTION=CP1251_GENERAL_CI");
+//connect 2 database
 
-	db_select_db(DB_NAME) or die (db_error());
+db_connect(DB_HOST,DB_USER,DB_PASS) or die (db_error());
+$q = db_query("SET NAMES CP1251");
+$q = db_query("SET COLLATION_CONNECTION=CP1251_GENERAL_CI");
 
-	settingDefineConstants();
+db_select_db(DB_NAME) or die (db_error());
+
+settingDefineConstants();
 
 // Получаем картинки для TOP SALE--------------------------------
 
@@ -52,808 +52,819 @@ $imgs_topsale = GetPicturesTOPSALE();
 
 if(isset($_POST["url_name"]))
 
-	{
+{
 
-		$_POST["url_name"] = trim($_POST["url_name"]);
+    $_POST["url_name"] = trim($_POST["url_name"]);
 
-		//чистим урл
+    //чистим урл
 
-			//$_POST["url_name"]	= eregi_replace("([\~\,\:\@\#\№\%\^\&\?\!\*\(\)\$\+\=\'\"\`\; а-яА-ЯёЁ])+", '',$_POST["url_name"]);
+    //$_POST["url_name"]	= eregi_replace("([\~\,\:\@\#\№\%\^\&\?\!\*\(\)\$\+\=\'\"\`\; а-яА-ЯёЁ])+", '',$_POST["url_name"]);
 
-			$_POST["url_name"]	=  preg_replace('/[^A-Za-z0-9-]+/', '', $_POST["url_name"]);
+    $_POST["url_name"]	=  preg_replace('/[^A-Za-z0-9-]+/', '', $_POST["url_name"]);
 
-	}
+}
 
-	if(isset($_POST["title_one"]))
+if(isset($_POST["title_one"]))
 
-	{
+{
 
-		$_POST["title_one"] = trim($_POST["title_one"]);
+    $_POST["title_one"] = trim($_POST["title_one"]);
 
-	}
+}
 
-	if(isset($_POST["title_two"]))
+if(isset($_POST["title_two"]))
 
-	{
+{
 
-		$_POST["title_two"] = trim($_POST["title_two"]);
+    $_POST["title_two"] = trim($_POST["title_two"]);
 
-	}
+}
 
-	//current language
+//current language
 
-	include("./cfg/language_list.php");
+include("./cfg/language_list.php");
 
-	if (!isset($_SESSION["current_language"]) ||
+if (!isset($_SESSION["current_language"]) ||
 
-		$_SESSION["current_language"] < 0 || $_SESSION["current_language"] > count($lang_list))
+    $_SESSION["current_language"] < 0 || $_SESSION["current_language"] > count($lang_list))
 
-			$_SESSION["current_language"] = 0; //set default language
+    $_SESSION["current_language"] = 0; //set default language
 
-	//include a language file
+//include a language file
 
-	if (isset($lang_list[$_SESSION["current_language"]]) &&
+if (isset($lang_list[$_SESSION["current_language"]]) &&
 
-		file_exists("languages/".$lang_list[$_SESSION["current_language"]]->filename))
+    file_exists("languages/".$lang_list[$_SESSION["current_language"]]->filename))
 
-	{
+{
 
-		//include current language file
+    //include current language file
 
-		include("languages/".$lang_list[$_SESSION["current_language"]]->filename);
+    include("languages/".$lang_list[$_SESSION["current_language"]]->filename);
 
-	}
+}
 
-	else
+else
 
-	{
+{
 
-		die("<font color=red><b>ERROR: Couldn't find language file!</b></font>");
+    die("<font color=red><b>ERROR: Couldn't find language file!</b></font>");
 
-	}
+}
 
-	include("./checklogin.php");
+include("./checklogin.php");
 
-	if ( CONF_BACKEND_SAFEMODE != 1 && (!isset($_SESSION["log"]) || strcmp($_SESSION["log"],ADMIN_LOGIN))) //unauthorized
+if ( CONF_BACKEND_SAFEMODE != 1 && (!isset($_SESSION["log"]) || strcmp($_SESSION["log"],ADMIN_LOGIN))) //unauthorized
 
-	{
+{
 
-		die (ERROR_FORBIDDEN);
+    die (ERROR_FORBIDDEN);
 
-	}
+}
 
-	// several function
+// several function
 
-	// *****************************************************************************
+// *****************************************************************************
 
-	// Purpose	gets size
+// Purpose	gets size
 
-	// Inputs
+// Inputs
 
-	// Remarks
+// Remarks
 
-	// Returns
+// Returns
 
-	function GetPictureSize( $filename )
+function GetPictureSize( $filename )
 
-	{
+{
 
-		$size_info=getimagesize("./products_pictures/".$filename);
+    $size_info=getimagesize("./products_pictures/".$filename);
 
-		return ((string)($size_info[0] + 40 )).", ".((string)($size_info[1] + 40 ));
+    return ((string)($size_info[0] + 40 )).", ".((string)($size_info[1] + 40 ));
 
-	}
+}
 
-	// *****************************************************************************
+// *****************************************************************************
 
-	// Purpose	gets client JavaScript to reload opener page
+// Purpose	gets client JavaScript to reload opener page
 
-	// Inputs
+// Inputs
 
-	// Remarks
+// Remarks
 
-	// Returns
+// Returns
 
-	function ReLoadOpener()
+function ReLoadOpener()
 
-	{
+{
 
-		if ( $_GET["productID"]==0 )
+    if ( $_GET["productID"]==0 )
 
-			$categoryID=$_POST["categoryID"];
+        $categoryID=$_POST["categoryID"];
 
-		else
-
-		{
-
-			$q=db_query("select categoryID from ".PRODUCTS_TABLE.
-
-				" where productID='".$_GET["productID"]."'");
-
-			$r=db_fetch_row($q);
-
-			$categoryID=$r["categoryID"];
-
-		}
-
-		echo("<script language='JavaScript'>");
-
-		echo("	try");
-
-		echo("	{");
-
-		echo("		window.opener.location.reload();");
-
-		echo("	}");
-
-		echo("	catch(e) { }");
-
-		echo("</script>");
-
-	}
-
-	// *****************************************************************************
-
-	// Purpose	gets client JavaScript to close page
-
-	// Inputs
-
-	// Remarks
-
-	// Returns
-
-	function CloseWindow()
-
-	{
-
-		echo("<script language='JavaScript'>");
-
-		echo("	window.close();\n");
-
-		echo("</script>");
-
-	}
-
-	// *****************************************************************************
-
-	// Purpose	gets client JavaScript to open in new window
-
-	//							option_value_configurator.php
-
-	// Inputs
-
-	// Remarks
-
-	// Returns
-
-	function OpenConfigurator($optionID, $productID)
-
-	{
-
-		$url = "option_value_configurator.php?optionID=".$optionID."&productID=".$productID;
-
-		echo("<script language='JavaScript'>\n");
-
-		echo("		w=400; \n");
-
-		echo("		h=400; \n");
-
-		echo("		link='".$url."'; \n");
-
-		echo("		var win = 'width='+w+',height='+h+',menubar=no,location=no,resizable=yes,scrollbars=yes';\n");
-
-		echo("		wishWin = window.open(link,'wishWin',win);\n");
-
-		echo("</script>\n");
-
-	}
-
-	if ( isset($_GET["delete"]) )
-
-	{
-
-		if (CONF_BACKEND_SAFEMODE) //this action is forbidden when SAFE MODE is ON
-
-		{
-
-			Redirect("products.php?safemode=yes&productID=".$_GET["productID"]);
-
-		}
-
-		DeleteProduct( $_GET["productID"] );
-
-		CloseWindow();
-
-		ReLoadOpener();
-
-	}
-
-	if (!isset($_GET["productID"])) $_GET["productID"]=0;
-
-	$_GET["productID"] = (int)$_GET["productID"];
-
-	$productID = $_GET["productID"];
-
-	if (isset($_POST) && count($_POST)>0)
-
-	{
-
-		if (CONF_BACKEND_SAFEMODE) //this action is forbidden when SAFE MODE is ON
-
-		{
-
-			Redirect("products.php?safemode=yes&productID=".$productID);
-
-		}
-
-	}
-
-	if ( !isset($_POST["eproduct_available_days"]) )
-
-		$_POST["eproduct_available_days"] = 365;
-
-	if ( !isset($_POST["eproduct_download_times"]) )
-
-		$_POST["eproduct_download_times"] = 1;
-
-	if ( isset($_POST["eproduct_download_times"]) )
-
-		$_POST["eproduct_download_times"] = (int)$_POST["eproduct_download_times"];
-
-// dublicate product *********************************
-
-    if ( isset($_POST["dbl_product"]) )
+    else
 
     {
 
-			$productID = AddProduct(
+        $q=db_query("select categoryID from ".PRODUCTS_TABLE.
 
-				$_POST["categoryID"],$_POST["title_one"],$_POST["title_two"],$_POST["url_name"], $_POST["name"],  $_POST["producer"],$_POST["num_topsale"], $_POST["price"], $_POST["description"], $_POST["description2"], $_POST["brief_description2"], 
+            " where productID='".$_GET["productID"]."'");
 
-				$_POST["in_stock"],$_POST["skidka"],
+        $r=db_fetch_row($q);
 
-				$_POST["brief_description"], $_POST["list_price"],
-
-				$_POST["product_code"], $_POST["sort_order"],
-
-				isset($_POST["ProductIsProgram"]), "eproduct_filename",
-
-				$_POST["eproduct_available_days"],
-
-				$_POST["eproduct_download_times"],
-
-				$_POST["weight"], $_POST["meta_description"],
-
-				$_POST["meta_keywords"], isset($_POST["free_shipping"]),
-
-				$_POST["min_order_amount"], $_POST["shipping_freight"],
-
-				$_POST["tax_class"] );
-
-            $_GET["productID"] = $productID;
-
-            $updatedValues = ScanPostVariableWithId( array( "option_value", "option_radio_type" ) );
-
-            cfgUpdateOptionValue($productID, $updatedValues);
-
-        if ( CONF_UPDATE_GCV == '1' )
-
-            update_products_Count_Value_For_Categories(1);
-
-        ReLoadOpener();
-
-        if ( $_POST["save_product_without_closing"]=="0" )
-
-            CloseWindow();
+        $categoryID=$r["categoryID"];
 
     }
 
+    echo("<script language='JavaScript'>");
+
+    echo("	try");
+
+    echo("	{");
+
+    echo("		window.opener.location.reload();");
+
+    echo("	}");
+
+    echo("	catch(e) { }");
+
+    echo("</script>");
+
+}
+
+// *****************************************************************************
+
+// Purpose	gets client JavaScript to close page
+
+// Inputs
+
+// Remarks
+
+// Returns
+
+function CloseWindow()
+
+{
+
+    echo("<script language='JavaScript'>");
+
+    echo("	window.close();\n");
+
+    echo("</script>");
+
+}
+
+// *****************************************************************************
+
+// Purpose	gets client JavaScript to open in new window
+
+//							option_value_configurator.php
+
+// Inputs
+
+// Remarks
+
+// Returns
+
+function OpenConfigurator($optionID, $productID)
+
+{
+
+    $url = "option_value_configurator.php?optionID=".$optionID."&productID=".$productID;
+
+    echo("<script language='JavaScript'>\n");
+
+    echo("		w=400; \n");
+
+    echo("		h=400; \n");
+
+    echo("		link='".$url."'; \n");
+
+    echo("		var win = 'width='+w+',height='+h+',menubar=no,location=no,resizable=yes,scrollbars=yes';\n");
+
+    echo("		wishWin = window.open(link,'wishWin',win);\n");
+
+    echo("</script>\n");
+
+}
+
+if ( isset($_GET["delete"]) )
+
+{
+
+    if (CONF_BACKEND_SAFEMODE) //this action is forbidden when SAFE MODE is ON
+
+    {
+
+        Redirect("products.php?safemode=yes&productID=".$_GET["productID"]);
+
+    }
+
+    DeleteProduct( $_GET["productID"] );
+
+    CloseWindow();
+
+    ReLoadOpener();
+
+}
+
+if (!isset($_GET["productID"])) $_GET["productID"]=0;
+
+$_GET["productID"] = (int)$_GET["productID"];
+
+$productID = $_GET["productID"];
+
+if (isset($_POST) && count($_POST)>0)
+
+{
+
+    if (CONF_BACKEND_SAFEMODE) //this action is forbidden when SAFE MODE is ON
+
+    {
+
+        Redirect("products.php?safemode=yes&productID=".$productID);
+
+    }
+
+}
+
+if ( !isset($_POST["eproduct_available_days"]) )
+
+    $_POST["eproduct_available_days"] = 365;
+
+if ( !isset($_POST["eproduct_download_times"]) )
+
+    $_POST["eproduct_download_times"] = 1;
+
+if ( isset($_POST["eproduct_download_times"]) )
+
+    $_POST["eproduct_download_times"] = (int)$_POST["eproduct_download_times"];
+
+// dublicate product *********************************
+
+if ( isset($_POST["dbl_product"]) )
+
+{
+
+    $productID = AddProduct(
+
+        $_POST["categoryID"],$_POST["title_one"],$_POST["title_two"],$_POST["url_name"], $_POST["name"],  $_POST["producer"],$_POST["num_topsale"], $_POST["price"], $_POST["description"], $_POST["description2"], $_POST["brief_description2"],
+
+        $_POST["in_stock"],$_POST["skidka"],
+
+        $_POST["brief_description"], $_POST["list_price"],
+
+        $_POST["product_code"], $_POST["sort_order"],
+
+        isset($_POST["ProductIsProgram"]), "eproduct_filename",
+
+        $_POST["eproduct_available_days"],
+
+        $_POST["eproduct_download_times"],
+
+        $_POST["weight"], $_POST["meta_description"],
+
+        $_POST["meta_keywords"], isset($_POST["free_shipping"]),
+
+        $_POST["min_order_amount"], $_POST["shipping_freight"],
+
+        $_POST["tax_class"] );
+
+    $_GET["productID"] = $productID;
+
+    $updatedValues = ScanPostVariableWithId( array( "option_value", "option_radio_type" ) );
+
+    cfgUpdateOptionValue($productID, $updatedValues);
+
+    if ( CONF_UPDATE_GCV == '1' )
+
+        update_products_Count_Value_For_Categories(1);
+
+    ReLoadOpener();
+
+    if ( $_POST["save_product_without_closing"]=="0" )
+
+        CloseWindow();
+
+}
+
 ////////////////////////////////////////////////////////////////////
 
-	// save product
+// save product
 
-	if ( isset($_POST["save_product"]) )
+if ( isset($_POST["save_product"]) )
 
-	{
+{
 
-		if ( $_GET["productID"] == 0 )
+    if ( $_GET["productID"] == 0 )
 
-		{
+    {
 
-			$productID = AddProduct(
+        $productID = AddProduct(
 
-				$_POST["categoryID"],$_POST["title_one"],$_POST["title_two"],$_POST["url_name"], $_POST["name"],  $_POST["producer"],$_POST["num_topsale"], $_POST["price"], $_POST["description"], $_POST["description2"], $_POST["brief_description2"], 
+            $_POST["categoryID"],$_POST["title_one"],$_POST["title_two"],$_POST["url_name"], $_POST["name"],  $_POST["producer"],$_POST["num_topsale"], $_POST["price"], $_POST["description"], $_POST["description2"], $_POST["brief_description2"],
 
-				$_POST["in_stock"],$_POST["skidka"],
+            $_POST["in_stock"],$_POST["skidka"],
 
-				$_POST["brief_description"], $_POST["list_price"],
+            $_POST["brief_description"], $_POST["list_price"],
 
-				$_POST["product_code"], $_POST["sort_order"],
+            $_POST["product_code"], $_POST["sort_order"],
 
-				isset($_POST["ProductIsProgram"]), "eproduct_filename",
+            isset($_POST["ProductIsProgram"]), "eproduct_filename",
 
-				$_POST["eproduct_available_days"],
+            $_POST["eproduct_available_days"],
 
-				$_POST["eproduct_download_times"],
+            $_POST["eproduct_download_times"],
 
-				$_POST["weight"], $_POST["meta_description"],
+            $_POST["weight"], $_POST["meta_description"],
 
-				$_POST["meta_keywords"], isset($_POST["free_shipping"]),
+            $_POST["meta_keywords"], isset($_POST["free_shipping"]),
 
-				$_POST["min_order_amount"], $_POST["shipping_freight"],
+            $_POST["min_order_amount"], $_POST["shipping_freight"],
 
-				$_POST["tax_class"] );
+            $_POST["tax_class"] );
 
-			$_GET["productID"] = $productID;
+        $_GET["productID"] = $productID;
 
-			/*echo '<pre>';
+        /*echo '<pre>';
 
-				print_r($_POST);
+            print_r($_POST);
 
-			echo '</pre>';
+        echo '</pre>';
 
-			exit();*/
+        exit();*/
 
-			$updatedValues = ScanPostVariableWithId( array( "option_value", "option_radio_type" ) );
+        $updatedValues = ScanPostVariableWithId( array( "option_value", "option_radio_type" ) );
 
-			cfgUpdateOptionValue($productID, $updatedValues);
+        cfgUpdateOptionValue($productID, $updatedValues);
 
-			//------------------ URL REWRITE-------------------------------------
+        //------------------ URL REWRITE-------------------------------------
 
-				include_once("./public_scripts/call_url_rewrite.php");
+        include_once("./public_scripts/call_url_rewrite.php");
 
-			//------------------------------------------------------------------
+        //------------------------------------------------------------------
 
-		}
+    }
 
-		else
+    else
 
-		{
+    {
 
-/*echo $_POST["url_name"];
+        /*echo $_POST["url_name"];
 
-exit();*/
+        exit();*/
 
-			UpdateProduct( $productID,
+        UpdateProduct( $productID,
 
-				$_POST["categoryID"],$_POST["title_one"],$_POST["title_two"],$_POST["url_name"], $_POST["name"],$_POST["producer"],$_POST["num_topsale"],  $_POST["price"], $_POST["description"], $_POST["description2"], $_POST["brief_description2"], 
+            $_POST["categoryID"],$_POST["title_one"],$_POST["title_two"],$_POST["url_name"], $_POST["name"],$_POST["producer"],$_POST["num_topsale"],  $_POST["price"], $_POST["description"], $_POST["description2"], $_POST["brief_description2"],
 
-				$_POST["in_stock"],$_POST["skidka"], $_POST["rating"],
+            $_POST["in_stock"],$_POST["skidka"], $_POST["rating"],
 
-				$_POST["brief_description"], $_POST["list_price"],
+            $_POST["brief_description"], $_POST["list_price"],
 
-				$_POST["product_code"], $_POST["sort_order"],
+            $_POST["product_code"], $_POST["sort_order"],
 
-				isset($_POST["ProductIsProgram"]), "eproduct_filename",
+            isset($_POST["ProductIsProgram"]), "eproduct_filename",
 
-				$_POST["eproduct_available_days"],
+            $_POST["eproduct_available_days"],
 
-				$_POST["eproduct_download_times"],
+            $_POST["eproduct_download_times"],
 
-				$_POST["weight"], $_POST["meta_description"],
+            $_POST["weight"], $_POST["meta_description"],
 
-				$_POST["meta_keywords"], isset($_POST["free_shipping"]),
+            $_POST["meta_keywords"], isset($_POST["free_shipping"]),
 
-				$_POST["min_order_amount"], $_POST["shipping_freight"],
+            $_POST["min_order_amount"], $_POST["shipping_freight"],
 
-				$_POST["tax_class"] );
+            $_POST["tax_class"] );
 
-/*echo '<pre>';
+        /*echo '<pre>';
 
-	print_r($_POST);
+            print_r($_POST);
 
-echo '</pre>';*/
+        echo '</pre>';*/
 
-			$updatedValues = ScanPostVariableWithId( array( "option_value", "option_radio_type" ) );
+        $updatedValues = ScanPostVariableWithId( array( "option_value", "option_radio_type" ) );
 
-			cfgUpdateOptionValue($productID, $updatedValues);
+        cfgUpdateOptionValue($productID, $updatedValues);
 
-			//exit();
+        //exit();
 
-			//------------------ URL REWRITE-------------------------------------
+        //------------------ URL REWRITE-------------------------------------
 
-			include_once("./public_scripts/call_url_rewrite.php");
+        include_once("./public_scripts/call_url_rewrite.php");
 
-			//------------------------------------------------------------------
+        //------------------------------------------------------------------
 
-		}
+    }
 
-		//exit();
+    //exit();
 
-		if ( CONF_UPDATE_GCV == '1' )
+    if ( CONF_UPDATE_GCV == '1' )
 
-			update_products_Count_Value_For_Categories(1);
+        update_products_Count_Value_For_Categories(1);
 
-		ReLoadOpener();
+    ReLoadOpener();
 
-		if ( $_POST["save_product_without_closing"]=="0" )
+    if ( $_POST["save_product_without_closing"]=="0" )
 
-			CloseWindow();
+        CloseWindow();
 
-	}
+}
 
-	// save pictures
+// save pictures
 
-	if ( isset( $_POST["save_pictures"] ) )
+if ( isset( $_POST["save_pictures"] ) )
 
-	{
+{
 
-		if ( $_GET["productID"] == 0 )
+    if ( $_GET["productID"] == 0 )
 
-		{
+    {
 
-			$productID = AddProduct(
+        $productID = AddProduct(
 
-				$_POST["categoryID"],$_POST["title_one"],$_POST["title_two"],$_POST["url_name"], $_POST["name"],  $_POST["producer"],$_POST["num_topsale"], $_POST["price"], $_POST["description"], $_POST["description2"], $_POST["brief_description2"], 
+            $_POST["categoryID"],$_POST["title_one"],$_POST["title_two"],$_POST["url_name"], $_POST["name"],  $_POST["producer"],$_POST["num_topsale"], $_POST["price"], $_POST["description"], $_POST["description2"], $_POST["brief_description2"],
 
-				$_POST["in_stock"],$_POST["skidka"],
+            $_POST["in_stock"],$_POST["skidka"],
 
-				$_POST["brief_description"], $_POST["list_price"],
+            $_POST["brief_description"], $_POST["list_price"],
 
-				$_POST["product_code"], $_POST["sort_order"],
+            $_POST["product_code"], $_POST["sort_order"],
 
-				isset($_POST["ProductIsProgram"]), "eproduct_filename",
+            isset($_POST["ProductIsProgram"]), "eproduct_filename",
 
-				$_POST["eproduct_available_days"],
+            $_POST["eproduct_available_days"],
 
-				$_POST["eproduct_download_times"],
+            $_POST["eproduct_download_times"],
 
-				$_POST["weight"], $_POST["meta_description"],
+            $_POST["weight"], $_POST["meta_description"],
 
-				$_POST["meta_keywords"], isset($_POST["free_shipping"]),
+            $_POST["meta_keywords"], isset($_POST["free_shipping"]),
 
-				$_POST["min_order_amount"], $_POST["shipping_freight"],
+            $_POST["min_order_amount"], $_POST["shipping_freight"],
 
-				$_POST["tax_class"] );
+            $_POST["tax_class"] );
 
-			$_GET["productID"] = $productID;
+        $_GET["productID"] = $productID;
 
-		}
+    }
 
-			AddNewPictures( $_GET["productID"], "new_filename", "new_thumbnail", "new_enlarged", $_POST["default_picture"] );
+    AddNewPictures( $_GET["productID"], "new_filename", "new_thumbnail", "new_enlarged", $_POST["default_picture"] );
 
-		$updatedFileNames = ScanPostVariableWithId(
+    $updatedFileNames = ScanPostVariableWithId(
 
-			array( "filename", "thumbnail", "enlarged" ) );
+        array( "filename", "thumbnail", "enlarged" ) );
 
-		UpdatePictures( $_GET["productID"], $updatedFileNames, $_POST["default_picture"] );
+    UpdatePictures( $_GET["productID"], $updatedFileNames, $_POST["default_picture"] );
 
-		ReLoadOpener();
+    ReLoadOpener();
 
-	}
+}
 
-	// delete three picture
+// delete three picture
 
-	if ( isset( $_GET["delete_pictures"] ) )
+if ( isset( $_GET["delete_pictures"] ) )
 
-	{
+{
 
-		if (CONF_BACKEND_SAFEMODE) //this action is forbidden when SAFE MODE is ON
+    if (CONF_BACKEND_SAFEMODE) //this action is forbidden when SAFE MODE is ON
 
-		{
+    {
 
-			Redirect("products.php?safemode=yes&productID=".$productID);
+        Redirect("products.php?safemode=yes&productID=".$productID);
 
-		}
+    }
 
-		DeleteThreePictures( $_GET["photoID"] );
+    DeleteThreePictures( $_GET["photoID"] );
 
-		ReLoadOpener();
+    ReLoadOpener();
 
-	}
+}
 
-	// delete one picture
+// delete one picture
 
-	if ( isset( $_GET["delete_one_picture"] ) )
+if ( isset( $_GET["delete_one_picture"] ) )
 
-	{
+{
 
-		if (CONF_BACKEND_SAFEMODE) //this action is forbidden when SAFE MODE is ON
+    if (CONF_BACKEND_SAFEMODE) //this action is forbidden when SAFE MODE is ON
 
-		{
+    {
 
-			Redirect("products.php?safemode=yes&productID=".$productID);
+        Redirect("products.php?safemode=yes&productID=".$productID);
 
-		}
+    }
 
-		if ( isset( $_GET["filename"] ) )
+    if ( isset( $_GET["filename"] ) )
 
-			DeleteFilenamePicture( $_GET["filename"] );
+        DeleteFilenamePicture( $_GET["filename"] );
 
-		if ( isset( $_GET["thumbnail"] ) )
+    if ( isset( $_GET["thumbnail"] ) )
 
-			DeleteThumbnailPicture( $_GET["thumbnail"] );
+        DeleteThumbnailPicture( $_GET["thumbnail"] );
 
-		if ( isset( $_GET["enlarged"] ) )
+    if ( isset( $_GET["enlarged"] ) )
 
-			DeleteEnlargedPicture( $_GET["enlarged"] );
+        DeleteEnlargedPicture( $_GET["enlarged"] );
 
-		ReLoadOpener();
+    ReLoadOpener();
 
-	}
+}
 
-	// add new product and open configurator
+// add new product and open configurator
 
-	// it works when user click "setting..." and new product is added
+// it works when user click "setting..." and new product is added
 
-	if ( isset($_POST["AddProductAndOpenConfigurator"]) )
+if ( isset($_POST["AddProductAndOpenConfigurator"]) )
 
-	{
+{
 
-		$productID = AddProduct(
+    $productID = AddProduct(
 
-				$_POST["categoryID"],$_POST["title_one"],$_POST["title_two"],$_POST["url_name"], $_POST["name"],  $_POST["producer"],$_POST["num_topsale"], $_POST["price"], $_POST["description"], $_POST["description2"], $_POST["brief_description2"], 
+        $_POST["categoryID"],$_POST["title_one"],$_POST["title_two"],$_POST["url_name"], $_POST["name"],  $_POST["producer"],$_POST["num_topsale"], $_POST["price"], $_POST["description"], $_POST["description2"], $_POST["brief_description2"],
 
-				$_POST["in_stock"],$_POST["skidka"],
+        $_POST["in_stock"],$_POST["skidka"],
 
-				$_POST["brief_description"], $_POST["list_price"],
+        $_POST["brief_description"], $_POST["list_price"],
 
-				$_POST["product_code"], $_POST["sort_order"],
+        $_POST["product_code"], $_POST["sort_order"],
 
-				isset($_POST["ProductIsProgram"]), "eproduct_filename",
+        isset($_POST["ProductIsProgram"]), "eproduct_filename",
 
-				$_POST["eproduct_available_days"],
+        $_POST["eproduct_available_days"],
 
-				$_POST["eproduct_download_times"],
+        $_POST["eproduct_download_times"],
 
-				$_POST["weight"], $_POST["meta_description"],
+        $_POST["weight"], $_POST["meta_description"],
 
-				$_POST["meta_keywords"], isset($_POST["free_shipping"]),
+        $_POST["meta_keywords"], isset($_POST["free_shipping"]),
 
-				$_POST["min_order_amount"], $_POST["shipping_freight"],
+        $_POST["min_order_amount"], $_POST["shipping_freight"],
 
-				$_POST["tax_class"] );
+        $_POST["tax_class"] );
 
-		$_GET["productID"] = $productID;
+    $_GET["productID"] = $productID;
 
-		$updatedValues = ScanPostVariableWithId( array( "option_value", "option_radio_type" ) );
+    $updatedValues = ScanPostVariableWithId( array( "option_value", "option_radio_type" ) );
 
-		cfgUpdateOptionValue($productID, $updatedValues);
+    cfgUpdateOptionValue($productID, $updatedValues);
 
-		OpenConfigurator($_POST["optionID"], $productID);
+    OpenConfigurator($_POST["optionID"], $productID);
 
-	}
+}
 
-	// remove product from appended category
+// remove product from appended category
 
-	if ( isset($_GET["remove_from_app_cat"]) )
+if ( isset($_GET["remove_from_app_cat"]) )
 
-	{
+{
 
-		if (CONF_BACKEND_SAFEMODE) //this action is forbidden when SAFE MODE is ON
+    if (CONF_BACKEND_SAFEMODE) //this action is forbidden when SAFE MODE is ON
 
-		{
+    {
 
-			Redirect("products.php?safemode=yes&productID=".$productID);
+        Redirect("products.php?safemode=yes&productID=".$productID);
 
-		}
+    }
 
-		catRemoveProductFromAppendedCategory( $_GET["productID"],
+    catRemoveProductFromAppendedCategory( $_GET["productID"],
 
-				$_GET["remove_from_app_cat"] );
+        $_GET["remove_from_app_cat"] );
 
-		catUpdateProductCount($_GET["productID"], $_GET["remove_from_app_cat"], -1);
+    catUpdateProductCount($_GET["productID"], $_GET["remove_from_app_cat"], -1);
 
-	}
+}
 
-	// add into new appended category
+// add into new appended category
 
-	if ( isset($_POST["add_category"]) )
+if ( isset($_POST["add_category"]) )
 
-	{
+{
 
-		if ( $_GET["productID"] == 0 )
+    if ( $_GET["productID"] == 0 )
 
-		{
+    {
 
-			$productID = AddProduct(
+        $productID = AddProduct(
 
-				$_POST["categoryID"],$_POST["title_one"],$_POST["title_two"],$_POST["url_name"], $_POST["name"],  $_POST["producer"],$_POST["num_topsale"], $_POST["price"], $_POST["description"], $_POST["description2"], $_POST["brief_description2"], 
+            $_POST["categoryID"],$_POST["title_one"],$_POST["title_two"],$_POST["url_name"], $_POST["name"],  $_POST["producer"],$_POST["num_topsale"], $_POST["price"], $_POST["description"], $_POST["description2"], $_POST["brief_description2"],
 
-				$_POST["in_stock"],$_POST["skidka"],
+            $_POST["in_stock"],$_POST["skidka"],
 
-				$_POST["brief_description"], $_POST["list_price"],
+            $_POST["brief_description"], $_POST["list_price"],
 
-				$_POST["product_code"], $_POST["sort_order"],
+            $_POST["product_code"], $_POST["sort_order"],
 
-				isset($_POST["ProductIsProgram"]), "eproduct_filename",
+            isset($_POST["ProductIsProgram"]), "eproduct_filename",
 
-				$_POST["eproduct_available_days"],
+            $_POST["eproduct_available_days"],
 
-				$_POST["eproduct_download_times"],
+            $_POST["eproduct_download_times"],
 
-				$_POST["weight"], $_POST["meta_description"],
+            $_POST["weight"], $_POST["meta_description"],
 
-				$_POST["meta_keywords"], isset($_POST["free_shipping"]),
+            $_POST["meta_keywords"], isset($_POST["free_shipping"]),
 
-				$_POST["min_order_amount"], $_POST["shipping_freight"],
+            $_POST["min_order_amount"], $_POST["shipping_freight"],
 
-				$_POST["tax_class"] );
+            $_POST["tax_class"] );
 
-			$_GET["productID"] = $productID;
+        $_GET["productID"] = $productID;
 
-		}
+    }
 
-		catAddProductIntoAppendedCategory($_GET["productID"],
+    catAddProductIntoAppendedCategory($_GET["productID"],
 
-				$_POST["new_appended_category"] );
+        $_POST["new_appended_category"] );
 
-		if ( CONF_UPDATE_GCV == '1' )
+    if ( CONF_UPDATE_GCV == '1' )
 
-			catUpdateProductCount($_GET["productID"], $_POST["new_appended_category"]);
+        catUpdateProductCount($_GET["productID"], $_POST["new_appended_category"]);
 
-	}
+}
 
-	// show product
+// show product
 
-	if ( $_GET["productID"] != 0 )
+if ( $_GET["productID"] != 0 )
 
-	{
+{
 
-		$product = GetProduct($_GET["productID"]);
+    $product = GetProduct($_GET["productID"]);
 
-		//----- удаляем кеш файл, чтоб увидеть обновление--------------------------------
+    //----- удаляем кеш файл, чтоб увидеть обновление--------------------------------
 
-			if($product["url_name"] !== '')
+    if($product["url_name"] !== '')
 
-			{
+    {
 
-				if (file_exists('./cache/'.$product["url_name"].'.cache'))
+        if (file_exists('./cache/'.$product["url_name"].'.cache'))
 
-					unlink('./cache/'.$product["url_name"].'.cache');
+            unlink('./cache/'.$product["url_name"].'.cache');
 
-			}
+    }
 
-		//-------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------
 
-		$title = $product["name"];
+    $title = $product["name"];
 
-	}
+}
 
-	else
+else
 
-	{
+{
 
-		$product = array();
+    $product = array();
 
-		$title = ADMIN_PRODUCT_NEW;
+    $title = ADMIN_PRODUCT_NEW;
 
-		$cat = isset($_GET["categoryID"]) ? $_GET["categoryID"] : 0;
+    $cat = isset($_GET["categoryID"]) ? $_GET["categoryID"] : 0;
 
-		$product["categoryID"]			= $cat;
+    $product["categoryID"]			= $cat;
 
-		$product["title_one"]			= "";
+    $product["title_one"]			= "";
 
-		$product["title_two"]			= "";
+    $product["title_two"]			= "";
 
-		$product["url_name"]			= "";
+    $product["url_name"]			= "";
 
-		$product["name"]				= "";
+    $product["name"]				= "";
 
-		$product["producer"]				= "";
+    $product["producer"]				= "";
 
-		$product["num_topsale"]				= "";
+    $product["num_topsale"]				= "";
 
-		$product["description"]			= "";
+    $product["description"]			= "";
 
-		$product["description2"]			= "";
+    $product["description2"]			= "";
 
-		$product["brief_description2"]			= "";
+    $product["brief_description2"]			= "";
 
-		$product["customers_rating"]	= "";
+    $product["customers_rating"]	= "";
 
-		$product["Price"]				= 0;
+    $product["Price"]				= 0;
 
-		$product["picture"]				= "";
+    $product["picture"]				= "";
 
-		$product["in_stock" ]			= 5;
+    $product["in_stock" ]			= 5;
 
-		$product["skidka" ]			= 0;
+    $product["skidka" ]			= 0;
 
-		$product["thumbnail" ]			= "";
+    $product["thumbnail" ]			= "";
 
-		$product["big_picture" ]		= "";
+    $product["big_picture" ]		= "";
 
-		$product["brief_description"]	= "";
+    $product["brief_description"]	= "";
 
-		$product["list_price"]			= 0;
+    $product["list_price"]			= 0;
 
-		$product["product_code"]		= "";
+    $product["product_code"]		= "";
 
-		$product["sort_order"]			= 0;
+    $product["sort_order"]			= 0;
 
-		$product["date_added"]			= null;
+    $product["date_added"]			= null;
 
-		$product["date_modified"]		= null;
+    $product["date_modified"]		= null;
 
-		$product["eproduct_filename"]			= "";
+    $product["eproduct_filename"]			= "";
 
-		$product["eproduct_available_days"]		= 365;
+    $product["eproduct_available_days"]		= 365;
 
-		$product["eproduct_download_times"]		= 1;
+    $product["eproduct_download_times"]		= 1;
 
-		$product["weight"]				= 0;
+    $product["weight"]				= 0;
 
-		$product["meta_description"]	= "";
+    $product["meta_description"]	= "";
 
-		$product["meta_keywords"]		= "";
+    $product["meta_keywords"]		= "";
 
-		$product["free_shipping"]		= 0;
+    $product["free_shipping"]		= 0;
 
-		$product["min_order_amount"]	= 1;
+    $product["min_order_amount"]	= 1;
 
-		if ( CONF_DEFAULT_TAX_CLASS == '0' )
+    if ( CONF_DEFAULT_TAX_CLASS == '0' )
 
-			$product["classID"]	= "null";
+        $product["classID"]	= "null";
 
-		else
+    else
 
-			$product["classID"] = CONF_DEFAULT_TAX_CLASS;
+        $product["classID"] = CONF_DEFAULT_TAX_CLASS;
 
-		$product["shipping_freight"]	= 0;
+    $product["shipping_freight"]	= 0;
 
-	}
+}
 
-	// gets ALL product options
+// gets ALL product options
 
-	$options = cfgGetProductOptionValue( $_GET["productID"] );
+$options = cfgGetProductOptionValue( $_GET["productID"] );
 
 
-	$options = html_spchars($options);
+$options = html_spchars($options);
 
-	// gets pictures
+// gets pictures
 
-	$picturies = GetPictures( $_GET["productID"] );
+$picturies = GetPictures( $_GET["productID"] );
 
-	// get appended categories
+// get appended categories
 
-	$appended_categories = catGetAppendedCategoriesToProduct( $_GET["productID"] );
+$appended_categories = catGetAppendedCategoriesToProduct( $_GET["productID"] );
 
-	// hide/show tables
+// hide/show tables
 
-	$showAppendedParentsTable = 0;
+$showAppendedParentsTable = 0;
 
-	if ( isset($_POST["AppendedParentsTableHideTable_hidden"]) )
+if ( isset($_POST["AppendedParentsTableHideTable_hidden"]) )
 
-	{
+{
 
-		if ( $_POST["AppendedParentsTableHideTable_hidden"] == "1" )
+    if ( $_POST["AppendedParentsTableHideTable_hidden"] == "1" )
 
-			$showAppendedParentsTable = 1;
+        $showAppendedParentsTable = 1;
 
-	}
+}
 
-	else if ( isset($_GET["remove_from_app_cat"]) )
+else if ( isset($_GET["remove_from_app_cat"]) )
 
-		$showAppendedParentsTable = 1;
+    $showAppendedParentsTable = 1;
 
-	$showConfiguratorTable = 0;
+$showConfiguratorTable = 0;
 
-	if ( isset($_POST["ConfiguratorHideTable_hidden"]) )
+if ( isset($_POST["ConfiguratorHideTable_hidden"]) )
 
-		if ( $_POST["ConfiguratorHideTable_hidden"] == "1" )
+    if ( $_POST["ConfiguratorHideTable_hidden"] == "1" )
 
-			$showConfiguratorTable = 1;
+        $showConfiguratorTable = 1;
 
-	$showPhotoTable = 0;
+$showVariantsProduct = 0;
 
-	if ( isset($_POST["PhotoHideTable_hidden"]) )
 
-	{
+if ( isset($_POST["VariantsProductHideTable_hidden"]) )
 
-		if ( $_POST["PhotoHideTable_hidden"] == "1" )
+    if ( $_POST["VariantsProductHideTable_hidden"] == "1" )
 
-			$showPhotoTable = 1;
+        $showVariantsProduct = 1;
 
-	}
 
-	else if ( isset($_GET["delete_pictures"]) ||  isset($_GET["delete_one_picture"])  )
 
-		$showPhotoTable = 1;
+$showPhotoTable = 0;
 
-	$tax_classes = taxGetTaxClasses();
+if ( isset($_POST["PhotoHideTable_hidden"]) )
 
-	$brends_arr = GetProductBrends();
+{
+
+    if ( $_POST["PhotoHideTable_hidden"] == "1" )
+
+        $showPhotoTable = 1;
+
+}
+
+else if ( isset($_GET["delete_pictures"]) ||  isset($_GET["delete_one_picture"])  )
+
+    $showPhotoTable = 1;
+
+$tax_classes = taxGetTaxClasses();
+
+$brends_arr = GetProductBrends();
 
 ?>
 
@@ -861,67 +872,67 @@ echo '</pre>';*/
 
 <head>
 
-<link rel=STYLESHEET href="style1.css" type="text/css">
+    <link rel=STYLESHEET href="style1.css" type="text/css">
 
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo DEFAULT_CHARSET;?>">
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo DEFAULT_CHARSET;?>">
 
-<title><?php echo ADMIN_PRODUCT_TITLE;?></title>
+    <title><?php echo ADMIN_PRODUCT_TITLE;?></title>
 
-<script>
+    <script>
 
-function confirmDelete(question, where)
+        function confirmDelete(question, where)
 
-{
+        {
 
-	temp = window.confirm(question);
+            temp = window.confirm(question);
 
-	if (temp) //delete
+            if (temp) //delete
 
-	{
+            {
 
-		window.location=where;
+                window.location=where;
 
-	}
+            }
 
-}
+        }
 
-function open_window(link,w,h) //opens new window
+        function open_window(link,w,h) //opens new window
 
-{
+        {
 
-	var win = "width="+w+",height="+h+",menubar=no,location=no,resizable=yes,scrollbars=yes";
+            var win = "width="+w+",height="+h+",menubar=no,location=no,resizable=yes,scrollbars=yes";
 
-	wishWin = window.open(link,'wishWin',win);
+            wishWin = window.open(link,'wishWin',win);
 
-}
+        }
 
-function position_this_window()
+        function position_this_window()
 
-{
+        {
 
-	var x = (screen.availWidth - 795) / 2;
+            var x = (screen.availWidth - 795) / 2;
 
-	window.resizeTo(795, screen.availHeight - 50);
+            window.resizeTo(795, screen.availHeight - 50);
 
-	window.moveTo(Math.floor(x),25);
+            window.moveTo(Math.floor(x),25);
 
-}
+        }
 
-function add_from_select(el)
+        function add_from_select(el)
 
-{
+        {
 
-	//var selct;
+            //var selct;
 
-	//tagList = document.getElementsByName('myTag');
+            //tagList = document.getElementsByName('myTag');
 
-	//selct = document.getElementsByName(el[]);
+            //selct = document.getElementsByName(el[]);
 
-	//alert (selct.option);
+            //alert (selct.option);
 
-}
+        }
 
-</script>
+    </script>
 
 </head>
 
@@ -929,960 +940,1018 @@ function add_from_select(el)
 
 <center>
 
-<p>
+    <p>
 
-<b><?php echo $title; ?></b>
+        <b><?php echo $title; ?></b>
 
-<?php
+        <?php
 
-		if ( isset($_GET["couldntToDelete"]) )
+        if ( isset($_GET["couldntToDelete"]) )
 
-		{
+        {
 
-			?>
+            ?>
 
-				<br>
+            <br>
 
-				<font color=red>
+            <font color=red>
 
-					<b><?php echo COULD_NOT_DELETE_THIS_PRODUCT?><b>
+                <b><?php echo COULD_NOT_DELETE_THIS_PRODUCT?><b>
 
-				</font>
+            </font>
 
-			<?php
+            <?php
 
-		}
+        }
 
-?>
+        ?>
 
-<?php
+        <?php
 
-		if ( isset($_GET["safemode"]) )
+        if ( isset($_GET["safemode"]) )
 
-		{
+        {
 
-			echo "<p><font color=red><b>".ADMIN_SAFEMODE_WARNING."<b></font>";
+            echo "<p><font color=red><b>".ADMIN_SAFEMODE_WARNING."<b></font>";
 
-		}
+        }
 
-?>
+        ?>
 
-<form enctype="multipart/form-data" action="products.php?productID=<?php echo $_GET["productID"]?>"
+        <form enctype="multipart/form-data" action="products.php?productID=<?php echo $_GET["productID"]?>"
 
-		method=post name="MainForm">
+              method=post name="MainForm">
 
-<table width=100% border=0 cellpadding=3 cellspacing=0>
+            <table width=100% border=0 cellpadding=3 cellspacing=0>
 
-<tr>
+                <tr>
 
-<td align=right><?php echo ADMIN_CATEGORY_PARENT;?></td>
+                    <td align=right><?php echo ADMIN_CATEGORY_PARENT;?></td>
 
-<td>
+                    <td>
 
-<select name="categoryID" <?php
+                        <select name="categoryID" <?php
 
-	if (CONF_FULLY_EXPAND_CATEGORIES_IN_ADMIN_MODE == 0) // update list
+                        if (CONF_FULLY_EXPAND_CATEGORIES_IN_ADMIN_MODE == 0) // update list
 
-		echo "onChange=\"window.location='products.php?productID=".$_GET["productID"]."&change_category='+document.MainForm.categoryID.value;\"";
+                            echo "onChange=\"window.location='products.php?productID=".$_GET["productID"]."&change_category='+document.MainForm.categoryID.value;\"";
 
-?>>
+                        ?>>
 
-<?php
+                            <?php
 
-	if (CONF_FULLY_EXPAND_CATEGORIES_IN_ADMIN_MODE == 1) echo "<option value=\"1\">".ADMIN_CATEGORY_ROOT."</option>";
+                            if (CONF_FULLY_EXPAND_CATEGORIES_IN_ADMIN_MODE == 1) echo "<option value=\"1\">".ADMIN_CATEGORY_ROOT."</option>";
 
-	//show categories select element
+                            //show categories select element
 
-	$core_category = (isset($_GET["change_category"])) ? (int)$_GET["change_category"] : $product["categoryID"] ;
+                            $core_category = (isset($_GET["change_category"])) ? (int)$_GET["change_category"] : $product["categoryID"] ;
 
-	if (CONF_FULLY_EXPAND_CATEGORIES_IN_ADMIN_MODE == 0)
+                            if (CONF_FULLY_EXPAND_CATEGORIES_IN_ADMIN_MODE == 0)
 
-		$cats = catGetCategoryCompactCList($core_category);
+                                $cats = catGetCategoryCompactCList($core_category);
 
-	else
+                            else
 
-		$cats = catGetCategoryCList();
+                                $cats = catGetCategoryCList();
 
-	for ($i=0; $i<count($cats); $i++)
+                            for ($i=0; $i<count($cats); $i++)
 
-	{
+                            {
 
-		echo "<option value=\"".$cats[$i]["categoryID"]."\"";
+                                echo "<option value=\"".$cats[$i]["categoryID"]."\"";
 
-		if ($core_category == $cats[$i]["categoryID"]) //select category
+                                if ($core_category == $cats[$i]["categoryID"]) //select category
 
-			echo " selected";
+                                    echo " selected";
 
-		echo ">";
+                                echo ">";
 
-		for ($j=0;$j<$cats[$i]["level"];$j++) echo "&nbsp;&nbsp;";
+                                for ($j=0;$j<$cats[$i]["level"];$j++) echo "&nbsp;&nbsp;";
 
-		echo $cats[$i]["name"];
+                                echo $cats[$i]["name"];
 
-		echo "</option>";
+                                echo "</option>";
 
-	}
+                            }
 
-?>
+                            ?>
 
-</select>
+                        </select>
 
-</td>
+                    </td>
 
-</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-	<td align=center colspan=2>
+                    <td align=center colspan=2>
 
-		<a href="JavaScript:AppendedParentsTableHideTable();">
+                        <a href="JavaScript:AppendedParentsTableHideTable();">
 
-			<?php echo ADMIN_CATEGORY_APPENDED_PARENTS;?>
+                            <?php echo ADMIN_CATEGORY_APPENDED_PARENTS;?>
 
-			<input type=hidden name='AppendedParentsTableHideTable_hidden'
+                            <input type=hidden name='AppendedParentsTableHideTable_hidden'
 
-				value='<?php echo $showAppendedParentsTable;?>'>
+                                   value='<?php echo $showAppendedParentsTable;?>'>
 
-		</a>
+                        </a>
 
-		<script language='javascript'>
+                        <script language='javascript'>
 
-			function AppendedParentsTableHideTable()
+                            function AppendedParentsTableHideTable()
 
-			{
+                            {
 
-				if ( AppendedParentsTable.style.display == 'none' )
+                                if ( AppendedParentsTable.style.display == 'none' )
 
-				{
+                                {
 
-					AppendedParentsTable.style.display = 'block';
+                                    AppendedParentsTable.style.display = 'block';
 
-					document.MainForm.AppendedParentsTableHideTable_hidden.value='1';
+                                    document.MainForm.AppendedParentsTableHideTable_hidden.value='1';
 
-				}
+                                }
 
-				else
+                                else
 
-				{
+                                {
 
-					AppendedParentsTable.style.display = 'none';
+                                    AppendedParentsTable.style.display = 'none';
 
-					document.MainForm.AppendedParentsTableHideTable_hidden.value='0';
+                                    document.MainForm.AppendedParentsTableHideTable_hidden.value='0';
 
-				}
+                                }
 
-			}
+                            }
 
-		</script>
+                        </script>
 
-		<table border=0 cellpadding=5 cellspacing=1 bgcolor=#C3BD7C
+                        <table border=0 cellpadding=5 cellspacing=1 bgcolor=#C3BD7C
 
-			id='AppendedParentsTable'>
+                               id='AppendedParentsTable'>
 
-			<tr>
+                            <tr>
 
-				<td colspan=2 align=center>
+                                <td colspan=2 align=center>
 
-					<b><?php echo ADMIN_CATEGORY_APPENDED_PARENTS;?>:</b>
+                                    <b><?php echo ADMIN_CATEGORY_APPENDED_PARENTS;?>:</b>
 
-				</td>
+                                </td>
 
-			</tr>
+                            </tr>
 
-			<tr bgcolor=#F5F5C5>
+                            <tr bgcolor=#F5F5C5>
 
-				<td align=center><?php echo ADMIN_CATEGORY_TITLE;?></td>
+                                <td align=center><?php echo ADMIN_CATEGORY_TITLE;?></td>
 
-				<td width=1%>&nbsp;</td>
+                                <td width=1%>&nbsp;</td>
 
-			</tr>
+                            </tr>
 
-			<?php
+                            <?php
 
-			foreach( $appended_categories as $app_cat )
+                            foreach( $appended_categories as $app_cat )
 
-			{
+                            {
 
-			?>
+                                ?>
 
-			<tr bgcolor=#FFFFE2>
+                                <tr bgcolor=#FFFFE2>
 
-				<td align=center>
+                                    <td align=center>
 
-					<?php echo $app_cat["category_name"];?>
+                                        <?php echo $app_cat["category_name"];?>
 
-				</td>
+                                    </td>
 
-				<td width=1%>
+                                    <td width=1%>
 
-					<a href="javascript:confirmDelete('<?php echo QUESTION_DELETE_CONFIRMATION;?>','products.php?productID=<?php echo $_GET["productID"]?>&remove_from_app_cat=<?php echo $app_cat["categoryID"]?>');">
+                                        <a href="javascript:confirmDelete('<?php echo QUESTION_DELETE_CONFIRMATION;?>','products.php?productID=<?php echo $_GET["productID"]?>&remove_from_app_cat=<?php echo $app_cat["categoryID"]?>');">
 
-						<img src="images/remove.jpg" border=0 alt="<?php echo DELETE_BUTTON?>">
+                                            <img src="images/remove.jpg" border=0 alt="<?php echo DELETE_BUTTON?>">
 
-					</a>
+                                        </a>
 
-				</td>
+                                    </td>
 
-			</tr>
+                                </tr>
 
-			<?php
+                                <?php
 
-			}
+                            }
 
-			?>
+                            ?>
 
-			<tr>
+                            <tr>
 
-				<td align=center colspan=2>
+                                <td align=center colspan=2>
 
-					<?php echo ADD_BUTTON;?>:
+                                    <?php echo ADD_BUTTON;?>:
 
-				</td>
+                                </td>
 
-			</tr>
+                            </tr>
 
-			<tr bgcolor=white>
+                            <tr bgcolor=white>
 
-				<td align=center>
+                                <td align=center>
 
-					<select name='new_appended_category' <?php
+                                    <select name='new_appended_category' <?php
 
-	if (CONF_FULLY_EXPAND_CATEGORIES_IN_ADMIN_MODE == 0) // update list
+                                    if (CONF_FULLY_EXPAND_CATEGORIES_IN_ADMIN_MODE == 0) // update list
 
-		echo "onChange=\"window.location='products.php?productID=".$_GET["productID"]."&change_app_category='+document.MainForm.new_appended_category.value;\"";
+                                        echo "onChange=\"window.location='products.php?productID=".$_GET["productID"]."&change_app_category='+document.MainForm.new_appended_category.value;\"";
 
-?>>
+                                    ?>>
 
-					<?php
+                                        <?php
 
-						$change_app_category = isset($_GET["change_app_category"]) ? (int)$_GET["change_app_category"] : $product["categoryID"];
+                                        $change_app_category = isset($_GET["change_app_category"]) ? (int)$_GET["change_app_category"] : $product["categoryID"];
 
-						if (CONF_FULLY_EXPAND_CATEGORIES_IN_ADMIN_MODE == 0)
+                                        if (CONF_FULLY_EXPAND_CATEGORIES_IN_ADMIN_MODE == 0)
 
-							$cats = catGetCategoryCompactCList($change_app_category);
+                                            $cats = catGetCategoryCompactCList($change_app_category);
 
-						else
+                                        else
 
-							$cats = catGetCategoryCList();
+                                            $cats = catGetCategoryCList();
 
-						for ($i=0; $i<count($cats); $i++)
+                                        for ($i=0; $i<count($cats); $i++)
 
-						 if ($cats[$i]["categoryID"] > 1)
+                                            if ($cats[$i]["categoryID"] > 1)
 
-						 {
+                                            {
 
-							echo "<option value=\"".$cats[$i]["categoryID"]."\"";
+                                                echo "<option value=\"".$cats[$i]["categoryID"]."\"";
 
-							if ($change_app_category == $cats[$i]["categoryID"]) echo " selected";
+                                                if ($change_app_category == $cats[$i]["categoryID"]) echo " selected";
 
-							echo ">";
+                                                echo ">";
 
-							for ($j=0;$j<$cats[$i]["level"];$j++) echo "&nbsp;&nbsp;";
+                                                for ($j=0;$j<$cats[$i]["level"];$j++) echo "&nbsp;&nbsp;";
 
-							echo $cats[$i]["name"];
+                                                echo $cats[$i]["name"];
 
-							echo "</option>";
+                                                echo "</option>";
 
-						 }
+                                            }
 
-					?>
+                                        ?>
 
-					</select>
+                                    </select>
 
-				</td>
+                                </td>
 
-				<td width=1%>&nbsp;</td>
+                                <td width=1%>&nbsp;</td>
 
-			</tr>
+                            </tr>
 
-			<tr>
+                            <tr>
 
-				<td colspan=2 align=center>
+                                <td colspan=2 align=center>
 
-					<input type=submit value='<?php echo ADD_BUTTON;?>' name='add_category'>
+                                    <input type=submit value='<?php echo ADD_BUTTON;?>' name='add_category'>
 
-				</td>
+                                </td>
 
-			</tr>
+                            </tr>
 
-		</table>
+                        </table>
 
-		<script language='JavaScript'>
+                        <script language='JavaScript'>
 
-			<?php
+                            <?php
 
-			if ( $showAppendedParentsTable == 0 && !isset($_GET["change_app_category"]) )
+                            if ( $showAppendedParentsTable == 0 && !isset($_GET["change_app_category"]) )
 
-			{
+                            {
 
-			?>
+                            ?>
 
-				AppendedParentsTable.style.display = 'none';
+                            AppendedParentsTable.style.display = 'none';
 
-			<?php
+                            <?php
 
-			}
+                            }
 
-			?>
+                            ?>
 
-		</script>
+                        </script>
 
-	</td>
+                    </td>
 
-</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-	<td align=right>
+                    <td align=right>
 
-		<?php echo ADMIN_CATEGORY_TITLE_ONE;?>
+                        <?php echo ADMIN_CATEGORY_TITLE_ONE;?>
 
-	</td>
+                    </td>
 
-	<td>
+                    <td>
 
-		<input type="text"  size="40" name="title_one" value="<?php echo str_replace("\"","&quot;",$product["title_one"]); ?>">
+                        <input type="text"  size="40" name="title_one" value="<?php echo str_replace("\"","&quot;",$product["title_one"]); ?>">
 
-	</td>
+                    </td>
 
-</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-	<td align="center" colspan="2">
+                    <td align="center" colspan="2">
 
-		<?php echo ADMIN_CATEGORY_TITLE_TWO;?><br>
+                        <?php echo ADMIN_CATEGORY_TITLE_TWO;?><br>
 
-		<textarea name='title_two' 	rows="3" cols="60"><?php echo str_replace("\"","&quot;",$product["title_two"]);?></textarea>
+                        <textarea name='title_two' 	rows="3" cols="60"><?php echo str_replace("\"","&quot;",$product["title_two"]);?></textarea>
 
-	</td>
+                    </td>
 
-</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-	<td align=right>
+                    <td align=right>
 
-		<?php echo ADMIN_CATEGORY_URL_NAME;?>
+                        <?php echo ADMIN_CATEGORY_URL_NAME;?>
 
-	</td>
+                    </td>
 
-	<td>
+                    <td>
 
-		<input type="text"  size="40" name="url_name" value="<?php echo str_replace("\"","&quot;",$product["url_name"]); ?>">
+                        <input type="text"  size="40" name="url_name" value="<?php echo str_replace("\"","&quot;",$product["url_name"]); ?>">
 
-	</td>
+                    </td>
 
-</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-	<td align=right>
+                    <td align=right>
 
-		<?php echo ADMIN_PRODUCT_NAME;?>
+                        <?php echo ADMIN_PRODUCT_NAME;?>
 
-	</td>
+                    </td>
 
-	<td>
+                    <td>
 
-		<input type="text"  size="40" name="name" value="<?php echo str_replace("\"","&quot;",$product["name"]); ?>">
+                        <input type="text"  size="40" name="name" value="<?php echo str_replace("\"","&quot;",$product["name"]); ?>">
 
-	</td>
+                    </td>
 
-</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-	<td align=right><?php echo ADMIN_PRODUCER;?></td>
+                    <td align=right><?php echo ADMIN_PRODUCER;?></td>
 
-	<td>
+                    <td>
 
-		<select name='producer'>
+                        <select name='producer'>
 
-			<option value='null'><?php echo ADMIN_NOT_DEFINED;?></option>
+                            <option value='null'><?php echo ADMIN_NOT_DEFINED;?></option>
 
-			<?php
+                            <?php
 
-			foreach( $brends_arr as $brends_el )
+                            foreach( $brends_arr as $brends_el )
 
-			{
+                            {
 
-			?>
+                                ?>
 
-				<option value='<?php echo $brends_el["name"];?>'
+                                <option value='<?php echo $brends_el["name"];?>'
 
-				<?php
+                                    <?php
 
-				if ( $product["producer"] == $brends_el["name"] )
+                                    if ( $product["producer"] == $brends_el["name"] )
 
-				{
+                                    {
 
-				?>
+                                        ?>
 
-					selected
+                                        selected
 
-				<?php
+                                        <?php
 
-				}
+                                    }
 
-				?>
+                                    ?>
 
-				>
+                                >
 
-					<?php echo $brends_el["name"];?>
+                                    <?php echo $brends_el["name"];?>
 
-				</option>
+                                </option>
 
-			<?php
+                                <?php
 
-			}
+                            }
 
-			?>
+                            ?>
 
-		</select>
+                        </select>
 
-	</td>
+                    </td>
 
-</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-	<td align=right><?php echo ADMIN_TOPSALE;?></td>
+                    <td align=right><?php echo ADMIN_TOPSALE;?></td>
 
-	<td>
+                    <td>
 
-		<select name='num_topsale'>
+                        <select name='num_topsale'>
 
-			<option value='0'><?php echo ADMIN_NOT_DEFINED;?></option>
+                            <option value='0'><?php echo ADMIN_NOT_DEFINED;?></option>
 
-			<?php
+                            <?php
 
-			foreach( $imgs_topsale as $imgs_topsale_el )
+                            foreach( $imgs_topsale as $imgs_topsale_el )
 
-			{
+                            {
 
-			?>
+                                ?>
 
-				<option value='<?php echo $imgs_topsale_el["num_topsale"];?>'
+                                <option value='<?php echo $imgs_topsale_el["num_topsale"];?>'
 
-				<?php
+                                    <?php
 
-				if ( $product["num_topsale"] == $imgs_topsale_el["num_topsale"] )
+                                    if ( $product["num_topsale"] == $imgs_topsale_el["num_topsale"] )
 
-				{
+                                    {
 
-				?>
+                                        ?>
 
-					selected
+                                        selected
 
-				<?php
+                                        <?php
 
-				}
+                                    }
 
-				?>
+                                    ?>
 
-				>
+                                >
 
-					<?php echo '('.$imgs_topsale_el["num_topsale"].') '.$imgs_topsale_el["filename"];?>
+                                    <?php echo '('.$imgs_topsale_el["num_topsale"].') '.$imgs_topsale_el["filename"];?>
 
-				</option>
+                                </option>
 
-			<?php
+                                <?php
 
-			}
+                            }
 
-			?>
+                            ?>
 
-		</select>
+                        </select>
 
-	</td>
+                    </td>
 
-</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-	<td align=right>
+                    <td align=right>
 
-		<?php echo ADMIN_PRODUCT_CODE;?>
+                        <?php echo ADMIN_PRODUCT_CODE;?>
 
-	</td>
+                    </td>
 
-	<td>
+                    <td>
 
-		<input type="text" name="product_code"  size="40"
+                        <input type="text" name="product_code"  size="40"
 
-			value="<?php echo str_replace("\"","&quot;",$product["product_code"] ); ?>">
+                               value="<?php echo str_replace("\"","&quot;",$product["product_code"] ); ?>">
 
-	</td>
+                    </td>
 
-</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-	<td align=right><?php echo ADMIN_TAX_CLASS;?></td>
+                    <td align=right><?php echo ADMIN_TAX_CLASS;?></td>
 
-	<td>
+                    <td>
 
-		<select name='tax_class'>
+                        <select name='tax_class'>
 
-			<option value='null'><?php echo ADMIN_NOT_DEFINED;?></option>
+                            <option value='null'><?php echo ADMIN_NOT_DEFINED;?></option>
 
-			<?php
+                            <?php
 
-			foreach( $tax_classes as $tax_class )
+                            foreach( $tax_classes as $tax_class )
 
-			{
+                            {
 
-			?>
+                                ?>
 
-				<option value='<?php echo $tax_class["classID"];?>'
+                                <option value='<?php echo $tax_class["classID"];?>'
 
-				<?php
+                                    <?php
 
-				if ( $product["classID"] == $tax_class["classID"] )
+                                    if ( $product["classID"] == $tax_class["classID"] )
 
-				{
+                                    {
 
-				?>
+                                        ?>
 
-					selected
+                                        selected
 
-				<?php
+                                        <?php
 
-				}
+                                    }
 
-				?>
+                                    ?>
 
-				>
+                                >
 
-					<?php echo $tax_class["name"];?>
+                                    <?php echo $tax_class["name"];?>
 
-				</option>
+                                </option>
 
-			<?php
+                                <?php
 
-			}
+                            }
 
-			?>
+                            ?>
 
-		</select>
+                        </select>
 
-	</td>
+                    </td>
 
-</tr>
+                </tr>
 
-<?php
+                <?php
 
-	if ( !is_null($product["date_added"])  )
+                if ( !is_null($product["date_added"])  )
 
-	{
+                {
 
-?>
+                    ?>
 
-<tr>
+                    <tr>
 
-	<td align=right>
+                        <td align=right>
 
-		<?php echo ADMIN_DATE_ADDED;?>
+                            <?php echo ADMIN_DATE_ADDED;?>
 
-	</td>
+                        </td>
 
-	<td>
+                        <td>
 
-		<?php echo $product["date_added"]?>
+                            <?php echo $product["date_added"]?>
 
-	</td>
+                        </td>
 
-</tr>
+                    </tr>
 
-<?php
+                    <?php
 
-	}
+                }
 
-?>
+                ?>
 
-<?php
+                <?php
 
-	if ( !is_null($product["date_modified"]) )
+                if ( !is_null($product["date_modified"]) )
 
-	{
+                {
 
-?>
+                    ?>
 
-<tr>
+                    <tr>
 
-	<td align=right>
+                        <td align=right>
 
-		<?php echo ADMIN_DATE_MODIFIED;?>
+                            <?php echo ADMIN_DATE_MODIFIED;?>
 
-	</td>
+                        </td>
 
-	<td>
+                        <td>
 
-		<?php echo $product["date_modified"]?>
+                            <?php echo $product["date_modified"]?>
 
-	</td>
+                        </td>
 
-</tr>
+                    </tr>
 
-<?php
+                    <?php
 
-	}
+                }
 
-?>
+                ?>
 
-<?php
+                <?php
 
-	if ($_GET["productID"])
+                if ($_GET["productID"])
 
-	{
+                {
 
-?>
+                    ?>
 
-<tr>
+                    <tr>
 
-	<td align=right>
+                        <td align=right>
 
-		<?php echo ADMIN_PRODUCT_RATING;?>
+                            <?php echo ADMIN_PRODUCT_RATING;?>
 
-	</td>
+                        </td>
 
-	<td>
+                        <td>
 
-		<input type=text name="rating"
+                            <input type=text name="rating"
 
-			value="<?php echo str_replace("\"","&quot;",$product["customers_rating"]); ?>">
+                                   value="<?php echo str_replace("\"","&quot;",$product["customers_rating"]); ?>">
 
-	</td>
+                        </td>
 
-</tr>
+                    </tr>
 
-<?php }; ?>
+                <?php }; ?>
 
-<tr>
+                <tr>
 
-	<td align=right>
+                    <td align=right>
 
-		<?php echo ADMIN_SORT_ORDER;?>
+                        <?php echo ADMIN_SORT_ORDER;?>
 
-	</td>
+                    </td>
 
-	<td>
+                    <td>
 
-		<input type="text" name="sort_order" value="<?php echo $product["sort_order"];?>">
+                        <input type="text" name="sort_order" value="<?php echo $product["sort_order"];?>">
 
-	</td>
+                    </td>
 
-</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-	<td align=right>
+                    <td align=right>
 
-		<?php echo ADMIN_PRODUCT_PRICE;?>, <?php echo STRING_UNIVERSAL_CURRENCY;?><br>(<?php echo STRING_NUMBER_ONLY;?>):
+                        <?php echo ADMIN_PRODUCT_PRICE;?>, <?php echo STRING_UNIVERSAL_CURRENCY;?><br>(<?php echo STRING_NUMBER_ONLY;?>):
 
-	</td>
+                    </td>
 
-	<td>
+                    <td>
 
-		<input type="text" name="price" value=<?php echo $product["Price"]; ?>>
+                        <input type="text" name="price" value=<?php echo $product["Price"]; ?>>
 
-	</td>
+                    </td>
 
-</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-	<td align=right>
+                    <td align=right>
 
-		<?php echo ADMIN_PRODUCT_LISTPRICE;?>, <?php echo STRING_UNIVERSAL_CURRENCY;?><br>(<?php echo STRING_NUMBER_ONLY;?>):
+                        <?php echo ADMIN_PRODUCT_LISTPRICE;?>, <?php echo STRING_UNIVERSAL_CURRENCY;?><br>(<?php echo STRING_NUMBER_ONLY;?>):
 
-	</td>
+                    </td>
 
-	<td>
+                    <td>
 
-		<input type="text" name="list_price" value=<?php echo $product["list_price"];?>>
+                        <input type="text" name="list_price" value=<?php echo $product["list_price"];?>>
 
-	</td>
+                    </td>
 
-</tr>
+                </tr>
 
-<?php
+                <?php
 
-	if ($product["in_stock"]<0) $is = 0;
+                if ($product["in_stock"]<0) $is = 0;
 
-	else $is = $product["in_stock"];
+                else $is = $product["in_stock"];
 
-	if (CONF_CHECKSTOCK == 1) {
+                if (CONF_CHECKSTOCK == 1) {
 
-$skidka = $product["skidka"];
+                    $skidka = $product["skidka"];
 
-?>
+                    ?>
 
-	<tr>
+                    <tr>
 
-	<td align=right><?php echo ADMIN_PRODUCT_INSTOCK;?>:</td>
+                        <td align=right><?php echo ADMIN_PRODUCT_INSTOCK;?>:</td>
 
-	<td><input type="text" name="in_stock" value="<?php echo $is;?>"></td>
+                        <td><input type="text" name="in_stock" value="<?php echo $is;?>"></td>
 
-	</tr>
+                    </tr>
 
-<?php } else { ?>
+                <?php } else { ?>
 
-	<input type=hidden name="in_stock" value="<?php echo $is;?>">
+                    <input type=hidden name="in_stock" value="<?php echo $is;?>">
 
-<?php } ?>
+                <?php } ?>
 
-<tr>
+                <tr>
 
-		<td align=right>
+                    <td align=right>
 
-			<?php echo ADMIN_SKIDKA_PRODUCT;?>
+                        <?php echo ADMIN_SKIDKA_PRODUCT;?>
 
-		</td>
+                    </td>
 
-		<td>
+                    <td>
 
-			<input type="text" name="skidka" value="<?php echo $skidka?>"  style="background: #eae8e3;">
+                        <input type="text" name="skidka" value="<?php echo $skidka?>"  style="background: #eae8e3;">
 
-		</td>
+                    </td>
 
-	</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-	<td align=right>
+                    <td align=right>
 
-		<?php echo ADMIN_SHIPPING_FREIGHT;?>
+                        <?php echo ADMIN_SHIPPING_FREIGHT;?>
 
-	</td>
+                    </td>
 
-	<td>
+                    <td>
 
-		<input type="text" name="shipping_freight" value=<?php echo $product["shipping_freight"];?>>
+                        <input type="text" name="shipping_freight" value=<?php echo $product["shipping_freight"];?>>
 
-	</td>
+                    </td>
 
-</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-	<td align=right><?php echo ADMIN_PRODUCT_WEIGHT;?></td>
+                    <td align=right><?php echo ADMIN_PRODUCT_WEIGHT;?></td>
 
-	<td><input type=text name='weight'
+                    <td><input type=text name='weight'
 
-		value='<?php echo $product["weight"];?>'> <?php echo CONF_WEIGHT_UNIT;?></td>
+                               value='<?php echo $product["weight"];?>'> <?php echo CONF_WEIGHT_UNIT;?></td>
 
-</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-	<td align=right><?php echo ADMIN_FREE_SHIPPING;?></td>
+                    <td align=right><?php echo ADMIN_FREE_SHIPPING;?></td>
 
-	<td><input type=checkbox name='free_shipping'
+                    <td><input type=checkbox name='free_shipping'
 
-		<?php
+                            <?php
 
-		 	if ( $product["free_shipping"] )
+                            if ( $product["free_shipping"] )
 
-			{
+                            {
 
-		?>
+                                ?>
 
-			checked
+                                checked
 
-		<?php
+                                <?php
 
-			}
+                            }
 
-		?>
+                            ?>
 
-		value='1'>
+                               value='1'>
 
-	</td>
+                    </td>
 
-</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-	<td align=right><?php echo ADMIN_MIN_ORDER_AMOUNT;?></td>
+                    <td align=right><?php echo ADMIN_MIN_ORDER_AMOUNT;?></td>
 
-	<td><input type=text name='min_order_amount'
+                    <td><input type=text name='min_order_amount'
 
-			value='<?php echo $product["min_order_amount"];?>'>
+                               value='<?php echo $product["min_order_amount"];?>'>
 
-	</td>
+                    </td>
 
-</tr>
+                </tr>
 
-	<!-- ************************ CONFIGUARTOR *********************** -->
+                <!-- ************************  VARIANTS OF PRODUCT *********************** -->
 
-	<tr><td align=center colspan=2>
 
-	<center>
+                <tr><td align=center colspan=2>
 
-		<a href="JavaScript:ConfiguratorHideTable();">
+                        <center>
 
-			<?php echo ADMIN_CONFIGURATOR;?>
+                            <a href="JavaScript:VariantsProductHideTable();">
 
-			<input type=hidden name='ConfiguratorHideTable_hidden'
+                                <?php echo ADMIN_VARIANTS_PRODUCTS;?>
 
-				value='<?php echo $showConfiguratorTable;?>'>
+                                <input type=hidden name='VariantsProductHideTable_hidden'
 
-		</a>
+                                       value='<?php echo $showVariantsProduct ?>'>
 
-	</center>
+                            </a>
 
-	<script language='javascript'>
+                        </center>
 
-		function ConfiguratorHideTable()
+                        <script language='javascript'>
 
-		{
+                            function VariantsProductHideTable()
 
-			if ( ConfiguratorTable.style.display == 'none' )
+                            {
 
-			{
+                                if ( VariantsProductTable.style.display == 'none' )
 
-				ConfiguratorTable.style.display = 'block';
+                                {
 
-				document.MainForm.ConfiguratorHideTable_hidden.value='1';
+                                    VariantsProductTable.style.display = 'block';
 
-			}
+                                    document.MainForm.VariantsProductHideTable_hidden.value='1';
 
-			else
+                                }
 
-			{
+                                else
 
-				ConfiguratorTable.style.display = 'none';
+                                {
 
-				document.MainForm.ConfiguratorHideTable_hidden.value='0';
+                                    VariantsProductTable.style.display = 'none';
 
-			}
+                                    document.MainForm.VariantsProductHideTable_hidden.value='0';
 
-		}
+                                }
 
-	</script>
+                            }
 
-	<table id='ConfiguratorTable'>
+                        </script>
+                        <table id='VariantsProductTable'>
 
-	<tr><td>
+                            <tr><td>
+                                    <textarea name='variantsProduct' 	rows="3" cols="60"><?php echo $product["variantsProduct"];?></textarea>
+                                </td></tr>
+                        </table>
 
-	<script language='JavaScript'>
 
-			function SetOptionValueTypeRadioButton( id, radioButtonState )
 
-			{
 
-				if ( radioButtonState == "UN_DEFINED" )
+                        <!-- ************************ CONFIGUARTOR *********************** -->
 
-					document.all["option_radio_type_"+id][0].click();
+                <tr><td align=center colspan=2>
 
-				else if ( radioButtonState == "ANY_VALUE" )
+                        <center>
 
-					document.all["option_radio_type_"+id][1].click();
+                            <a href="JavaScript:ConfiguratorHideTable();">
 
-				else if ( radioButtonState == "N_VALUES" )
+                                <?php echo ADMIN_CONFIGURATOR;?>
 
-					document.all["option_radio_type_"+id][2].click();
+                                <input type=hidden name='ConfiguratorHideTable_hidden'
 
-			}
+                                       value='<?php echo $showConfiguratorTable;?>'>
 
-			function SetEnabledStateTextValueField( id, radioButtonState )
+                            </a>
 
-			{
+                        </center>
 
-				if ( radioButtonState == "UN_DEFINED" || radioButtonState == "N_VALUES" )
+                        <script language='javascript'>
 
-				{
+                            function ConfiguratorHideTable()
 
-					document.all["option_value_"+id].disabled=true;
+                            {
 
-					document.all["option_value_"+id].value="";
+                                if ( ConfiguratorTable.style.display == 'none' )
 
-				}
+                                {
 
-				else
+                                    ConfiguratorTable.style.display = 'block';
 
-					document.all["option_value_"+id].disabled=false;
+                                    document.MainForm.ConfiguratorHideTable_hidden.value='1';
 
-			}
+                                }
 
-	</script>
+                                else
 
-		<?php
+                                {
 
-		//product extra options
+                                    ConfiguratorTable.style.display = 'none';
 
-		foreach($options as $option)
+                                    document.MainForm.ConfiguratorHideTable_hidden.value='0';
 
-		{
+                                }
 
-			$option_row = $option["option_row"];
+                            }
 
-			$value_row  = $option["option_value"];
+                        </script>
 
-			$ValueCount = $option["value_count"];
+                        <table id='ConfiguratorTable'>
 
-		?>
+                            <tr><td>
 
-		<table border='0' cellspacing='0' cellpadding='4' width=100%>
+                                    <script language='JavaScript'>
 
-			<tr>
+                                        function SetOptionValueTypeRadioButton( id, radioButtonState )
 
-				<td align=left width=25%>
+                                        {
 
-					<b><?php echo $option_row["name"]?></b>:
+                                            if ( radioButtonState == "UN_DEFINED" )
 
-				</td>
+                                                document.all["option_radio_type_"+id][0].click();
 
-				<td>
+                                            else if ( radioButtonState == "ANY_VALUE" )
 
-					<input name='option_radio_type_<?php echo $option_row["optionID"]?>'
+                                                document.all["option_radio_type_"+id][1].click();
 
-						type='radio' value="UN_DEFINED"
+                                            else if ( radioButtonState == "N_VALUES" )
 
-						onclick="JavaScript:SetEnabledStateTextValueField(<?php echo $option_row['optionID']?>, 'UN_DEFINED' );"
+                                                document.all["option_radio_type_"+id][2].click();
 
-						<?php
+                                        }
 
-							if ( (is_null($value_row["option_value"]) || $value_row["option_value"] == '')
+                                        function SetEnabledStateTextValueField( id, radioButtonState )
 
-								&& $value_row["option_type"]==0 )
+                                        {
 
-							echo "checked";
+                                            if ( radioButtonState == "UN_DEFINED" || radioButtonState == "N_VALUES" )
 
-						?>
+                                            {
 
-					>
+                                                document.all["option_value_"+id].disabled=true;
 
+                                                document.all["option_value_"+id].value="";
 
-				</td>
+                                            }
 
-				<td>
+                                            else
 
-					<?php echo ADMIN_NOT_DEFINED;?>
+                                                document.all["option_value_"+id].disabled=false;
 
-				</td>
+                                        }
 
-			</tr>
+                                    </script>
 
-		<?php
+                                    <?php
 
-				if($option_row["optionID"] == '17')///-------------------------------------------БРЕНДЫ---------------------------------------------
+                                    //product extra options
 
-				{
+                                    foreach($options as $option)
 
-					$brends_arr = GetProductBrends();
+                                    {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                        $option_row = $option["option_row"];
 
-								$str_checked = "checked";
+                                        $value_row  = $option["option_value"];
 
-					else
+                                        $ValueCount = $option["value_count"];
 
-								$str_checked = "";
+                                        ?>
 
-					echo '<tr>
+                                        <table border='0' cellspacing='0' cellpadding='4' width=100%>
+
+                                            <tr>
+
+                                                <td align=left width=25%>
+
+                                                    <b><?php echo $option_row["name"]?></b>:
+
+                                                </td>
+
+                                                <td>
+
+                                                    <input name='option_radio_type_<?php echo $option_row["optionID"]?>'
+
+                                                           type='radio' value="UN_DEFINED"
+
+                                                           onclick="JavaScript:SetEnabledStateTextValueField(<?php echo $option_row['optionID']?>, 'UN_DEFINED' );"
+
+                                                        <?php
+
+                                                        if ( (is_null($value_row["option_value"]) || $value_row["option_value"] == '')
+
+                                                            && $value_row["option_type"]==0 )
+
+                                                            echo "checked";
+
+                                                        ?>
+
+                                                    >
+
+
+                                                </td>
+
+                                                <td>
+
+                                                    <?php echo ADMIN_NOT_DEFINED;?>
+
+                                                </td>
+
+                                            </tr>
+
+                                            <?php
+
+                                            if($option_row["optionID"] == '17')///-------------------------------------------БРЕНДЫ---------------------------------------------
+
+                                            {
+
+                                                $brends_arr = GetProductBrends();
+
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+
+                                                    $str_checked = "checked";
+
+                                                else
+
+                                                    $str_checked = "";
+
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -1896,41 +1965,41 @@ $skidka = $product["skidka"];
 
 									<select name=option_value_'.$option_row["optionID"].'>';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										for($i=0; $i<count($brends_arr);$i++)
+                                                for($i=0; $i<count($brends_arr);$i++)
 
-										{
+                                                {
 
-											echo '<option value="'.$brends_arr[$i]['name'].'"'; if($value_row['option_value']==$brends_arr[$i]['name'])
+                                                    echo '<option value="'.$brends_arr[$i]['name'].'"'; if($value_row['option_value']==$brends_arr[$i]['name'])
 
-															{ echo 'selected';} else echo ''; echo '>'.$brends_arr[$i]['name'].'</option>';
+                                                { echo 'selected';} else echo ''; echo '>'.$brends_arr[$i]['name'].'</option>';
 
-										}
+                                                }
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '16')///-------------------------------------------Класс палатки---------------------------------------------
+                                            elseif ($option_row["optionID"] == '16')///-------------------------------------------Класс палатки---------------------------------------------
 
-				{
+                                            {
 
-						$class_arr = GetProductClass();
+                                                $class_arr = GetProductClass();
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -1944,39 +2013,39 @@ $skidka = $product["skidka"];
 
 									<select name=option_value_'.$option_row["optionID"].'>';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										for($i=0; $i<count($class_arr);$i++)
+                                                for($i=0; $i<count($class_arr);$i++)
 
-										{
+                                                {
 
-											echo '<option value="'.$class_arr[$i]['name'].'"'; if($value_row['option_value']==$class_arr[$i]['name'])
+                                                    echo '<option value="'.$class_arr[$i]['name'].'"'; if($value_row['option_value']==$class_arr[$i]['name'])
 
-															{ echo 'selected';} else echo ''; echo '>'.$class_arr[$i]['name'].'</option>';
+                                                { echo 'selected';} else echo ''; echo '>'.$class_arr[$i]['name'].'</option>';
 
-										}
+                                                }
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '18')///-------------------------------------------Система палатки---------------------------------------------
+                                            elseif ($option_row["optionID"] == '18')///-------------------------------------------Система палатки---------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -1990,37 +2059,37 @@ $skidka = $product["skidka"];
 
 									<select name=option_value_'.$option_row["optionID"].'>';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-					echo '<option value="полусфера"';   if($value_row['option_value']=='полусфера')   { echo 'selected';} else echo ''; echo '>полусфера</option>';
+                                                echo '<option value="полусфера"';   if($value_row['option_value']=='полусфера')   { echo 'selected';} else echo ''; echo '>полусфера</option>';
 
-					echo '<option value="полубочка"';   if($value_row['option_value']=='полубочка')   { echo 'selected';} else echo ''; echo '>полубочка</option>';
+                                                echo '<option value="полубочка"';   if($value_row['option_value']=='полубочка')   { echo 'selected';} else echo ''; echo '>полубочка</option>';
 
-					echo '<option value="двухскатная"'; if($value_row['option_value']=='двухскатная') { echo 'selected';} else echo ''; echo '>двухскатная</option>';
+                                                echo '<option value="двухскатная"'; if($value_row['option_value']=='двухскатная') { echo 'selected';} else echo ''; echo '>двухскатная</option>';
 
-					echo '<option value="подвесная"';   if($value_row['option_value']=='подвесная')   { echo 'selected';} else echo ''; echo '>подвесная</option>';
+                                                echo '<option value="подвесная"';   if($value_row['option_value']=='подвесная')   { echo 'selected';} else echo ''; echo '>подвесная</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '1')///-------------------------------------------Количество мест---------------------------------------------
+                                            elseif ($option_row["optionID"] == '1')///-------------------------------------------Количество мест---------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -2034,59 +2103,59 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="1"';   if($value_row['option_value']=='1')   { echo 'selected';} else echo ''; echo '>1</option>';
+                                                echo '<option value="1"';   if($value_row['option_value']=='1')   { echo 'selected';} else echo ''; echo '>1</option>';
 
-										echo '<option value="2"';   if($value_row['option_value']=='2')   { echo 'selected';} else echo ''; echo '>2</option>';
+                                                echo '<option value="2"';   if($value_row['option_value']=='2')   { echo 'selected';} else echo ''; echo '>2</option>';
 
-										echo '<option value="2+1"';   if($value_row['option_value']=='2+1')   { echo 'selected';} else echo ''; echo '>2+1</option>';
+                                                echo '<option value="2+1"';   if($value_row['option_value']=='2+1')   { echo 'selected';} else echo ''; echo '>2+1</option>';
 
-										echo '<option value="3"';   if($value_row['option_value']=='3')   { echo 'selected';} else echo ''; echo '>3</option>';
+                                                echo '<option value="3"';   if($value_row['option_value']=='3')   { echo 'selected';} else echo ''; echo '>3</option>';
 
-										echo '<option value="3+1"';   if($value_row['option_value']=='3+1')   { echo 'selected';} else echo ''; echo '>3+1</option>';
+                                                echo '<option value="3+1"';   if($value_row['option_value']=='3+1')   { echo 'selected';} else echo ''; echo '>3+1</option>';
 
-										echo '<option value="4"';   if($value_row['option_value']=='4')   { echo 'selected';} else echo ''; echo '>4</option>';
+                                                echo '<option value="4"';   if($value_row['option_value']=='4')   { echo 'selected';} else echo ''; echo '>4</option>';
 
-										echo '<option value="4+1"';   if($value_row['option_value']=='4+1')   { echo 'selected';} else echo ''; echo '>4+1</option>';
+                                                echo '<option value="4+1"';   if($value_row['option_value']=='4+1')   { echo 'selected';} else echo ''; echo '>4+1</option>';
 
-										echo '<option value="4+2"';   if($value_row['option_value']=='4+2')   { echo 'selected';} else echo ''; echo '>4+2</option>';
+                                                echo '<option value="4+2"';   if($value_row['option_value']=='4+2')   { echo 'selected';} else echo ''; echo '>4+2</option>';
 
-										echo '<option value="5"';   if($value_row['option_value']=='5')   { echo 'selected';} else echo ''; echo '>5</option>';
+                                                echo '<option value="5"';   if($value_row['option_value']=='5')   { echo 'selected';} else echo ''; echo '>5</option>';
 
-										echo '<option value="6"';   if($value_row['option_value']=='6')   { echo 'selected';} else echo ''; echo '>6</option>';
+                                                echo '<option value="6"';   if($value_row['option_value']=='6')   { echo 'selected';} else echo ''; echo '>6</option>';
 
-										echo '<option value="7"';   if($value_row['option_value']=='7')   { echo 'selected';} else echo ''; echo '>7</option>';
+                                                echo '<option value="7"';   if($value_row['option_value']=='7')   { echo 'selected';} else echo ''; echo '>7</option>';
 
-										echo '<option value="8"';   if($value_row['option_value']=='8')   { echo 'selected';} else echo ''; echo '>8</option>';
+                                                echo '<option value="8"';   if($value_row['option_value']=='8')   { echo 'selected';} else echo ''; echo '>8</option>';
 
-										echo '<option value="8+2"';   if($value_row['option_value']=='8+2')   { echo 'selected';} else echo ''; echo '>8+2</option>';
+                                                echo '<option value="8+2"';   if($value_row['option_value']=='8+2')   { echo 'selected';} else echo ''; echo '>8+2</option>';
 
-										echo '<option value="9"';   if($value_row['option_value']=='9')   { echo 'selected';} else echo ''; echo '>9</option>';
+                                                echo '<option value="9"';   if($value_row['option_value']=='9')   { echo 'selected';} else echo ''; echo '>9</option>';
 
-										echo '<option value="10"';   if($value_row['option_value']=='10')   { echo 'selected';} else echo ''; echo '>10</option>';
+                                                echo '<option value="10"';   if($value_row['option_value']=='10')   { echo 'selected';} else echo ''; echo '>10</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '239')///-------------------------------------------Количество Клапанов---------------------------------------------
+                                            elseif ($option_row["optionID"] == '239')///-------------------------------------------Количество Клапанов---------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -2100,37 +2169,37 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="1"';   if($value_row['option_value']=='1')   { echo 'selected';} else echo ''; echo '>1</option>';
+                                                echo '<option value="1"';   if($value_row['option_value']=='1')   { echo 'selected';} else echo ''; echo '>1</option>';
 
-										echo '<option value="2"';   if($value_row['option_value']=='2')   { echo 'selected';} else echo ''; echo '>2</option>';
+                                                echo '<option value="2"';   if($value_row['option_value']=='2')   { echo 'selected';} else echo ''; echo '>2</option>';
 
-										echo '<option value="3"';   if($value_row['option_value']=='3')   { echo 'selected';} else echo ''; echo '>3</option>';
+                                                echo '<option value="3"';   if($value_row['option_value']=='3')   { echo 'selected';} else echo ''; echo '>3</option>';
 
-										echo '<option value="4"';   if($value_row['option_value']=='4')   { echo 'selected';} else echo ''; echo '>4</option>';
+                                                echo '<option value="4"';   if($value_row['option_value']=='4')   { echo 'selected';} else echo ''; echo '>4</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '240')///-------------------------------------------Кнопки для состегивания ковриков ---------------------------------------------
+                                            elseif ($option_row["optionID"] == '240')///-------------------------------------------Кнопки для состегивания ковриков ---------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -2144,33 +2213,33 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="Есть"';   if($value_row['option_value']=='Есть')   { echo 'selected';} else echo ''; echo '>Есть</option>';
+                                                echo '<option value="Есть"';   if($value_row['option_value']=='Есть')   { echo 'selected';} else echo ''; echo '>Есть</option>';
 
-										echo '<option value="Нет"';   if($value_row['option_value']=='Нет')   { echo 'selected';} else echo ''; echo '>Нет</option>';
+                                                echo '<option value="Нет"';   if($value_row['option_value']=='Нет')   { echo 'selected';} else echo ''; echo '>Нет</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '237')///------------------------------------------- Материал верха ---------------------------------------------
+                                            elseif ($option_row["optionID"] == '237')///------------------------------------------- Материал верха ---------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -2184,37 +2253,37 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="Полиэстер Chamois suede (тканная замша)"';   if($value_row['option_value']=='Полиэстер Chamois suede (тканная замша)')   { echo 'selected';} else echo ''; echo '>Полиэстер Chamois suede (тканная замша)</option>';									
+                                                echo '<option value="Полиэстер Chamois suede (тканная замша)"';   if($value_row['option_value']=='Полиэстер Chamois suede (тканная замша)')   { echo 'selected';} else echo ''; echo '>Полиэстер Chamois suede (тканная замша)</option>';
 
-										echo '<option value="Polyester 75D Micro Brushed Lamminated TPU"';   if($value_row['option_value']=='Polyester 75D Micro Brushed Lamminated TPU')   { echo 'selected';} else echo ''; echo '>Polyester 75D Micro Brushed Lamminated TPU</option>';									
+                                                echo '<option value="Polyester 75D Micro Brushed Lamminated TPU"';   if($value_row['option_value']=='Polyester 75D Micro Brushed Lamminated TPU')   { echo 'selected';} else echo ''; echo '>Polyester 75D Micro Brushed Lamminated TPU</option>';
 
-										echo '<option value="Polyester 50D Stretch Lamminated TPU"';   if($value_row['option_value']=='Polyester 50D Stretch Lamminated TPU')   { echo 'selected';} else echo ''; echo '>Polyester 50D Stretch Lamminated TPU</option>';									
+                                                echo '<option value="Polyester 50D Stretch Lamminated TPU"';   if($value_row['option_value']=='Polyester 50D Stretch Lamminated TPU')   { echo 'selected';} else echo ''; echo '>Polyester 50D Stretch Lamminated TPU</option>';
 
-										echo '<option value="Polyester 75D Velours Embossed Lamminated TPU"';   if($value_row['option_value']=='Polyester 75D Velours Embossed Lamminated TPU')   { echo 'selected';} else echo ''; echo '>Polyester 75D Velours Embossed Lamminated TPU</option>';									
+                                                echo '<option value="Polyester 75D Velours Embossed Lamminated TPU"';   if($value_row['option_value']=='Polyester 75D Velours Embossed Lamminated TPU')   { echo 'selected';} else echo ''; echo '>Polyester 75D Velours Embossed Lamminated TPU</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '238')///------------------------------------------- Материал дна ---------------------------------------------
+                                            elseif ($option_row["optionID"] == '238')///------------------------------------------- Материал дна ---------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -2228,37 +2297,37 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="Полиэстер SlidesLess 75D (точечное гелеобразное нанесение)"';   if($value_row['option_value']=='Полиэстер SlidesLess 75D (точечное гелеобразное нанесение)')   { echo 'selected';} else echo ''; echo '>Полиэстер SlidesLess 75D (точечное гелеобразное нанесение)</option>';
+                                                echo '<option value="Полиэстер SlidesLess 75D (точечное гелеобразное нанесение)"';   if($value_row['option_value']=='Полиэстер SlidesLess 75D (точечное гелеобразное нанесение)')   { echo 'selected';} else echo ''; echo '>Полиэстер SlidesLess 75D (точечное гелеобразное нанесение)</option>';
 
-										echo '<option value="Polyester 75D Non-Slip Lamminated TPU"';   if($value_row['option_value']=='Polyester 75D Non-Slip Lamminated TPU')   { echo 'selected';} else echo ''; echo '>Polyester 75D Non-Slip Lamminated TPU</option>';
-										echo '<option value="Терпаулинг"';   if($value_row['option_value']=='Терпаулинг')   { echo 'selected';} else echo ''; echo '>Терпаулинг</option>';
+                                                echo '<option value="Polyester 75D Non-Slip Lamminated TPU"';   if($value_row['option_value']=='Polyester 75D Non-Slip Lamminated TPU')   { echo 'selected';} else echo ''; echo '>Polyester 75D Non-Slip Lamminated TPU</option>';
+                                                echo '<option value="Терпаулинг"';   if($value_row['option_value']=='Терпаулинг')   { echo 'selected';} else echo ''; echo '>Терпаулинг</option>';
 
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '7')///-------------------------------------------внешний тент ---------------------------------------------
+                                            elseif ($option_row["optionID"] == '7')///-------------------------------------------внешний тент ---------------------------------------------
 
-				{
+                                            {
 
-					//onchange="add_from_select(option_value_'.$option_row["optionID"].')"
+                                                //onchange="add_from_select(option_value_'.$option_row["optionID"].')"
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -2272,336 +2341,336 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
 
 
-										echo '<option value="100% полиэстер 75D190T 7000 мм в. ст., проклеенные швы" ';
+                                                echo '<option value="100% полиэстер 75D190T 7000 мм в. ст., проклеенные швы" ';
 
-												if($value_row['option_value']=='100% полиэстер 75D190T 7000 мм в. ст., проклеенные швы')
+                                                if($value_row['option_value']=='100% полиэстер 75D190T 7000 мм в. ст., проклеенные швы')
 
-													{ echo 'selected';}
+                                                { echo 'selected';}
 
-												else echo '';
+                                                else echo '';
 
-												echo '>100% полиэстер 75D190T 7000 мм в. ст., проклеенные швы</option>';
+                                                echo '>100% полиэстер 75D190T 7000 мм в. ст., проклеенные швы</option>';
 
 
 
 
-										echo '<option value="100% Polyester RipStop, DryTech покрытие, 7000 мм, проклеенные швы" ';
+                                                echo '<option value="100% Polyester RipStop, DryTech покрытие, 7000 мм, проклеенные швы" ';
 
-												if($value_row['option_value']=='100% Polyester RipStop, DryTech покрытие, 7000 мм, проклеенные швы')
+                                                if($value_row['option_value']=='100% Polyester RipStop, DryTech покрытие, 7000 мм, проклеенные швы')
 
-													{ echo 'selected';}
+                                                { echo 'selected';}
 
-												else echo '';
+                                                else echo '';
 
-												echo '>100% Polyester RipStop, DryTech покрытие, 7000 мм, проклеенные швы</option>';
+                                                echo '>100% Polyester RipStop, DryTech покрытие, 7000 мм, проклеенные швы</option>';
 
-												
 
-										echo '<option value="4000 мм H2O Polyester 190T PU"';
 
-												if($value_row['option_value']=='4000 мм H2O Polyester 190T PU')
+                                                echo '<option value="4000 мм H2O Polyester 190T PU"';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='4000 мм H2O Polyester 190T PU')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>4000 мм H2O Polyester 190T PU</option>';
+                                                else echo '';
 
-										echo '<option value="40D/240Т нейлон Rip Stop 3000мм H2O силиконизированный огнеупорная пропитка швы проклеены" ';
+                                                echo '>4000 мм H2O Polyester 190T PU</option>';
 
-												if($value_row['option_value']=='40D/240Т нейлон Rip Stop 3000мм H2O силиконизированный огнеупорная пропитка швы проклеены')
+                                                echo '<option value="40D/240Т нейлон Rip Stop 3000мм H2O силиконизированный огнеупорная пропитка швы проклеены" ';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='40D/240Т нейлон Rip Stop 3000мм H2O силиконизированный огнеупорная пропитка швы проклеены')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>40D/240Т нейлон Rip Stop 3000мм H2O силиконизированный огнеупорная пропитка швы проклеены</option>';
+                                                else echo '';
 
-										echo '<option value="Polyester, покрытие PU на 3 000 мм Н2О, SL, проклеенные швы"';
+                                                echo '>40D/240Т нейлон Rip Stop 3000мм H2O силиконизированный огнеупорная пропитка швы проклеены</option>';
 
-												if($value_row['option_value']=='Polyester, покрытие PU на 3 000 мм Н2О, SL, проклеенные швы')
+                                                echo '<option value="Polyester, покрытие PU на 3 000 мм Н2О, SL, проклеенные швы"';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='Polyester, покрытие PU на 3 000 мм Н2О, SL, проклеенные швы')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>Polyester, покрытие PU на 3 000 мм Н2О, SL, проклеенные швы</option>';
+                                                else echo '';
 
-										echo '<option value="Polyester, покрытие PU на 4000 мм Н2О, силиконизирован"';
+                                                echo '>Polyester, покрытие PU на 3 000 мм Н2О, SL, проклеенные швы</option>';
 
-												if($value_row['option_value']=='Polyester, покрытие PU на 4000 мм Н2О, силиконизирован')
+                                                echo '<option value="Polyester, покрытие PU на 4000 мм Н2О, силиконизирован"';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='Polyester, покрытие PU на 4000 мм Н2О, силиконизирован')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>Polyester, покрытие PU на 4000 мм Н2О, силиконизирован</option>';
+                                                else echo '';
 
-										echo '<option value="Polyester, покрытие PU на 3000 мм Н2О"';
+                                                echo '>Polyester, покрытие PU на 4000 мм Н2О, силиконизирован</option>';
 
-												if($value_row['option_value']=='Polyester, покрытие PU на 3000 мм Н2О')
+                                                echo '<option value="Polyester, покрытие PU на 3000 мм Н2О"';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='Polyester, покрытие PU на 3000 мм Н2О')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>Polyester, покрытие PU на 3000 мм Н2О</option>';
+                                                else echo '';
 
-										echo '<option value="Polyester, PU (внутренняя поверхность покрыта полиуретаном), 2500 мм H2O"';
+                                                echo '>Polyester, покрытие PU на 3000 мм Н2О</option>';
 
-												if($value_row['option_value']=='Polyester, PU (внутренняя поверхность покрыта полиуретаном), 2500 мм H2O')
+                                                echo '<option value="Polyester, PU (внутренняя поверхность покрыта полиуретаном), 2500 мм H2O"';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='Polyester, PU (внутренняя поверхность покрыта полиуретаном), 2500 мм H2O')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>Polyester, PU (внутренняя поверхность покрыта полиуретаном), 2500 мм H2O</option>';
+                                                else echo '';
 
-										echo '<option value="100% Polyester RipStop, DryTech покрытие, 2000 мм, проклеенные швы"';
+                                                echo '>Polyester, PU (внутренняя поверхность покрыта полиуретаном), 2500 мм H2O</option>';
 
-												if($value_row['option_value']=='100% Polyester RipStop, DryTech покрытие, 2000 мм, проклеенные швы')
+                                                echo '<option value="100% Polyester RipStop, DryTech покрытие, 2000 мм, проклеенные швы"';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='100% Polyester RipStop, DryTech покрытие, 2000 мм, проклеенные швы')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>100% Polyester RipStop, DryTech покрытие, 2000 мм, проклеенные швы</option>';
+                                                else echo '';
 
-										echo '<option value="100% Polyester Diamond graphic, DryTech покрытие, 3000 мм, проклеенные швы"';
+                                                echo '>100% Polyester RipStop, DryTech покрытие, 2000 мм, проклеенные швы</option>';
 
-												if($value_row['option_value']=='100% Polyester Diamond graphic, DryTech покрытие, 3000 мм, проклеенные швы')
+                                                echo '<option value="100% Polyester Diamond graphic, DryTech покрытие, 3000 мм, проклеенные швы"';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='100% Polyester Diamond graphic, DryTech покрытие, 3000 мм, проклеенные швы')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>100% Polyester Diamond graphic, DryTech покрытие, 3000 мм, проклеенные швы</option>';
+                                                else echo '';
 
-										echo '<option value="100% Polyester Diamond graphic, DryTech покрытие, 1000 мм, проклеенные швы"';
+                                                echo '>100% Polyester Diamond graphic, DryTech покрытие, 3000 мм, проклеенные швы</option>';
 
-												if($value_row['option_value']=='100% Polyester Diamond graphic, DryTech покрытие, 1000 мм, проклеенные швы')
+                                                echo '<option value="100% Polyester Diamond graphic, DryTech покрытие, 1000 мм, проклеенные швы"';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='100% Polyester Diamond graphic, DryTech покрытие, 1000 мм, проклеенные швы')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>100% Polyester Diamond graphic, DryTech покрытие, 1000 мм, проклеенные швы</option>';
+                                                else echo '';
 
-										echo '<option value="100% Polyester, DryTech покрытие, 3000 мм, проклеенные швы"';
+                                                echo '>100% Polyester Diamond graphic, DryTech покрытие, 1000 мм, проклеенные швы</option>';
 
-												if($value_row['option_value']=='100% Polyester, DryTech покрытие, 3000 мм, проклеенные швы')
+                                                echo '<option value="100% Polyester, DryTech покрытие, 3000 мм, проклеенные швы"';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='100% Polyester, DryTech покрытие, 3000 мм, проклеенные швы')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>100% Polyester, DryTech покрытие, 3000 мм, проклеенные швы</option>';
+                                                else echo '';
 
-										echo '<option value="100% Polyester, DryTech покрытие, 2000 мм, проклеенные швы"';
+                                                echo '>100% Polyester, DryTech покрытие, 3000 мм, проклеенные швы</option>';
 
-												if($value_row['option_value']=='100% Polyester, DryTech покрытие, 2000 мм, проклеенные швы')
+                                                echo '<option value="100% Polyester, DryTech покрытие, 2000 мм, проклеенные швы"';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='100% Polyester, DryTech покрытие, 2000 мм, проклеенные швы')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>100% Polyester, DryTech покрытие, 2000 мм, проклеенные швы</option>';
+                                                else echo '';
 
-										echo '<option value="100% полиэстер Dry Tech покрытие,  2000 мм в. ст."';
+                                                echo '>100% Polyester, DryTech покрытие, 2000 мм, проклеенные швы</option>';
 
-												if($value_row['option_value']=='100% полиэстер Dry Tech покрытие,  2000 мм в. ст.')
+                                                echo '<option value="100% полиэстер Dry Tech покрытие,  2000 мм в. ст."';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='100% полиэстер Dry Tech покрытие,  2000 мм в. ст.')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>100% полиэстер Dry Tech покрытие,  2000 мм в. ст.</option>';
+                                                else echo '';
 
-										echo '<option value="100% полиэстер 75D/190T WR PU 3000 мм в. ст."';
+                                                echo '>100% полиэстер Dry Tech покрытие,  2000 мм в. ст.</option>';
 
-												if($value_row['option_value']=='100% полиэстер 75D/190T WR PU 3000 мм в. ст.')
+                                                echo '<option value="100% полиэстер 75D/190T WR PU 3000 мм в. ст."';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='100% полиэстер 75D/190T WR PU 3000 мм в. ст.')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>100% полиэстер 75D/190T WR PU 3000 мм в. ст.</option>';
+                                                else echo '';
 
-										echo '<option value="100% полиэстер 75D/190T WR PU 2000 мм в. ст."';
+                                                echo '>100% полиэстер 75D/190T WR PU 3000 мм в. ст.</option>';
 
-												if($value_row['option_value']=='100% полиэстер 75D/190T WR PU 2000 мм в. ст.')
+                                                echo '<option value="100% полиэстер 75D/190T WR PU 2000 мм в. ст."';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='100% полиэстер 75D/190T WR PU 2000 мм в. ст.')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>100% полиэстер 75D/190T WR PU 2000 мм в. ст.</option>';
+                                                else echo '';
 
-										echo '<option value="Polyester 400D PU 2000"';
+                                                echo '>100% полиэстер 75D/190T WR PU 2000 мм в. ст.</option>';
 
-												if($value_row['option_value']=='Polyester 400D PU 2000')
+                                                echo '<option value="Polyester 400D PU 2000"';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='Polyester 400D PU 2000')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>Polyester 400D PU 2000</option>';
+                                                else echo '';
 
-										echo '<option value="100% полиэстер 75D 1500 мм в. ст."';
+                                                echo '>Polyester 400D PU 2000</option>';
 
-												if($value_row['option_value']=='100% полиэстер 75D 1500 мм в. ст.')
+                                                echo '<option value="100% полиэстер 75D 1500 мм в. ст."';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='100% полиэстер 75D 1500 мм в. ст.')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>100% полиэстер 75D 1500 мм в. ст.</option>';
+                                                else echo '';
 
-										echo '<option value="100% полиэстер 75D/190T WR PU 1000 мм в. ст."';
+                                                echo '>100% полиэстер 75D 1500 мм в. ст.</option>';
 
-												if($value_row['option_value']=='100% полиэстер 75D/190T WR PU 1000 мм в. ст.')
+                                                echo '<option value="100% полиэстер 75D/190T WR PU 1000 мм в. ст."';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='100% полиэстер 75D/190T WR PU 1000 мм в. ст.')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>100% полиэстер 75D/190T WR PU 1000 мм в. ст.</option>';
+                                                else echo '';
 
-										echo '<option value="100% полиэстер 3000 мм в. ст."';
+                                                echo '>100% полиэстер 75D/190T WR PU 1000 мм в. ст.</option>';
 
-												if($value_row['option_value']=='100% полиэстер 3000 мм в. ст.')
+                                                echo '<option value="100% полиэстер 3000 мм в. ст."';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='100% полиэстер 3000 мм в. ст.')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>100% полиэстер 3000 мм в. ст.</option>';
+                                                else echo '';
 
-										echo '<option value="100% полиэстер 75D/190T RipStop PU 5000мм в. ст."';
+                                                echo '>100% полиэстер 3000 мм в. ст.</option>';
 
-												if($value_row['option_value']=='100% полиэстер 75D/190T RipStop PU 5000мм в. ст.')
+                                                echo '<option value="100% полиэстер 75D/190T RipStop PU 5000мм в. ст."';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='100% полиэстер 75D/190T RipStop PU 5000мм в. ст.')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>100% полиэстер 75D/190T RipStop PU 5000мм в. ст.</option>';
+                                                else echo '';
 
-										echo '<option value="100% полиэстер 75D/190T Dry Tech  PU 4000мм в. ст."';
+                                                echo '>100% полиэстер 75D/190T RipStop PU 5000мм в. ст.</option>';
 
-												if($value_row['option_value']=='100% полиэстер 75D/190T Dry Tech  PU 4000мм в. ст.')
+                                                echo '<option value="100% полиэстер 75D/190T Dry Tech  PU 4000мм в. ст."';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='100% полиэстер 75D/190T Dry Tech  PU 4000мм в. ст.')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>100% полиэстер 75D/190T Dry Tech  PU 4000мм в. ст.</option>';
+                                                else echo '';
 
-										echo '<option value="100% полиэстер 75D/190T Diamond RipStop PU, 8000 мм в. ст."';
+                                                echo '>100% полиэстер 75D/190T Dry Tech  PU 4000мм в. ст.</option>';
 
-												if($value_row['option_value']=='100% полиэстер 75D/190T Diamond RipStop PU, 8000 мм в. ст.')
+                                                echo '<option value="100% полиэстер 75D/190T Diamond RipStop PU, 8000 мм в. ст."';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='100% полиэстер 75D/190T Diamond RipStop PU, 8000 мм в. ст.')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>100% полиэстер 75D/190T Diamond RipStop PU, 8000 мм в. ст.</option>';
+                                                else echo '';
 
-										echo '<option value="100% полиэстер 75D/190T Diamond RipStop WR PU 4000 мм в. ст."';
+                                                echo '>100% полиэстер 75D/190T Diamond RipStop PU, 8000 мм в. ст.</option>';
 
-												if($value_row['option_value']=='100% полиэстер 75D/190T Diamond RipStop WR PU 4000 мм в. ст.')
+                                                echo '<option value="100% полиэстер 75D/190T Diamond RipStop WR PU 4000 мм в. ст."';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='100% полиэстер 75D/190T Diamond RipStop WR PU 4000 мм в. ст.')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>100% полиэстер 75D/190T Diamond RipStop WR PU 4000 мм в. ст.</option>';
+                                                else echo '';
 
-										echo '<option value="185T полиэстер Rip Stop 3000мм H2O швы проклеены"';
+                                                echo '>100% полиэстер 75D/190T Diamond RipStop WR PU 4000 мм в. ст.</option>';
 
-												if($value_row['option_value']=='185T полиэстер Rip Stop 3000мм H2O швы проклеены')
+                                                echo '<option value="185T полиэстер Rip Stop 3000мм H2O швы проклеены"';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='185T полиэстер Rip Stop 3000мм H2O швы проклеены')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>185T полиэстер Rip Stop 3000мм H2O швы проклеены</option>';
+                                                else echo '';
 
-										echo '<option value="185T полиэстер Rip Stop 3000мм H2O огнеупорная пропитка швы проклеены"';
+                                                echo '>185T полиэстер Rip Stop 3000мм H2O швы проклеены</option>';
 
-												if($value_row['option_value']=='185T полиэстер Rip Stop 3000мм H2O огнеупорная пропитка швы проклеены')
+                                                echo '<option value="185T полиэстер Rip Stop 3000мм H2O огнеупорная пропитка швы проклеены"';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='185T полиэстер Rip Stop 3000мм H2O огнеупорная пропитка швы проклеены')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>185T полиэстер Rip Stop 3000мм H2O огнеупорная пропитка швы проклеены</option>';
+                                                else echo '';
 
-										echo '<option value="185T полиэстер Rip Stop 4000мм H2O огнеупорная пропитка швы проклеены"';
+                                                echo '>185T полиэстер Rip Stop 3000мм H2O огнеупорная пропитка швы проклеены</option>';
 
-												if($value_row['option_value']=='185T полиэстер Rip Stop 4000мм H2O огнеупорная пропитка швы проклеены')
+                                                echo '<option value="185T полиэстер Rip Stop 4000мм H2O огнеупорная пропитка швы проклеены"';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='185T полиэстер Rip Stop 4000мм H2O огнеупорная пропитка швы проклеены')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>185T полиэстер Rip Stop 4000мм H2O огнеупорная пропитка швы проклеены</option>';
+                                                else echo '';
 
-										echo '<option value="185T полиэстер Rip Stop 6000мм H2O огнеупорная пропитка швы проклеены"';
+                                                echo '>185T полиэстер Rip Stop 4000мм H2O огнеупорная пропитка швы проклеены</option>';
 
-												if($value_row['option_value']=='185T полиэстер Rip Stop 6000мм H2O огнеупорная пропитка швы проклеены')
+                                                echo '<option value="185T полиэстер Rip Stop 6000мм H2O огнеупорная пропитка швы проклеены"';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='185T полиэстер Rip Stop 6000мм H2O огнеупорная пропитка швы проклеены')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>185T полиэстер Rip Stop 6000мм H2O огнеупорная пропитка швы проклеены</option>';
+                                                else echo '';
 
-										echo '<option value="40D/240Т нейлон DOUBLE Rip Stop 6000мм H2O силиконизированный огнеупорная пропитка швы проклеены"';
+                                                echo '>185T полиэстер Rip Stop 6000мм H2O огнеупорная пропитка швы проклеены</option>';
 
-												if($value_row['option_value']=='40D/240Т нейлон DOUBLE Rip Stop 6000мм H2O силиконизированный огнеупорная пропитка швы проклеены')
+                                                echo '<option value="40D/240Т нейлон DOUBLE Rip Stop 6000мм H2O силиконизированный огнеупорная пропитка швы проклеены"';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='40D/240Т нейлон DOUBLE Rip Stop 6000мм H2O силиконизированный огнеупорная пропитка швы проклеены')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>40D/240Т нейлон DOUBLE Rip Stop 6000мм H2O силиконизированный огнеупорная пропитка швы проклеены</option>';
+                                                else echo '';
 
-										echo '<option value="185T полиэстер 3000мм H2O огнеупорная пропитка швы проклеены"';
+                                                echo '>40D/240Т нейлон DOUBLE Rip Stop 6000мм H2O силиконизированный огнеупорная пропитка швы проклеены</option>';
 
-												if($value_row['option_value']=='185T полиэстер 3000мм H2O огнеупорная пропитка швы проклеены')
+                                                echo '<option value="185T полиэстер 3000мм H2O огнеупорная пропитка швы проклеены"';
 
-													{ echo 'selected';}
+                                                if($value_row['option_value']=='185T полиэстер 3000мм H2O огнеупорная пропитка швы проклеены')
 
-												else echo '';
+                                                { echo 'selected';}
 
-												echo '>185T полиэстер 3000мм H2O огнеупорная пропитка швы проклеены</option>';
+                                                else echo '';
 
-					echo '			</select>
+                                                echo '>185T полиэстер 3000мм H2O огнеупорная пропитка швы проклеены</option>';
+
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '14')///-------------------------------------------Цвет внешнего тента---------------------------------------------
+                                            elseif ($option_row["optionID"] == '14')///-------------------------------------------Цвет внешнего тента---------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -2615,53 +2684,53 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="хаки, песочный"';   if($value_row['option_value']=='хаки, песочный')   { echo 'selected';} else echo ''; echo '>хаки, песочный</option>';
+                                                echo '<option value="хаки, песочный"';   if($value_row['option_value']=='хаки, песочный')   { echo 'selected';} else echo ''; echo '>хаки, песочный</option>';
 
-										echo '<option value="синий"';   if($value_row['option_value']=='синий')   { echo 'selected';} else echo ''; echo '>синий</option>';
+                                                echo '<option value="синий"';   if($value_row['option_value']=='синий')   { echo 'selected';} else echo ''; echo '>синий</option>';
 
-										echo '<option value="красный"';   if($value_row['option_value']=='красный')   { echo 'selected';} else echo ''; echo '>красный</option>';
+                                                echo '<option value="красный"';   if($value_row['option_value']=='красный')   { echo 'selected';} else echo ''; echo '>красный</option>';
 
-										echo '<option value="зеленый"';   if($value_row['option_value']=='зеленый')   { echo 'selected';} else echo ''; echo '>зеленый</option>';
+                                                echo '<option value="зеленый"';   if($value_row['option_value']=='зеленый')   { echo 'selected';} else echo ''; echo '>зеленый</option>';
 
-										echo '<option value="зеленый, оранжевый"';   if($value_row['option_value']=='зеленый, оранжевый')   { echo 'selected';} else echo ''; echo '>зеленый, оранжевый</option>';
+                                                echo '<option value="зеленый, оранжевый"';   if($value_row['option_value']=='зеленый, оранжевый')   { echo 'selected';} else echo ''; echo '>зеленый, оранжевый</option>';
 
-										echo '<option value="желто-черный"';   if($value_row['option_value']=='желто-черный')   { echo 'selected';} else echo ''; echo '>желто-черный</option>';
+                                                echo '<option value="желто-черный"';   if($value_row['option_value']=='желто-черный')   { echo 'selected';} else echo ''; echo '>желто-черный</option>';
 
-										echo '<option value="оранжевый"';   if($value_row['option_value']=='оранжевый')   { echo 'selected';} else echo ''; echo '>оранжевый</option>';
+                                                echo '<option value="оранжевый"';   if($value_row['option_value']=='оранжевый')   { echo 'selected';} else echo ''; echo '>оранжевый</option>';
 
-										echo '<option value="светло-зеленый"';   if($value_row['option_value']=='светло-зеленый')   { echo 'selected';} else echo ''; echo '>светло-зеленый</option>';
+                                                echo '<option value="светло-зеленый"';   if($value_row['option_value']=='светло-зеленый')   { echo 'selected';} else echo ''; echo '>светло-зеленый</option>';
 
-										echo '<option value="темно-зеленый"';   if($value_row['option_value']=='темно-зеленый')   { echo 'selected';} else echo ''; echo '>темно-зеленый</option>';
+                                                echo '<option value="темно-зеленый"';   if($value_row['option_value']=='темно-зеленый')   { echo 'selected';} else echo ''; echo '>темно-зеленый</option>';
 
-										echo '<option value="песочный"';   if($value_row['option_value']=='песочный')   { echo 'selected';} else echo ''; echo '>песочный</option>';
+                                                echo '<option value="песочный"';   if($value_row['option_value']=='песочный')   { echo 'selected';} else echo ''; echo '>песочный</option>';
 
-										echo '<option value="серый"';   if($value_row['option_value']=='серый')   { echo 'selected';} else echo ''; echo '>серый</option>';
+                                                echo '<option value="серый"';   if($value_row['option_value']=='серый')   { echo 'selected';} else echo ''; echo '>серый</option>';
 
-										echo '<option value="камуфляжный"';   if($value_row['option_value']=='камуфляжный')   { echo 'selected';} else echo ''; echo '>камуфляжный</option>';
+                                                echo '<option value="камуфляжный"';   if($value_row['option_value']=='камуфляжный')   { echo 'selected';} else echo ''; echo '>камуфляжный</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '8')///-------------------------------------------Материал внутренней комнаты:---------------------------------------------
+                                            elseif ($option_row["optionID"] == '8')///-------------------------------------------Материал внутренней комнаты:---------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -2675,51 +2744,51 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="100% Nylon RipStop – дышащий"';   if($value_row['option_value']=='100% Nylon RipStop – дышащий')   { echo 'selected';} else echo ''; echo '>100% Nylon RipStop – дышащий</option>';
+                                                echo '<option value="100% Nylon RipStop – дышащий"';   if($value_row['option_value']=='100% Nylon RipStop – дышащий')   { echo 'selected';} else echo ''; echo '>100% Nylon RipStop – дышащий</option>';
 
-										echo '<option value="20D/240T полиэстер Rip Stop (дышащий) водоотталкивающая пропитка"';   if($value_row['option_value']=='20D/240T полиэстер Rip Stop (дышащий) водоотталкивающая пропитка')   { echo 'selected';} else echo ''; echo '>20D/240T полиэстер Rip Stop (дышащий) водоотталкивающая пропитка</option>';
+                                                echo '<option value="20D/240T полиэстер Rip Stop (дышащий) водоотталкивающая пропитка"';   if($value_row['option_value']=='20D/240T полиэстер Rip Stop (дышащий) водоотталкивающая пропитка')   { echo 'selected';} else echo ''; echo '>20D/240T полиэстер Rip Stop (дышащий) водоотталкивающая пропитка</option>';
 
-										echo '<option value="нейлон воздухопроницаемый Ripstop"';   if($value_row['option_value']=='нейлон воздухопроницаемый Ripstop')   { echo 'selected';} else echo ''; echo '>нейлон воздухопроницаемый Ripstop</option>';
+                                                echo '<option value="нейлон воздухопроницаемый Ripstop"';   if($value_row['option_value']=='нейлон воздухопроницаемый Ripstop')   { echo 'selected';} else echo ''; echo '>нейлон воздухопроницаемый Ripstop</option>';
 
-										echo '<option value="нейлон воздухопроницаемый"';   if($value_row['option_value']=='нейлон воздухопроницаемый')   { echo 'selected';} else echo ''; echo '>нейлон воздухопроницаемый</option>';
+                                                echo '<option value="нейлон воздухопроницаемый"';   if($value_row['option_value']=='нейлон воздухопроницаемый')   { echo 'selected';} else echo ''; echo '>нейлон воздухопроницаемый</option>';
 
-										echo '<option value="100% дышащий полиэстер RipStop"';   if($value_row['option_value']=='100% дышащий полиэстер RipStop')   { echo 'selected';} else echo ''; echo '>100% дышащий полиэстер RipStop</option>';
+                                                echo '<option value="100% дышащий полиэстер RipStop"';   if($value_row['option_value']=='100% дышащий полиэстер RipStop')   { echo 'selected';} else echo ''; echo '>100% дышащий полиэстер RipStop</option>';
 
-										echo '<option value="100% дышащий Nylon"';   if($value_row['option_value']=='100% дышащий Nylon')   { echo 'selected';} else echo ''; echo '>100% дышащий Nylon</option>';
+                                                echo '<option value="100% дышащий Nylon"';   if($value_row['option_value']=='100% дышащий Nylon')   { echo 'selected';} else echo ''; echo '>100% дышащий Nylon</option>';
 
-										echo '<option value="100% дышащий полиэстер 68D/68D 190T"';   if($value_row['option_value']=='100% дышащий полиэстер 68D/68D 190T')   { echo 'selected';} else echo ''; echo '>100% дышащий полиэстер 68D/68D 190T1</option>';
+                                                echo '<option value="100% дышащий полиэстер 68D/68D 190T"';   if($value_row['option_value']=='100% дышащий полиэстер 68D/68D 190T')   { echo 'selected';} else echo ''; echo '>100% дышащий полиэстер 68D/68D 190T1</option>';
 
-										echo '<option value="100% дышащий полиэстер 70D/190W/R"';   if($value_row['option_value']=='100% дышащий полиэстер 70D/190W/R')   { echo 'selected';} else echo ''; echo '>100% дышащий полиэстер 70D/190W/R</option>';
+                                                echo '<option value="100% дышащий полиэстер 70D/190W/R"';   if($value_row['option_value']=='100% дышащий полиэстер 70D/190W/R')   { echo 'selected';} else echo ''; echo '>100% дышащий полиэстер 70D/190W/R</option>';
 
-										echo '<option value="100% дышащий полиэстер"';   if($value_row['option_value']=='100% дышащий полиэстер')   { echo 'selected';} else echo ''; echo '>100% дышащий полиэстер</option>';
+                                                echo '<option value="100% дышащий полиэстер"';   if($value_row['option_value']=='100% дышащий полиэстер')   { echo 'selected';} else echo ''; echo '>100% дышащий полиэстер</option>';
 
-										echo '<option value="210T полиэстер Rip Stop (дышащий) водоотталкивающая пропитка"';   if($value_row['option_value']=='210T полиэстер Rip Stop (дышащий) водоотталкивающая пропитка')   { echo 'selected';} else echo ''; echo '>210T полиэстер Rip Stop (дышащий) водоотталкивающая пропитка</option>';
+                                                echo '<option value="210T полиэстер Rip Stop (дышащий) водоотталкивающая пропитка"';   if($value_row['option_value']=='210T полиэстер Rip Stop (дышащий) водоотталкивающая пропитка')   { echo 'selected';} else echo ''; echo '>210T полиэстер Rip Stop (дышащий) водоотталкивающая пропитка</option>';
 
-										echo '<option value="190T полиэстер дышащий водоотталкивающая пропитка"';   if($value_row['option_value']=='190T полиэстер дышащий водоотталкивающая пропитка')   { echo 'selected';} else echo ''; echo '>190T полиэстер дышащий водоотталкивающая пропитка</option>';
+                                                echo '<option value="190T полиэстер дышащий водоотталкивающая пропитка"';   if($value_row['option_value']=='190T полиэстер дышащий водоотталкивающая пропитка')   { echo 'selected';} else echo ''; echo '>190T полиэстер дышащий водоотталкивающая пропитка</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '34')///-------------------------------------------Цвет внутренней палатки---------------------------------------------
+                                            elseif ($option_row["optionID"] == '34')///-------------------------------------------Цвет внутренней палатки---------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -2733,39 +2802,39 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="желтый"';   if($value_row['option_value']=='желтый')   { echo 'selected';} else echo ''; echo '>желтый</option>';
+                                                echo '<option value="желтый"';   if($value_row['option_value']=='желтый')   { echo 'selected';} else echo ''; echo '>желтый</option>';
 
-										echo '<option value="оранжевый"';   if($value_row['option_value']=='оранжевый')   { echo 'selected';} else echo ''; echo '>оранжевый</option>';
+                                                echo '<option value="оранжевый"';   if($value_row['option_value']=='оранжевый')   { echo 'selected';} else echo ''; echo '>оранжевый</option>';
 
-										echo '<option value="белый"';   if($value_row['option_value']=='белый')   { echo 'selected';} else echo ''; echo '>белый</option>';
+                                                echo '<option value="белый"';   if($value_row['option_value']=='белый')   { echo 'selected';} else echo ''; echo '>белый</option>';
 
-										echo '<option value="серый"';   if($value_row['option_value']=='серый')   { echo 'selected';} else echo ''; echo '>серый</option>';
+                                                echo '<option value="серый"';   if($value_row['option_value']=='серый')   { echo 'selected';} else echo ''; echo '>серый</option>';
 
-										echo '<option value="бежевый"';   if($value_row['option_value']=='бежевый')   { echo 'selected';} else echo ''; echo '>бежевый</option>';
+                                                echo '<option value="бежевый"';   if($value_row['option_value']=='бежевый')   { echo 'selected';} else echo ''; echo '>бежевый</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '9')///-------------------------------------------Пол: ---------------------------------------------
+                                            elseif ($option_row["optionID"] == '9')///-------------------------------------------Пол: ---------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -2779,79 +2848,79 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="150D Polyester Oxford 5000 мм"';   if($value_row['option_value']=='150D Polyester Oxford 5000 мм')   { echo 'selected';} else echo ''; echo '>150D Polyester Oxford 5000 мм</option>';
+                                                echo '<option value="150D Polyester Oxford 5000 мм"';   if($value_row['option_value']=='150D Polyester Oxford 5000 мм')   { echo 'selected';} else echo ''; echo '>150D Polyester Oxford 5000 мм</option>';
 
-										echo '<option value="6000мм H2O Polyester 150D Oxford PU"';   if($value_row['option_value']=='6000мм H2O Polyester 150D Oxford PU')   { echo 'selected';} else echo ''; echo '>6000мм H2O Polyester 150D Oxford PU</option>';
+                                                echo '<option value="6000мм H2O Polyester 150D Oxford PU"';   if($value_row['option_value']=='6000мм H2O Polyester 150D Oxford PU')   { echo 'selected';} else echo ''; echo '>6000мм H2O Polyester 150D Oxford PU</option>';
 
-										echo '<option value="4000мм H2O Polyethylene"';   if($value_row['option_value']=='4000мм H2O Polyethylene')   { echo 'selected';} else echo ''; echo '>4000мм H2O Polyethylene</option>';
+                                                echo '<option value="4000мм H2O Polyethylene"';   if($value_row['option_value']=='4000мм H2O Polyethylene')   { echo 'selected';} else echo ''; echo '>4000мм H2O Polyethylene</option>';
 
-										echo '<option value="100% нейлон Dry Tech, 5000 мм"';   if($value_row['option_value']=='100% нейлон Dry Tech, 5000 мм')   { echo 'selected';} else echo ''; echo '>100% нейлон Dry Tech, 5000 мм</option>';
+                                                echo '<option value="100% нейлон Dry Tech, 5000 мм"';   if($value_row['option_value']=='100% нейлон Dry Tech, 5000 мм')   { echo 'selected';} else echo ''; echo '>100% нейлон Dry Tech, 5000 мм</option>';
 
-										echo '<option value="100% Nylon, DryTech покрытие, 7000 мм, проклеенные швы"';   if($value_row['option_value']=='100% Nylon, DryTech покрытие, 7000 мм, проклеенные швы')   { echo 'selected';} else echo ''; echo '>100% Nylon, DryTech покрытие, 7000 мм, проклеенные швы</option>';
+                                                echo '<option value="100% Nylon, DryTech покрытие, 7000 мм, проклеенные швы"';   if($value_row['option_value']=='100% Nylon, DryTech покрытие, 7000 мм, проклеенные швы')   { echo 'selected';} else echo ''; echo '>100% Nylon, DryTech покрытие, 7000 мм, проклеенные швы</option>';
 
-										echo '<option value="100% Polyester Oxford, 5000 мм"';   if($value_row['option_value']=='100% Polyester Oxford, 5000 мм')   { echo 'selected';} else echo ''; echo '>100% Polyester Oxford, 5000 мм</option>';
-										
-										echo '<option value="100% полиэстер 75D190T RipStop, PU 5000 мм в.ст."';   if($value_row['option_value']=='100% полиэстер 75D190T RipStop, PU 5000 мм в.ст.')   { echo 'selected';} else echo ''; echo '>100% полиэстер 75D190T RipStop, PU 5000 мм в.ст.</option>';
+                                                echo '<option value="100% Polyester Oxford, 5000 мм"';   if($value_row['option_value']=='100% Polyester Oxford, 5000 мм')   { echo 'selected';} else echo ''; echo '>100% Polyester Oxford, 5000 мм</option>';
 
-										echo '<option value="40D/240T нейлон Rip Stop 10000мм H2O"';   if($value_row['option_value']=='40D/240T нейлон Rip Stop 10000мм H2O')   { echo 'selected';} else echo ''; echo '>40D/240T нейлон Rip Stop 10000мм H2O</option>';
+                                                echo '<option value="100% полиэстер 75D190T RipStop, PU 5000 мм в.ст."';   if($value_row['option_value']=='100% полиэстер 75D190T RipStop, PU 5000 мм в.ст.')   { echo 'selected';} else echo ''; echo '>100% полиэстер 75D190T RipStop, PU 5000 мм в.ст.</option>';
 
-										echo '<option value="нейлон PU на 10 000 мм Н2О"';   if($value_row['option_value']=='нейлон PU на 10 000 мм Н2О')   { echo 'selected';} else echo ''; echo '>нейлон PU на 10 000 мм Н2О</option>';
+                                                echo '<option value="40D/240T нейлон Rip Stop 10000мм H2O"';   if($value_row['option_value']=='40D/240T нейлон Rip Stop 10000мм H2O')   { echo 'selected';} else echo ''; echo '>40D/240T нейлон Rip Stop 10000мм H2O</option>';
 
-										echo '<option value="нейлон PU на 10 000 мм Н2О, проклеенные швы"';   if($value_row['option_value']=='нейлон PU на 10 000 мм Н2О, проклеенные швы')   { echo 'selected';} else echo ''; echo '>нейлон PU на 10 000 мм Н2О, проклеенные швы</option>';
+                                                echo '<option value="нейлон PU на 10 000 мм Н2О"';   if($value_row['option_value']=='нейлон PU на 10 000 мм Н2О')   { echo 'selected';} else echo ''; echo '>нейлон PU на 10 000 мм Н2О</option>';
 
-										echo '<option value="нейлон PU на 7 000 мм Н2О, проклеенные швы"';   if($value_row['option_value']=='нейлон PU на 7 000 мм Н2О, проклеенные швы')   { echo 'selected';} else echo ''; echo '>нейлон PU на 7 000 мм Н2О, проклеенные швы</option>';
+                                                echo '<option value="нейлон PU на 10 000 мм Н2О, проклеенные швы"';   if($value_row['option_value']=='нейлон PU на 10 000 мм Н2О, проклеенные швы')   { echo 'selected';} else echo ''; echo '>нейлон PU на 10 000 мм Н2О, проклеенные швы</option>';
 
-										echo '<option value="100% полиэстер 75D/190T 10000 мм в. ст."';   if($value_row['option_value']=='100% полиэстер 75D/190T 10000 мм в. ст.')   { echo 'selected';} else echo ''; echo '>100% полиэстер 75D/190T 10000 мм в. ст.</option>';
+                                                echo '<option value="нейлон PU на 7 000 мм Н2О, проклеенные швы"';   if($value_row['option_value']=='нейлон PU на 7 000 мм Н2О, проклеенные швы')   { echo 'selected';} else echo ''; echo '>нейлон PU на 7 000 мм Н2О, проклеенные швы</option>';
 
-										echo '<option value="100% полиэстр 75D/190T 7000 мм в. ст."';   if($value_row['option_value']=='100% полиэстр 75D/190T 7000 мм в. ст.')   { echo 'selected';} else echo ''; echo '>100% полиэстр 75D/190T 7000 мм в. ст.</option>';
+                                                echo '<option value="100% полиэстер 75D/190T 10000 мм в. ст."';   if($value_row['option_value']=='100% полиэстер 75D/190T 10000 мм в. ст.')   { echo 'selected';} else echo ''; echo '>100% полиэстер 75D/190T 10000 мм в. ст.</option>';
 
-										echo '<option value="100% полиэстр 75D/190T 7000 мм в. ст. + дополнительное дно 7000 мм в. ст."';   if($value_row['option_value']=='100% полиэстр 75D/190T 7000 мм в. ст. + дополнительное дно 7000 мм в. ст.')   { echo 'selected';} else echo ''; echo '>100% полиэстр 75D/190T 7000 мм в. ст. + дополнительное дно 7000 мм в. ст.</option>';
+                                                echo '<option value="100% полиэстр 75D/190T 7000 мм в. ст."';   if($value_row['option_value']=='100% полиэстр 75D/190T 7000 мм в. ст.')   { echo 'selected';} else echo ''; echo '>100% полиэстр 75D/190T 7000 мм в. ст.</option>';
 
-										echo '<option value="армированный полиэтилен (терпаулинг)"';   if($value_row['option_value']=='армированный полиэтилен (терпаулинг)')   { echo 'selected';} else echo ''; echo '>армированный полиэтилен (терпаулинг)</option>';
+                                                echo '<option value="100% полиэстр 75D/190T 7000 мм в. ст. + дополнительное дно 7000 мм в. ст."';   if($value_row['option_value']=='100% полиэстр 75D/190T 7000 мм в. ст. + дополнительное дно 7000 мм в. ст.')   { echo 'selected';} else echo ''; echo '>100% полиэстр 75D/190T 7000 мм в. ст. + дополнительное дно 7000 мм в. ст.</option>';
 
-										echo '<option value="армированный полиэтилен (терпаулинг) 120г"';   if($value_row['option_value']=='армированный полиэтилен (терпаулинг) 120г')   { echo 'selected';} else echo ''; echo '>армированный полиэтилен (терпаулинг) 120г</option>';
+                                                echo '<option value="армированный полиэтилен (терпаулинг)"';   if($value_row['option_value']=='армированный полиэтилен (терпаулинг)')   { echo 'selected';} else echo ''; echo '>армированный полиэтилен (терпаулинг)</option>';
 
-										echo '<option value="100% полиэстер Diamond RipStop 75D/190T WR PU 6000мм в. ст."';   if($value_row['option_value']=='100% полиэстер Diamond RipStop 75D/190T WR PU 6000мм в. ст.')   { echo 'selected';} else echo ''; echo '>100% полиэстер Diamond RipStop 75D/190T WR PU 6000мм в. ст.</option>';
+                                                echo '<option value="армированный полиэтилен (терпаулинг) 120г"';   if($value_row['option_value']=='армированный полиэтилен (терпаулинг) 120г')   { echo 'selected';} else echo ''; echo '>армированный полиэтилен (терпаулинг) 120г</option>';
 
-										echo '<option value="100% полиэстер 75D/190T 5000 мм в. ст."';   if($value_row['option_value']=='100% полиэстер 75D/190T 5000 мм в. ст.')   { echo 'selected';} else echo ''; echo '>100% полиэстер 75D/190T 5000 мм в. ст.</option>';
+                                                echo '<option value="100% полиэстер Diamond RipStop 75D/190T WR PU 6000мм в. ст."';   if($value_row['option_value']=='100% полиэстер Diamond RipStop 75D/190T WR PU 6000мм в. ст.')   { echo 'selected';} else echo ''; echo '>100% полиэстер Diamond RipStop 75D/190T WR PU 6000мм в. ст.</option>';
 
-										echo '<option value="190T нейлон 5000мм H2O"';   if($value_row['option_value']=='190T нейлон 5000мм H2O')   { echo 'selected';} else echo ''; echo '>190T нейлон 5000мм H2O</option>';
+                                                echo '<option value="100% полиэстер 75D/190T 5000 мм в. ст."';   if($value_row['option_value']=='100% полиэстер 75D/190T 5000 мм в. ст.')   { echo 'selected';} else echo ''; echo '>100% полиэстер 75D/190T 5000 мм в. ст.</option>';
 
-										echo '<option value="190T нейлон 8000мм H2O"';   if($value_row['option_value']=='190T нейлон 8000мм H2O')   { echo 'selected';} else echo ''; echo '>190T нейлон 8000мм H2O</option>';
+                                                echo '<option value="190T нейлон 5000мм H2O"';   if($value_row['option_value']=='190T нейлон 5000мм H2O')   { echo 'selected';} else echo ''; echo '>190T нейлон 5000мм H2O</option>';
 
-										echo '<option value="190T нейлон 10000мм H2O"';   if($value_row['option_value']=='190T нейлон 10000мм H2O')   { echo 'selected';} else echo ''; echo '>190T нейлон 10000мм H2O</option>';
+                                                echo '<option value="190T нейлон 8000мм H2O"';   if($value_row['option_value']=='190T нейлон 8000мм H2O')   { echo 'selected';} else echo ''; echo '>190T нейлон 8000мм H2O</option>';
 
-										echo '<option value="многослойный полиэтилен"';   if($value_row['option_value']=='многослойный полиэтилен')   { echo 'selected';} else echo ''; echo '>многослойный полиэтилен</option>';
+                                                echo '<option value="190T нейлон 10000мм H2O"';   if($value_row['option_value']=='190T нейлон 10000мм H2O')   { echo 'selected';} else echo ''; echo '>190T нейлон 10000мм H2O</option>';
 
-										echo '<option value="ламинированный полиэтилен"';   if($value_row['option_value']=='ламинированный полиэтилен')   { echo 'selected';} else echo ''; echo '>ламинированный полиэтилен</option>';
+                                                echo '<option value="многослойный полиэтилен"';   if($value_row['option_value']=='многослойный полиэтилен')   { echo 'selected';} else echo ''; echo '>многослойный полиэтилен</option>';
 
-										echo '<option value="ламинированный полиэтилен или 150D Polyester OXFORD 5000mm H2O"';   if($value_row['option_value']=='ламинированный полиэтилен или 150D Polyester OXFORD 5000mm H2O')   { echo 'selected';} else echo ''; echo '>ламинированный полиэтилен или 150D Polyester OXFORD 5000mm H2O</option>';
+                                                echo '<option value="ламинированный полиэтилен"';   if($value_row['option_value']=='ламинированный полиэтилен')   { echo 'selected';} else echo ''; echo '>ламинированный полиэтилен</option>';
 
-										echo '<option value="150D полиэстер OXFORD, 5000мм H2O огнеупорная пропитка швы проклеены"';   if($value_row['option_value']=='150D полиэстер OXFORD, 5000мм H2O огнеупорная пропитка швы проклеены')   { echo 'selected';} else echo ''; echo '>150D полиэстер OXFORD, 5000мм H2O огнеупорная пропитка швы проклеены</option>';
+                                                echo '<option value="ламинированный полиэтилен или 150D Polyester OXFORD 5000mm H2O"';   if($value_row['option_value']=='ламинированный полиэтилен или 150D Polyester OXFORD 5000mm H2O')   { echo 'selected';} else echo ''; echo '>ламинированный полиэтилен или 150D Polyester OXFORD 5000mm H2O</option>';
 
-					echo '			</select>
+                                                echo '<option value="150D полиэстер OXFORD, 5000мм H2O огнеупорная пропитка швы проклеены"';   if($value_row['option_value']=='150D полиэстер OXFORD, 5000мм H2O огнеупорная пропитка швы проклеены')   { echo 'selected';} else echo ''; echo '>150D полиэстер OXFORD, 5000мм H2O огнеупорная пропитка швы проклеены</option>';
+
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '19')///-------------------------------------------Каркас---------------------------------------------
+                                            elseif ($option_row["optionID"] == '19')///-------------------------------------------Каркас---------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -2865,107 +2934,107 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="фибергласс"';   if($value_row['option_value']=='фибергласс')   { echo 'selected';} else echo ''; echo '>фибергласс</option>';
+                                                echo '<option value="фибергласс"';   if($value_row['option_value']=='фибергласс')   { echo 'selected';} else echo ''; echo '>фибергласс</option>';
 
-										echo '<option value="металл D20x0,8"';   if($value_row['option_value']=='металл D20x0,8')   { echo 'selected';} else echo ''; echo '>металл D20x0,8</option>';
+                                                echo '<option value="металл D20x0,8"';   if($value_row['option_value']=='металл D20x0,8')   { echo 'selected';} else echo ''; echo '>металл D20x0,8</option>';
 
-										echo '<option value="дюралюминий 7,9 мм"';   if($value_row['option_value']=='дюралюминий 7,9 мм')   { echo 'selected';} else echo ''; echo '>дюралюминий 7,9 мм</option>';
+                                                echo '<option value="дюралюминий 7,9 мм"';   if($value_row['option_value']=='дюралюминий 7,9 мм')   { echo 'selected';} else echo ''; echo '>дюралюминий 7,9 мм</option>';
 
-										echo '<option value="durawrap  7,9 мм"';   if($value_row['option_value']=='durawrap  7,9 мм')   { echo 'selected';} else echo ''; echo '>durawrap  7,9 мм</option>';
+                                                echo '<option value="durawrap  7,9 мм"';   if($value_row['option_value']=='durawrap  7,9 мм')   { echo 'selected';} else echo ''; echo '>durawrap  7,9 мм</option>';
 
-										echo '<option value="durawrap 9,5/11 мм"';   if($value_row['option_value']=='durawrap 9,5/11 мм')   { echo 'selected';} else echo ''; echo '>durawrap 9,5/11 мм</option>';
+                                                echo '<option value="durawrap 9,5/11 мм"';   if($value_row['option_value']=='durawrap 9,5/11 мм')   { echo 'selected';} else echo ''; echo '>durawrap 9,5/11 мм</option>';
 
-										echo '<option value="durawrap 8,5/9,5 мм"';   if($value_row['option_value']=='durawrap 8,5/9,5 мм')   { echo 'selected';} else echo ''; echo '>durawrap 8,5/9,5 мм</option>';
+                                                echo '<option value="durawrap 8,5/9,5 мм"';   if($value_row['option_value']=='durawrap 8,5/9,5 мм')   { echo 'selected';} else echo ''; echo '>durawrap 8,5/9,5 мм</option>';
 
-										echo '<option value="durawrap  7,9/8,5 мм"';   if($value_row['option_value']=='durawrap  7,9/8,5 мм')   { echo 'selected';} else echo ''; echo '>durawrap  7,9/8,5 мм</option>';
+                                                echo '<option value="durawrap  7,9/8,5 мм"';   if($value_row['option_value']=='durawrap  7,9/8,5 мм')   { echo 'selected';} else echo ''; echo '>durawrap  7,9/8,5 мм</option>';
 
-										echo '<option value="durawrap  11 мм"';   if($value_row['option_value']=='durawrap  11 мм')   { echo 'selected';} else echo ''; echo '>durawrap  11 мм</option>';
+                                                echo '<option value="durawrap  11 мм"';   if($value_row['option_value']=='durawrap  11 мм')   { echo 'selected';} else echo ''; echo '>durawrap  11 мм</option>';
 
-										echo '<option value="дюралюминий 9,6 мм"';   if($value_row['option_value']=='дюралюминий 9,6 мм')   { echo 'selected';} else echo ''; echo '>дюралюминий 9,6 мм</option>';
+                                                echo '<option value="дюралюминий 9,6 мм"';   if($value_row['option_value']=='дюралюминий 9,6 мм')   { echo 'selected';} else echo ''; echo '>дюралюминий 9,6 мм</option>';
 
-										echo '<option value="фибергласс  7,9/8,5 мм"';   if($value_row['option_value']=='фибергласс  7,9/8,5 мм')   { echo 'selected';} else echo ''; echo '>фибергласс  7,9/8,5 мм</option>';
+                                                echo '<option value="фибергласс  7,9/8,5 мм"';   if($value_row['option_value']=='фибергласс  7,9/8,5 мм')   { echo 'selected';} else echo ''; echo '>фибергласс  7,9/8,5 мм</option>';
 
-										echo '<option value="алюминий 8,5 мм"';   if($value_row['option_value']=='алюминий 8,5 мм')   { echo 'selected';} else echo ''; echo '>алюминий 8,5 мм</option>';
+                                                echo '<option value="алюминий 8,5 мм"';   if($value_row['option_value']=='алюминий 8,5 мм')   { echo 'selected';} else echo ''; echo '>алюминий 8,5 мм</option>';
 
-										echo '<option value="дюрапол 8.5 мм"';   if($value_row['option_value']=='дюрапол 8.5 мм')   { echo 'selected';} else echo ''; echo '>дюрапол 8.5 мм</option>';
+                                                echo '<option value="дюрапол 8.5 мм"';   if($value_row['option_value']=='дюрапол 8.5 мм')   { echo 'selected';} else echo ''; echo '>дюрапол 8.5 мм</option>';
 
-										echo '<option value="дюрапол 8.5 мм/сталь 16мм"';   if($value_row['option_value']=='дюрапол 8.5 мм/сталь 16мм')   { echo 'selected';} else echo ''; echo '>дюрапол 8.5 мм/сталь 16мм</option>';
+                                                echo '<option value="дюрапол 8.5 мм/сталь 16мм"';   if($value_row['option_value']=='дюрапол 8.5 мм/сталь 16мм')   { echo 'selected';} else echo ''; echo '>дюрапол 8.5 мм/сталь 16мм</option>';
 
-										echo '<option value="дюрапол 9.5 мм"';   if($value_row['option_value']=='дюрапол 9.5 мм')   { echo 'selected';} else echo ''; echo '>дюрапол 9.5 мм</option>';
+                                                echo '<option value="дюрапол 9.5 мм"';   if($value_row['option_value']=='дюрапол 9.5 мм')   { echo 'selected';} else echo ''; echo '>дюрапол 9.5 мм</option>';
 
-										echo '<option value="дюрапол 9.5 мм/сталь 16мм"';   if($value_row['option_value']=='дюрапол 9.5 мм/сталь 16мм')   { echo 'selected';} else echo ''; echo '>дюрапол 9.5 мм/сталь 16мм</option>';
+                                                echo '<option value="дюрапол 9.5 мм/сталь 16мм"';   if($value_row['option_value']=='дюрапол 9.5 мм/сталь 16мм')   { echo 'selected';} else echo ''; echo '>дюрапол 9.5 мм/сталь 16мм</option>';
 
-										echo '<option value="дюрапол 11 мм"';   if($value_row['option_value']=='дюрапол 11 мм')   { echo 'selected';} else echo ''; echo '>дюрапол 11 мм</option>';
+                                                echo '<option value="дюрапол 11 мм"';   if($value_row['option_value']=='дюрапол 11 мм')   { echo 'selected';} else echo ''; echo '>дюрапол 11 мм</option>';
 
-										echo '<option value="дюрапол 13 мм"';   if($value_row['option_value']=='дюрапол 13 мм')   { echo 'selected';} else echo ''; echo '>дюрапол 13 мм</option>';
+                                                echo '<option value="дюрапол 13 мм"';   if($value_row['option_value']=='дюрапол 13 мм')   { echo 'selected';} else echo ''; echo '>дюрапол 13 мм</option>';
 
-										echo '<option value="дюрапол 11мм + сталь 16 мм"';   if($value_row['option_value']=='дюрапол 11мм + сталь 16 мм')   { echo 'selected';} else echo ''; echo '>дюрапол 11мм + сталь 16 мм</option>';
+                                                echo '<option value="дюрапол 11мм + сталь 16 мм"';   if($value_row['option_value']=='дюрапол 11мм + сталь 16 мм')   { echo 'selected';} else echo ''; echo '>дюрапол 11мм + сталь 16 мм</option>';
 
-										echo '<option value="алюминий 11мм + сталь 16 мм"';   if($value_row['option_value']=='алюминий 11мм + сталь 16 мм')   { echo 'selected';} else echo ''; echo '>алюминий 11мм + сталь 16 мм</option>';
+                                                echo '<option value="алюминий 11мм + сталь 16 мм"';   if($value_row['option_value']=='алюминий 11мм + сталь 16 мм')   { echo 'selected';} else echo ''; echo '>алюминий 11мм + сталь 16 мм</option>';
 
-										echo '<option value="фибергласс 9,5/11 + сталь 16 мм"';   if($value_row['option_value']=='фибергласс 9,5/11 + сталь 16 мм')   { echo 'selected';} else echo ''; echo '>фибергласс 9,5/11 + сталь 16 мм</option>';
+                                                echo '<option value="фибергласс 9,5/11 + сталь 16 мм"';   if($value_row['option_value']=='фибергласс 9,5/11 + сталь 16 мм')   { echo 'selected';} else echo ''; echo '>фибергласс 9,5/11 + сталь 16 мм</option>';
 
-										echo '<option value="фибергласс 9,5/11"';   if($value_row['option_value']=='фибергласс 9,5/11')   { echo 'selected';} else echo ''; echo '>фибергласс 9,5/11</option>';
+                                                echo '<option value="фибергласс 9,5/11"';   if($value_row['option_value']=='фибергласс 9,5/11')   { echo 'selected';} else echo ''; echo '>фибергласс 9,5/11</option>';
 
-										echo '<option value="дюрапол 9,5/11 + сталь 16 мм"';   if($value_row['option_value']=='дюрапол 9,5/11 + сталь 16 мм')   { echo 'selected';} else echo ''; echo '>дюрапол 9,5/11 + сталь 16 мм</option>';
+                                                echo '<option value="дюрапол 9,5/11 + сталь 16 мм"';   if($value_row['option_value']=='дюрапол 9,5/11 + сталь 16 мм')   { echo 'selected';} else echo ''; echo '>дюрапол 9,5/11 + сталь 16 мм</option>';
 
-										echo '<option value="фибергласс 7.9 мм"';   if($value_row['option_value']=='фибергласс 7.9 мм')   { echo 'selected';} else echo ''; echo '>фибергласс 7.9 мм</option>';
+                                                echo '<option value="фибергласс 7.9 мм"';   if($value_row['option_value']=='фибергласс 7.9 мм')   { echo 'selected';} else echo ''; echo '>фибергласс 7.9 мм</option>';
 
-										echo '<option value="фибергласс 8.5 мм"';   if($value_row['option_value']=='фибергласс 8.5 мм')   { echo 'selected';} else echo ''; echo '>фибергласс 8.5 мм</option>';
+                                                echo '<option value="фибергласс 8.5 мм"';   if($value_row['option_value']=='фибергласс 8.5 мм')   { echo 'selected';} else echo ''; echo '>фибергласс 8.5 мм</option>';
 
-										echo '<option value="Flash Touch System Fiberglass 8,5 мм"';   if($value_row['option_value']=='Flash Touch System Fiberglass 8,5 мм')   { echo 'selected';} else echo ''; echo '>Flash Touch System Fiberglass 8,5 мм</option>';
+                                                echo '<option value="Flash Touch System Fiberglass 8,5 мм"';   if($value_row['option_value']=='Flash Touch System Fiberglass 8,5 мм')   { echo 'selected';} else echo ''; echo '>Flash Touch System Fiberglass 8,5 мм</option>';
 
-										echo '<option value="фибергласс 9.5 мм"';   if($value_row['option_value']=='фибергласс 9.5 мм')   { echo 'selected';} else echo ''; echo '>фибергласс 9.5 мм</option>';
+                                                echo '<option value="фибергласс 9.5 мм"';   if($value_row['option_value']=='фибергласс 9.5 мм')   { echo 'selected';} else echo ''; echo '>фибергласс 9.5 мм</option>';
 
-										echo '<option value="фибергласс 7.9 и 8.5 мм"';   if($value_row['option_value']=='фибергласс 7.9 и 8.5 мм')   { echo 'selected';} else echo ''; echo '>фибергласс 7.9 и 8.5 мм</option>';
+                                                echo '<option value="фибергласс 7.9 и 8.5 мм"';   if($value_row['option_value']=='фибергласс 7.9 и 8.5 мм')   { echo 'selected';} else echo ''; echo '>фибергласс 7.9 и 8.5 мм</option>';
 
-										echo '<option value="фибергласс 11 мм"';   if($value_row['option_value']=='фибергласс 11 мм')   { echo 'selected';} else echo ''; echo '>фибергласс 11 мм</option>';
+                                                echo '<option value="фибергласс 11 мм"';   if($value_row['option_value']=='фибергласс 11 мм')   { echo 'selected';} else echo ''; echo '>фибергласс 11 мм</option>';
 
-										echo '<option value="ламинированный фиберглас 8,5мм"';   if($value_row['option_value']=='ламинированный фиберглас 8,5мм')   { echo 'selected';} else echo ''; echo '>ламинированный фиберглас 8,5мм</option>';
+                                                echo '<option value="ламинированный фиберглас 8,5мм"';   if($value_row['option_value']=='ламинированный фиберглас 8,5мм')   { echo 'selected';} else echo ''; echo '>ламинированный фиберглас 8,5мм</option>';
 
-										echo '<option value="дюралюминий 8мм"';   if($value_row['option_value']=='дюралюминий 8мм')   { echo 'selected';} else echo ''; echo '>дюралюминий 8мм</option>';
+                                                echo '<option value="дюралюминий 8мм"';   if($value_row['option_value']=='дюралюминий 8мм')   { echo 'selected';} else echo ''; echo '>дюралюминий 8мм</option>';
 
-										echo '<option value="дюралюминий 7001-T6 8,5мм"';   if($value_row['option_value']=='дюралюминий 7001-T6 8,5мм')   { echo 'selected';} else echo ''; echo '>дюралюминий 7001-T6 8,5мм</option>';
+                                                echo '<option value="дюралюминий 7001-T6 8,5мм"';   if($value_row['option_value']=='дюралюминий 7001-T6 8,5мм')   { echo 'selected';} else echo ''; echo '>дюралюминий 7001-T6 8,5мм</option>';
 
-										echo '<option value="дюралюминий 7001-Т6 8,5/9,5 мм"';   if($value_row['option_value']=='дюралюминий 7001-Т6 8,5/9,5 мм')   { echo 'selected';} else echo ''; echo '>дюралюминий 7001-Т6 8,5/9,5 мм</option>';
+                                                echo '<option value="дюралюминий 7001-Т6 8,5/9,5 мм"';   if($value_row['option_value']=='дюралюминий 7001-Т6 8,5/9,5 мм')   { echo 'selected';} else echo ''; echo '>дюралюминий 7001-Т6 8,5/9,5 мм</option>';
 
-										echo '<option value="дюралюминий 7001-Т6 9,5 мм"';   if($value_row['option_value']=='дюралюминий 7001-Т6 9,5 мм')   { echo 'selected';} else echo ''; echo '>дюралюминий 7001-Т6 9,5 мм</option>';
+                                                echo '<option value="дюралюминий 7001-Т6 9,5 мм"';   if($value_row['option_value']=='дюралюминий 7001-Т6 9,5 мм')   { echo 'selected';} else echo ''; echo '>дюралюминий 7001-Т6 9,5 мм</option>';
 
-										echo '<option value="ламинированный фиберглас 8,5мм/9,5мм"';   if($value_row['option_value']=='ламинированный фиберглас 8,5мм/9,5мм')   { echo 'selected';} else echo ''; echo '>ламинированный фиберглас 8,5мм/9,5мм</option>';
+                                                echo '<option value="ламинированный фиберглас 8,5мм/9,5мм"';   if($value_row['option_value']=='ламинированный фиберглас 8,5мм/9,5мм')   { echo 'selected';} else echo ''; echo '>ламинированный фиберглас 8,5мм/9,5мм</option>';
 
-										echo '<option value="ламинированный фиберглас 11,5мм"';   if($value_row['option_value']=='ламинированный фиберглас 11,5мм')   { echo 'selected';} else echo ''; echo '>ламинированный фиберглас 11,5мм</option>';
+                                                echo '<option value="ламинированный фиберглас 11,5мм"';   if($value_row['option_value']=='ламинированный фиберглас 11,5мм')   { echo 'selected';} else echo ''; echo '>ламинированный фиберглас 11,5мм</option>';
 
-										echo '<option value="сталь 16мм + фибергласс 9.5мм"';   if($value_row['option_value']=='сталь 16мм + фибергласс 9.5мм')   { echo 'selected';} else echo ''; echo '>сталь 16мм + фибергласс 9.5мм</option>';
+                                                echo '<option value="сталь 16мм + фибергласс 9.5мм"';   if($value_row['option_value']=='сталь 16мм + фибергласс 9.5мм')   { echo 'selected';} else echo ''; echo '>сталь 16мм + фибергласс 9.5мм</option>';
 
-										echo '<option value="сталь 16мм"';   if($value_row['option_value']=='сталь 16мм')   { echo 'selected';} else echo ''; echo '>сталь 16мм</option>';
+                                                echo '<option value="сталь 16мм"';   if($value_row['option_value']=='сталь 16мм')   { echo 'selected';} else echo ''; echo '>сталь 16мм</option>';
 
-										echo '<option value="сталь 19мм"';   if($value_row['option_value']=='сталь 19мм')   { echo 'selected';} else echo ''; echo '>сталь 19мм</option>';
+                                                echo '<option value="сталь 19мм"';   if($value_row['option_value']=='сталь 19мм')   { echo 'selected';} else echo ''; echo '>сталь 19мм</option>';
 
-										echo '<option value="ламинированный фиберглас 11,0/12,5мм"';   if($value_row['option_value']=='ламинированный фиберглас 11,0/12,5мм')   { echo 'selected';} else echo ''; echo '>ламинированный фиберглас 11,0/12,5мм</option>';
+                                                echo '<option value="ламинированный фиберглас 11,0/12,5мм"';   if($value_row['option_value']=='ламинированный фиберглас 11,0/12,5мм')   { echo 'selected';} else echo ''; echo '>ламинированный фиберглас 11,0/12,5мм</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '2')///-------------------------------------------Количество входов---------------------------------------------
+                                            elseif ($option_row["optionID"] == '2')///-------------------------------------------Количество входов---------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -2979,37 +3048,37 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="1"';   if($value_row['option_value']=='1')   { echo 'selected';} else echo ''; echo '>1</option>';
+                                                echo '<option value="1"';   if($value_row['option_value']=='1')   { echo 'selected';} else echo ''; echo '>1</option>';
 
-										echo '<option value="2"';   if($value_row['option_value']=='2')   { echo 'selected';} else echo ''; echo '>2</option>';
+                                                echo '<option value="2"';   if($value_row['option_value']=='2')   { echo 'selected';} else echo ''; echo '>2</option>';
 
-										echo '<option value="3"';   if($value_row['option_value']=='3')   { echo 'selected';} else echo ''; echo '>3</option>';
+                                                echo '<option value="3"';   if($value_row['option_value']=='3')   { echo 'selected';} else echo ''; echo '>3</option>';
 
-										echo '<option value="4"';   if($value_row['option_value']=='4')   { echo 'selected';} else echo ''; echo '>4</option>';
+                                                echo '<option value="4"';   if($value_row['option_value']=='4')   { echo 'selected';} else echo ''; echo '>4</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '5')///-------------------------------------------Количество дуг (штоков)--------------------------------------------
+                                            elseif ($option_row["optionID"] == '5')///-------------------------------------------Количество дуг (штоков)--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -3023,49 +3092,49 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="1"';   if($value_row['option_value']=='1')   { echo 'selected';} else echo ''; echo '>1</option>';
+                                                echo '<option value="1"';   if($value_row['option_value']=='1')   { echo 'selected';} else echo ''; echo '>1</option>';
 
-										echo '<option value="2"';   if($value_row['option_value']=='2')   { echo 'selected';} else echo ''; echo '>2</option>';
+                                                echo '<option value="2"';   if($value_row['option_value']=='2')   { echo 'selected';} else echo ''; echo '>2</option>';
 
-										echo '<option value="3"';   if($value_row['option_value']=='3')   { echo 'selected';} else echo ''; echo '>3</option>';
+                                                echo '<option value="3"';   if($value_row['option_value']=='3')   { echo 'selected';} else echo ''; echo '>3</option>';
 
-										echo '<option value="4"';   if($value_row['option_value']=='4')   { echo 'selected';} else echo ''; echo '>4</option>';
+                                                echo '<option value="4"';   if($value_row['option_value']=='4')   { echo 'selected';} else echo ''; echo '>4</option>';
 
-										echo '<option value="5"';   if($value_row['option_value']=='5')   { echo 'selected';} else echo ''; echo '>5</option>';
+                                                echo '<option value="5"';   if($value_row['option_value']=='5')   { echo 'selected';} else echo ''; echo '>5</option>';
 
-										echo '<option value="6"';   if($value_row['option_value']=='6')   { echo 'selected';} else echo ''; echo '>6</option>';
+                                                echo '<option value="6"';   if($value_row['option_value']=='6')   { echo 'selected';} else echo ''; echo '>6</option>';
 
-										echo '<option value="7"';   if($value_row['option_value']=='7')   { echo 'selected';} else echo ''; echo '>7</option>';
+                                                echo '<option value="7"';   if($value_row['option_value']=='7')   { echo 'selected';} else echo ''; echo '>7</option>';
 
-										echo '<option value="8"';   if($value_row['option_value']=='8')   { echo 'selected';} else echo ''; echo '>8</option>';
+                                                echo '<option value="8"';   if($value_row['option_value']=='8')   { echo 'selected';} else echo ''; echo '>8</option>';
 
-										echo '<option value="9"';   if($value_row['option_value']=='9')   { echo 'selected';} else echo ''; echo '>9</option>';
+                                                echo '<option value="9"';   if($value_row['option_value']=='9')   { echo 'selected';} else echo ''; echo '>9</option>';
 
-										echo '<option value="10"';   if($value_row['option_value']=='10')   { echo 'selected';} else echo ''; echo '>10</option>';
+                                                echo '<option value="10"';   if($value_row['option_value']=='10')   { echo 'selected';} else echo ''; echo '>10</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '6')///-------------------------------------------Фурнитура--------------------------------------------
+                                            elseif ($option_row["optionID"] == '6')///-------------------------------------------Фурнитура--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -3079,43 +3148,43 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="Nifco"';   if($value_row['option_value']=='Nifco')   { echo 'selected';} else echo ''; echo '>Nifco</option>';
+                                                echo '<option value="Nifco"';   if($value_row['option_value']=='Nifco')   { echo 'selected';} else echo ''; echo '>Nifco</option>';
 
-										echo '<option value="YKK"';   if($value_row['option_value']=='YKK')   { echo 'selected';} else echo ''; echo '>YKK</option>';
+                                                echo '<option value="YKK"';   if($value_row['option_value']=='YKK')   { echo 'selected';} else echo ''; echo '>YKK</option>';
 
-										echo '<option value="Nexus"';   if($value_row['option_value']=='Nexus')   { echo 'selected';} else echo ''; echo '>Nexus</option>';
+                                                echo '<option value="Nexus"';   if($value_row['option_value']=='Nexus')   { echo 'selected';} else echo ''; echo '>Nexus</option>';
 
-										echo '<option value="Nexus, Equip"';   if($value_row['option_value']=='Nexus, Equip')   { echo 'selected';} else echo ''; echo '>Nexus, Equip</option>';
+                                                echo '<option value="Nexus, Equip"';   if($value_row['option_value']=='Nexus, Equip')   { echo 'selected';} else echo ''; echo '>Nexus, Equip</option>';
 
-										echo '<option value="DURAFLEX"';   if($value_row['option_value']=='DURAFLEX')   { echo 'selected';} else echo ''; echo '>DURAFLEX</option>';
+                                                echo '<option value="DURAFLEX"';   if($value_row['option_value']=='DURAFLEX')   { echo 'selected';} else echo ''; echo '>DURAFLEX</option>';
 
-										echo '<option value="молния YKK  с двумя двухсторонними замками"';   if($value_row['option_value']=='молния YKK  с двумя двухсторонними замками')   { echo 'selected';} else echo ''; echo '>молния YKK  с двумя двухсторонними замками</option>';
+                                                echo '<option value="молния YKK  с двумя двухсторонними замками"';   if($value_row['option_value']=='молния YKK  с двумя двухсторонними замками')   { echo 'selected';} else echo ''; echo '>молния YKK  с двумя двухсторонними замками</option>';
 
-										echo '<option value="молния с двумя двухсторонними замками"';   if($value_row['option_value']=='молния с двумя двухсторонними замками')   { echo 'selected';} else echo ''; echo '>молния с двумя двухсторонними замками</option>';
+                                                echo '<option value="молния с двумя двухсторонними замками"';   if($value_row['option_value']=='молния с двумя двухсторонними замками')   { echo 'selected';} else echo ''; echo '>молния с двумя двухсторонними замками</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '37')///-------------------------------------------Защитная юбка--------------------------------------------
+                                            elseif ($option_row["optionID"] == '37')///-------------------------------------------Защитная юбка--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -3129,33 +3198,75 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
+                                                echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
 
-										echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
+                                                echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				/*elseif ($option_row["optionID"] == '19')///-------------------------------------------Каркас палатки---------------------------------------------
+                                            /*elseif ($option_row["optionID"] == '19')///-------------------------------------------Каркас палатки---------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                            $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                            $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
+
+                                                            <td>&nbsp;</td>
+
+                                                            <td><input name="option_radio_type_'.$option_row["optionID"].'" type="radio" value="ANY_VALUE"
+
+                                                                        onclick="JavaScript:SetEnabledStateTextValueField('.$option_row['optionID'].', \'ANY_VALUE\' );"
+
+                                                            '.$str_checked.'> </td>
+
+                                                            <td>
+
+                                                                <select name=option_value_'.$option_row["optionID"].'>';
+
+                                                                    echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+
+                                                echo '<option value="металл"';   if($value_row['option_value']=='металл')   { echo 'selected';} else echo ''; echo '>металл</option>';
+
+                                                echo '<option value="пластик"';   if($value_row['option_value']=='пластик')   { echo 'selected';} else echo ''; echo '>пластик</option>';
+
+                                                echo '			</select>
+
+                                                            </td>
+
+                                                      </tr>';
+
+                                            }*/
+
+                                            elseif ($option_row["optionID"] == '20')///-------------------------------------------Класс рюкзака---------------------------------------------
+
+                                            {
+
+                                                $class_arr = GetProductClassRukzak();
+
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+
+                                                    $str_checked = "checked";
+
+                                                else
+
+                                                    $str_checked = "";
+
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -3169,35 +3280,39 @@ $skidka = $product["skidka"];
 
 									<select name=option_value_'.$option_row["optionID"].'>';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-					echo '<option value="металл"';   if($value_row['option_value']=='металл')   { echo 'selected';} else echo ''; echo '>металл</option>';
+                                                for($i=0; $i<count($class_arr);$i++)
 
-					echo '<option value="пластик"';   if($value_row['option_value']=='пластик')   { echo 'selected';} else echo ''; echo '>пластик</option>';
+                                                {
 
-					echo '			</select>
+                                                    echo '<option value="'.$class_arr[$i]['name'].'"'; if($value_row['option_value']==$class_arr[$i]['name'])
+
+                                                { echo 'selected';} else echo ''; echo '>'.$class_arr[$i]['name'].'</option>';
+
+                                                }
+
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}*/
+                                            }
 
-				elseif ($option_row["optionID"] == '20')///-------------------------------------------Класс рюкзака---------------------------------------------
+                                            elseif ($option_row["optionID"] == '22')///-------------------------------------------Каркас палатки---------------------------------------------
 
-				{
+                                            {
 
-						$class_arr = GetProductClassRukzak();
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                    $str_checked = "checked";
 
-								$str_checked = "checked";
+                                                else
 
-					else
+                                                    $str_checked = "";
 
-								$str_checked = "";
-
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -3211,79 +3326,33 @@ $skidka = $product["skidka"];
 
 									<select name=option_value_'.$option_row["optionID"].'>';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										for($i=0; $i<count($class_arr);$i++)
+                                                echo '<option value="спина"';   if($value_row['option_value']=='спина')   { echo 'selected';} else echo ''; echo '>спина</option>';
 
-										{
+                                                echo '<option value="рама"';   if($value_row['option_value']=='рама')   { echo 'selected';} else echo ''; echo '>рама</option>';
 
-											echo '<option value="'.$class_arr[$i]['name'].'"'; if($value_row['option_value']==$class_arr[$i]['name'])
-
-															{ echo 'selected';} else echo ''; echo '>'.$class_arr[$i]['name'].'</option>';
-
-										}
-
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '22')///-------------------------------------------Каркас палатки---------------------------------------------
+                                            elseif ($option_row["optionID"] == '46')///-------------------------------------------Защитная юбка--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
-
-								<td>&nbsp;</td>
-
-								<td><input name="option_radio_type_'.$option_row["optionID"].'" type="radio" value="ANY_VALUE"
-
-											onclick="JavaScript:SetEnabledStateTextValueField('.$option_row['optionID'].', \'ANY_VALUE\' );"
-
-								'.$str_checked.'> </td>
-
-								<td>
-
-									<select name=option_value_'.$option_row["optionID"].'>';
-
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
-
-					echo '<option value="спина"';   if($value_row['option_value']=='спина')   { echo 'selected';} else echo ''; echo '>спина</option>';
-
-					echo '<option value="рама"';   if($value_row['option_value']=='рама')   { echo 'selected';} else echo ''; echo '>рама</option>';
-
-					echo '			</select>
-
-								</td>
-
-						  </tr>';
-
-				}
-
-				elseif ($option_row["optionID"] == '46')///-------------------------------------------Защитная юбка--------------------------------------------
-
-				{
-
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
-
-								$str_checked = "checked";
-
-					else
-
-								$str_checked = "";
-
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -3297,33 +3366,33 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
+                                                echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
 
-										echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
+                                                echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '47')///-------------------------------------------Наполнитель--------------------------------------------
+                                            elseif ($option_row["optionID"] == '47')///-------------------------------------------Наполнитель--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -3337,52 +3406,52 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="PolyPlus Light"';   if($value_row['option_value']=='PolyPlus Light')   { echo 'selected';} else echo ''; echo '>PolyPlus Light</option>';
+                                                echo '<option value="PolyPlus Light"';   if($value_row['option_value']=='PolyPlus Light')   { echo 'selected';} else echo ''; echo '>PolyPlus Light</option>';
 
-										echo '<option value="Thermolite Extra"';   if($value_row['option_value']=='Thermolite Extra')   { echo 'selected';} else echo ''; echo '>Thermolite Extra</option>';
+                                                echo '<option value="Thermolite Extra"';   if($value_row['option_value']=='Thermolite Extra')   { echo 'selected';} else echo ''; echo '>Thermolite Extra</option>';
 
-										echo '<option value="Primaloft Sport"';   if($value_row['option_value']=='Primaloft Sport')   { echo 'selected';} else echo ''; echo '>Primaloft Sport</option>';
-										echo '<option value="Hollowfiber"';   if($value_row['option_value']=='Hollowfiber')   { echo 'selected';} else echo ''; echo '>Hollowfiber</option>';
+                                                echo '<option value="Primaloft Sport"';   if($value_row['option_value']=='Primaloft Sport')   { echo 'selected';} else echo ''; echo '>Primaloft Sport</option>';
+                                                echo '<option value="Hollowfiber"';   if($value_row['option_value']=='Hollowfiber')   { echo 'selected';} else echo ''; echo '>Hollowfiber</option>';
 
-										echo '<option value="пенополиуретан"';   if($value_row['option_value']=='пенополиуретан')   { echo 'selected';} else echo ''; echo '>пенополиуретан</option>';
+                                                echo '<option value="пенополиуретан"';   if($value_row['option_value']=='пенополиуретан')   { echo 'selected';} else echo ''; echo '>пенополиуретан</option>';
 
-										echo '<option value="вспененный полиуретан 16кг/м3"';   if($value_row['option_value']=='вспененный полиуретан 16кг/м3')   { echo 'selected';} else echo ''; echo '>вспененный полиуретан 16кг/м3</option>';
+                                                echo '<option value="вспененный полиуретан 16кг/м3"';   if($value_row['option_value']=='вспененный полиуретан 16кг/м3')   { echo 'selected';} else echo ''; echo '>вспененный полиуретан 16кг/м3</option>';
 
-										echo '<option value="полиэстеровые волокна, HollowCore"';   if($value_row['option_value']=='полиэстеровые волокна, HollowCore')   { echo 'selected';} else echo ''; echo '>полиэстеровые волокна, HollowCore</option>';
+                                                echo '<option value="полиэстеровые волокна, HollowCore"';   if($value_row['option_value']=='полиэстеровые волокна, HollowCore')   { echo 'selected';} else echo ''; echo '>полиэстеровые волокна, HollowCore</option>';
 
-										echo '<option value="полиэстеровые волокна, HollowCore 7"';   if($value_row['option_value']=='полиэстеровые волокна, HollowCore 7')   { echo 'selected';} else echo ''; echo '>полиэстеровые волокна, HollowCore 7</option>';
+                                                echo '<option value="полиэстеровые волокна, HollowCore 7"';   if($value_row['option_value']=='полиэстеровые волокна, HollowCore 7')   { echo 'selected';} else echo ''; echo '>полиэстеровые волокна, HollowCore 7</option>';
 
-										echo '<option value="полиэстеровые микроволокна, HollowCore-micro"';   if($value_row['option_value']=='полиэстеровые микроволокна, HollowCore-micro')   { echo 'selected';} else echo ''; echo '>полиэстеровые микроволокна, HollowCore-micro</option>';
+                                                echo '<option value="полиэстеровые микроволокна, HollowCore-micro"';   if($value_row['option_value']=='полиэстеровые микроволокна, HollowCore-micro')   { echo 'selected';} else echo ''; echo '>полиэстеровые микроволокна, HollowCore-micro</option>';
 
-										echo '<option value="утиный пух, Grey Duck Down 80/20, Fill Power 550"';   if($value_row['option_value']=='утиный пух, Grey Duck Down 80/20, Fill Power 550')   { echo 'selected';} else echo ''; echo '>утиный пух, Grey Duck Down 80/20, Fill Power 550</option>';
+                                                echo '<option value="утиный пух, Grey Duck Down 80/20, Fill Power 550"';   if($value_row['option_value']=='утиный пух, Grey Duck Down 80/20, Fill Power 550')   { echo 'selected';} else echo ''; echo '>утиный пух, Grey Duck Down 80/20, Fill Power 550</option>';
 
-										echo '<option value="полиэстеровые волокна, ProLite Extrafil Q7"';   if($value_row['option_value']=='полиэстеровые волокна, ProLite Extrafil Q7')   { echo 'selected';} else echo ''; echo '>полиэстеровые волокна, ProLite Extrafil Q7</option>';
+                                                echo '<option value="полиэстеровые волокна, ProLite Extrafil Q7"';   if($value_row['option_value']=='полиэстеровые волокна, ProLite Extrafil Q7')   { echo 'selected';} else echo ''; echo '>полиэстеровые волокна, ProLite Extrafil Q7</option>';
 
-										echo '<option value="силиконизированный HiTech Holofiber"';   if($value_row['option_value']=='силиконизированный HiTech Holofiber')   { echo 'selected';} else echo ''; echo '>силиконизированный HiTech Holofiber</option>';
+                                                echo '<option value="силиконизированный HiTech Holofiber"';   if($value_row['option_value']=='силиконизированный HiTech Holofiber')   { echo 'selected';} else echo ''; echo '>силиконизированный HiTech Holofiber</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '53')///-------------------------------------------Внешний материал--------------------------------------------
+                                            elseif ($option_row["optionID"] == '53')///-------------------------------------------Внешний материал--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -3396,50 +3465,50 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="Nylon Durafolio Rip"';   if($value_row['option_value']=='Nylon Durafolio Rip')   { echo 'selected';} else echo ''; echo '>Nylon Durafolio Rip</option>';
+                                                echo '<option value="Nylon Durafolio Rip"';   if($value_row['option_value']=='Nylon Durafolio Rip')   { echo 'selected';} else echo ''; echo '>Nylon Durafolio Rip</option>';
 
-										echo '<option value="Nylon 66 TACTEL Rip Stop, W/R, cire"';   if($value_row['option_value']=='Nylon 66 TACTEL Rip Stop, W/R, cire')   { echo 'selected';} else echo ''; echo '>Nylon 66 TACTEL Rip Stop, W/R, cire</option>';
+                                                echo '<option value="Nylon 66 TACTEL Rip Stop, W/R, cire"';   if($value_row['option_value']=='Nylon 66 TACTEL Rip Stop, W/R, cire')   { echo 'selected';} else echo ''; echo '>Nylon 66 TACTEL Rip Stop, W/R, cire</option>';
 
-										echo '<option value="40D Nylon Diamond Rip Stop, D/P"';   if($value_row['option_value']=='40D Nylon Diamond Rip Stop, D/P')   { echo 'selected';} else echo ''; echo '>40D Nylon Diamond Rip Stop, D/P</option>';
-	
-										echo '<option value="210T Polyester Rip Stop, CIRE"';   if($value_row['option_value']=='210T Polyester Rip Stop, CIRE')   { echo 'selected';} else echo ''; echo '>210T Polyester Rip Stop, CIRE</option>';
-									
-										echo '<option value="210T Polyester Rip Stop, W/R, CIRE"';   if($value_row['option_value']=='210T Polyester Rip Stop, W/R, CIRE')   { echo 'selected';} else echo ''; echo '>210T Polyester Rip Stop, W/R, CIRE</option>';
+                                                echo '<option value="40D Nylon Diamond Rip Stop, D/P"';   if($value_row['option_value']=='40D Nylon Diamond Rip Stop, D/P')   { echo 'selected';} else echo ''; echo '>40D Nylon Diamond Rip Stop, D/P</option>';
 
-										echo '<option value="190T Polyester, W/R, CIRE"';   if($value_row['option_value']=='190T Polyester, W/R, CIRE')   { echo 'selected';} else echo ''; echo '>190T Polyester, W/R, CIRE</option>';
+                                                echo '<option value="210T Polyester Rip Stop, CIRE"';   if($value_row['option_value']=='210T Polyester Rip Stop, CIRE')   { echo 'selected';} else echo ''; echo '>210T Polyester Rip Stop, CIRE</option>';
 
-										echo '<option value="polycotton 96*72 T/C"';   if($value_row['option_value']=='Polycotton 96*72 T/C')   { echo 'selected';} else echo ''; echo '>Polycotton 96*72 T/C</option>';
+                                                echo '<option value="210T Polyester Rip Stop, W/R, CIRE"';   if($value_row['option_value']=='210T Polyester Rip Stop, W/R, CIRE')   { echo 'selected';} else echo ''; echo '>210T Polyester Rip Stop, W/R, CIRE</option>';
 
-										echo '<option value="нейлон 300T/40D Diamond RipStop"';   if($value_row['option_value']=='нейлон 300T/40D Diamond RipStop')   { echo 'selected';} else echo ''; echo '>нейлон 300T/40D Diamond RipStop</option>';
+                                                echo '<option value="190T Polyester, W/R, CIRE"';   if($value_row['option_value']=='190T Polyester, W/R, CIRE')   { echo 'selected';} else echo ''; echo '>190T Polyester, W/R, CIRE</option>';
 
-										echo '<option value="210T Polyester Rip Stop"';   if($value_row['option_value']=='210T Polyester Rip Stop')   { echo 'selected';} else echo ''; echo '>210T Polyester Rip Stop</option>';
+                                                echo '<option value="polycotton 96*72 T/C"';   if($value_row['option_value']=='Polycotton 96*72 T/C')   { echo 'selected';} else echo ''; echo '>Polycotton 96*72 T/C</option>';
 
-										echo '<option value="нейлон 210T RipStop"';   if($value_row['option_value']=='нейлон 21T RipStop')   { echo 'selected';} else echo ''; echo '>нейлон 21T RipStop</option>';
-										echo '<option value="полиэстер 170T"';   if($value_row['option_value']=='полиэстер 170T')   { echo 'selected';} else echo ''; echo '>полиэстер 170T</option>';
+                                                echo '<option value="нейлон 300T/40D Diamond RipStop"';   if($value_row['option_value']=='нейлон 300T/40D Diamond RipStop')   { echo 'selected';} else echo ''; echo '>нейлон 300T/40D Diamond RipStop</option>';
 
-					echo '			</select>
+                                                echo '<option value="210T Polyester Rip Stop"';   if($value_row['option_value']=='210T Polyester Rip Stop')   { echo 'selected';} else echo ''; echo '>210T Polyester Rip Stop</option>';
+
+                                                echo '<option value="нейлон 210T RipStop"';   if($value_row['option_value']=='нейлон 21T RipStop')   { echo 'selected';} else echo ''; echo '>нейлон 21T RipStop</option>';
+                                                echo '<option value="полиэстер 170T"';   if($value_row['option_value']=='полиэстер 170T')   { echo 'selected';} else echo ''; echo '>полиэстер 170T</option>';
+
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '54')///-------------------------------------------Внутренний материал--------------------------------------------
+                                            elseif ($option_row["optionID"] == '54')///-------------------------------------------Внутренний материал--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -3453,48 +3522,48 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="Nylon Taffeta 210T"';   if($value_row['option_value']=='Nylon Taffeta 210T')   { echo 'selected';} else echo ''; echo '>Nylon Taffeta 210T</option>';
+                                                echo '<option value="Nylon Taffeta 210T"';   if($value_row['option_value']=='Nylon Taffeta 210T')   { echo 'selected';} else echo ''; echo '>Nylon Taffeta 210T</option>';
 
-										echo '<option value="100% Nylon RipStop – дышащий"';   if($value_row['option_value']=='100% Nylon RipStop – дышащий')   { echo 'selected';} else echo ''; echo '>100% Nylon RipStop – дышащий</option>';
+                                                echo '<option value="100% Nylon RipStop – дышащий"';   if($value_row['option_value']=='100% Nylon RipStop – дышащий')   { echo 'selected';} else echo ''; echo '>100% Nylon RipStop – дышащий</option>';
 
-										echo '<option value="290T Micro Polyester"';   if($value_row['option_value']=='290T Micro Polyester')   { echo 'selected';} else echo ''; echo '>290T Micro Polyester</option>';
+                                                echo '<option value="290T Micro Polyester"';   if($value_row['option_value']=='290T Micro Polyester')   { echo 'selected';} else echo ''; echo '>290T Micro Polyester</option>';
 
-										echo '<option value="280T Micro Polyester"';   if($value_row['option_value']=='280T Micro Polyester')   { echo 'selected';} else echo ''; echo '>280T Micro Polyester</option>';
+                                                echo '<option value="280T Micro Polyester"';   if($value_row['option_value']=='280T Micro Polyester')   { echo 'selected';} else echo ''; echo '>280T Micro Polyester</option>';
 
-										echo '<option value="T/C Fleece"';   if($value_row['option_value']=='T/C Fleece')   { echo 'selected';} else echo ''; echo '>T/C Fleece</option>';
+                                                echo '<option value="T/C Fleece"';   if($value_row['option_value']=='T/C Fleece')   { echo 'selected';} else echo ''; echo '>T/C Fleece</option>';
 
-										echo '<option value="Flannel 100% cotton"';   if($value_row['option_value']=='Flannel 100% cotton')   { echo 'selected';} else echo ''; echo '>Flannel 100% cotton</option>';
+                                                echo '<option value="Flannel 100% cotton"';   if($value_row['option_value']=='Flannel 100% cotton')   { echo 'selected';} else echo ''; echo '>Flannel 100% cotton</option>';
 
-										echo '<option value="хлопок"';   if($value_row['option_value']=='хлопок')   { echo 'selected';} else echo ''; echo '>хлопок</option>';
+                                                echo '<option value="хлопок"';   if($value_row['option_value']=='хлопок')   { echo 'selected';} else echo ''; echo '>хлопок</option>';
 
-										echo '<option value="210T нейлон Taffeta"';   if($value_row['option_value']=='210T нейлон Taffeta')   { echo 'selected';} else echo ''; echo '>210T нейлон Taffeta</option>';
+                                                echo '<option value="210T нейлон Taffeta"';   if($value_row['option_value']=='210T нейлон Taffeta')   { echo 'selected';} else echo ''; echo '>210T нейлон Taffeta</option>';
 
-										echo '<option value="фланель"';   if($value_row['option_value']=='фланель')   { echo 'selected';} else echo ''; echo '>фланель</option>';
-										echo '<option value="полиэстер 170Т cire"';   if($value_row['option_value']=='полиэстер 170Т cire')   { echo 'selected';} else echo ''; echo '>полиэстер 170Т cire</option>';
+                                                echo '<option value="фланель"';   if($value_row['option_value']=='фланель')   { echo 'selected';} else echo ''; echo '>фланель</option>';
+                                                echo '<option value="полиэстер 170Т cire"';   if($value_row['option_value']=='полиэстер 170Т cire')   { echo 'selected';} else echo ''; echo '>полиэстер 170Т cire</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '55')///-------------------------------------------Компрессионная упаковка--------------------------------------------
+                                            elseif ($option_row["optionID"] == '55')///-------------------------------------------Компрессионная упаковка--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -3508,33 +3577,33 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
+                                                echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
 
-										echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
+                                                echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '57')///-------------------------------------------Количество слоев--------------------------------------------
+                                            elseif ($option_row["optionID"] == '57')///-------------------------------------------Количество слоев--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -3548,37 +3617,37 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="1"';   if($value_row['option_value']=='1')   { echo 'selected';} else echo ''; echo '>1</option>';
+                                                echo '<option value="1"';   if($value_row['option_value']=='1')   { echo 'selected';} else echo ''; echo '>1</option>';
 
-										echo '<option value="2"';   if($value_row['option_value']=='2')   { echo 'selected';} else echo ''; echo '>2</option>';
+                                                echo '<option value="2"';   if($value_row['option_value']=='2')   { echo 'selected';} else echo ''; echo '>2</option>';
 
-										echo '<option value="3"';   if($value_row['option_value']=='3')   { echo 'selected';} else echo ''; echo '>3</option>';
+                                                echo '<option value="3"';   if($value_row['option_value']=='3')   { echo 'selected';} else echo ''; echo '>3</option>';
 
-										echo '<option value="4"';   if($value_row['option_value']=='4')   { echo 'selected';} else echo ''; echo '>4</option>';
+                                                echo '<option value="4"';   if($value_row['option_value']=='4')   { echo 'selected';} else echo ''; echo '>4</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '66')///-------------------------------------------Материал--------------------------------------------
+                                            elseif ($option_row["optionID"] == '66')///-------------------------------------------Материал--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -3592,77 +3661,77 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="Polyester 600D Rip Stop / 1680T FTX TM PD, WR, PU"';   if($value_row['option_value']=='Polyester 600D Rip Stop / 1680T FTX TM PD, WR, PU')   { echo 'selected';} else echo ''; echo '>Polyester 600D Rip Stop / 1680T FTX TM PD, WR, PU</option>';
+                                                echo '<option value="Polyester 600D Rip Stop / 1680T FTX TM PD, WR, PU"';   if($value_row['option_value']=='Polyester 600D Rip Stop / 1680T FTX TM PD, WR, PU')   { echo 'selected';} else echo ''; echo '>Polyester 600D Rip Stop / 1680T FTX TM PD, WR, PU</option>';
 
-										echo '<option value="Polyester 185T PU 4000 mm H2O"';   if($value_row['option_value']=='Polyester 185T PU 4000 mm H2O')   { echo 'selected';} else echo ''; echo '>Polyester 185T PU 4000 mm H2O</option>';
+                                                echo '<option value="Polyester 185T PU 4000 mm H2O"';   if($value_row['option_value']=='Polyester 185T PU 4000 mm H2O')   { echo 'selected';} else echo ''; echo '>Polyester 185T PU 4000 mm H2O</option>';
 
-										echo '<option value="Sio-Line 630"';   if($value_row['option_value']=='Sio-Line 630')   { echo 'selected';} else echo ''; echo '>Sio-Line 630</option>';
+                                                echo '<option value="Sio-Line 630"';   if($value_row['option_value']=='Sio-Line 630')   { echo 'selected';} else echo ''; echo '>Sio-Line 630</option>';
 
-										echo '<option value="100% поліестер 500 D, PU coating, Rip-Stop"';   if($value_row['option_value']=='100% поліестер 500 D, PU coating, Rip-Stop')   { echo 'selected';} else echo ''; echo '>100% поліестер 500 D, PU coating, Rip-Stop</option>';
+                                                echo '<option value="100% поліестер 500 D, PU coating, Rip-Stop"';   if($value_row['option_value']=='100% поліестер 500 D, PU coating, Rip-Stop')   { echo 'selected';} else echo ''; echo '>100% поліестер 500 D, PU coating, Rip-Stop</option>';
 
-										echo '<option value="100% поліестер 420 D, PU coating, Dobby texture"';   if($value_row['option_value']=='100% поліестер 420 D, PU coating, Dobby texture')   { echo 'selected';} else echo ''; echo '>100% поліестер 420 D, PU coating, Dobby texture</option>';
+                                                echo '<option value="100% поліестер 420 D, PU coating, Dobby texture"';   if($value_row['option_value']=='100% поліестер 420 D, PU coating, Dobby texture')   { echo 'selected';} else echo ''; echo '>100% поліестер 420 D, PU coating, Dobby texture</option>';
 
-										echo '<option value="100% поліестер 500 D, PU coating, Rip-stop texture"';   if($value_row['option_value']=='100% поліестер 500 D, PU coating, Rip-stop texture')   { echo 'selected';} else echo ''; echo '>100% поліестер 500 D, PU coating, Rip-stop texture</option>';
+                                                echo '<option value="100% поліестер 500 D, PU coating, Rip-stop texture"';   if($value_row['option_value']=='100% поліестер 500 D, PU coating, Rip-stop texture')   { echo 'selected';} else echo ''; echo '>100% поліестер 500 D, PU coating, Rip-stop texture</option>';
 
-										echo '<option value="Cordura"';   if($value_row['option_value']=='Cordura')   { echo 'selected';} else echo ''; echo '>Cordura</option>';
+                                                echo '<option value="Cordura"';   if($value_row['option_value']=='Cordura')   { echo 'selected';} else echo ''; echo '>Cordura</option>';
 
-										echo '<option value="Cordura 1000D"';   if($value_row['option_value']=='Cordura 1000D')   { echo 'selected';} else echo ''; echo '>Cordura 1000D</option>';
+                                                echo '<option value="Cordura 1000D"';   if($value_row['option_value']=='Cordura 1000D')   { echo 'selected';} else echo ''; echo '>Cordura 1000D</option>';
 
-										echo '<option value="600d Nylon"';   if($value_row['option_value']=='600d Nylon')   { echo 'selected';} else echo ''; echo '>600d Nylon</option>';
+                                                echo '<option value="600d Nylon"';   if($value_row['option_value']=='600d Nylon')   { echo 'selected';} else echo ''; echo '>600d Nylon</option>';
 
-										echo '<option value="600d Nylon R/S"';   if($value_row['option_value']=='600d Nylon R/S')   { echo 'selected';} else echo ''; echo '>600d Nylon R/S</option>';
+                                                echo '<option value="600d Nylon R/S"';   if($value_row['option_value']=='600d Nylon R/S')   { echo 'selected';} else echo ''; echo '>600d Nylon R/S</option>';
 
-										echo '<option value="Textreme 6.6 / Cross Nylon 420 HD"';   if($value_row['option_value']=='Textreme 6.6 / Cross Nylon 420 HD')   { echo 'selected';} else echo ''; echo '>Textreme 6.6 / Cross Nylon 420 HD</option>';
+                                                echo '<option value="Textreme 6.6 / Cross Nylon 420 HD"';   if($value_row['option_value']=='Textreme 6.6 / Cross Nylon 420 HD')   { echo 'selected';} else echo ''; echo '>Textreme 6.6 / Cross Nylon 420 HD</option>';
 
-										echo '<option value="450 HD Polyoxford, 420 HD Nylon"';   if($value_row['option_value']=='450 HD Polyoxford, 420 HD Nylon')   { echo 'selected';} else echo ''; echo '>450 HD Polyoxford, 420 HD Nylon</option>';
+                                                echo '<option value="450 HD Polyoxford, 420 HD Nylon"';   if($value_row['option_value']=='450 HD Polyoxford, 420 HD Nylon')   { echo 'selected';} else echo ''; echo '>450 HD Polyoxford, 420 HD Nylon</option>';
 
-										echo '<option value="Textreme, 420 HD Nylon"';   if($value_row['option_value']=='Textreme, 420 HD Nylon')   { echo 'selected';} else echo ''; echo '>Textreme, 420 HD Nylon</option>';
+                                                echo '<option value="Textreme, 420 HD Nylon"';   if($value_row['option_value']=='Textreme, 420 HD Nylon')   { echo 'selected';} else echo ''; echo '>Textreme, 420 HD Nylon</option>';
 
-										echo '<option value="Texamid 5.5, Rugg Tex 11.1, Texamid 11.1"';   if($value_row['option_value']=='Texamid 5.5, Rugg Tex 11.1, Texamid 11.1')   { echo 'selected';} else echo ''; echo '>Texamid 5.5, Rugg Tex 11.1, Texamid 11.1</option>';
+                                                echo '<option value="Texamid 5.5, Rugg Tex 11.1, Texamid 11.1"';   if($value_row['option_value']=='Texamid 5.5, Rugg Tex 11.1, Texamid 11.1')   { echo 'selected';} else echo ''; echo '>Texamid 5.5, Rugg Tex 11.1, Texamid 11.1</option>';
 
-										echo '<option value="Texamid 5.5, Rugg Tex 11.1"';   if($value_row['option_value']=='Texamid 5.5, Rugg Tex 11.1')   { echo 'selected';} else echo ''; echo '>Texamid 5.5, Rugg Tex 11.1</option>';
+                                                echo '<option value="Texamid 5.5, Rugg Tex 11.1"';   if($value_row['option_value']=='Texamid 5.5, Rugg Tex 11.1')   { echo 'selected';} else echo ''; echo '>Texamid 5.5, Rugg Tex 11.1</option>';
 
-										echo '<option value="Textreme 6.6"';   if($value_row['option_value']=='Textreme 6.6')   { echo 'selected';} else echo ''; echo '>Textreme 6.6</option>';
+                                                echo '<option value="Textreme 6.6"';   if($value_row['option_value']=='Textreme 6.6')   { echo 'selected';} else echo ''; echo '>Textreme 6.6</option>';
 
-										echo '<option value="Polartec® Classic 200"';   if($value_row['option_value']=='Polartec® Classic 200')   { echo 'selected';} else echo ''; echo '>Polartec® Classic 200</option>';
+                                                echo '<option value="Polartec® Classic 200"';   if($value_row['option_value']=='Polartec® Classic 200')   { echo 'selected';} else echo ''; echo '>Polartec® Classic 200</option>';
 
-										echo '<option value="Polartec® Thermal Pro®"';   if($value_row['option_value']=='Polartec® Thermal Pro®')   { echo 'selected';} else echo ''; echo '>Polartec® Thermal Pro®</option>';
+                                                echo '<option value="Polartec® Thermal Pro®"';   if($value_row['option_value']=='Polartec® Thermal Pro®')   { echo 'selected';} else echo ''; echo '>Polartec® Thermal Pro®</option>';
 
-										echo '<option value="Polartec® Windbloc®"';   if($value_row['option_value']=='Polartec® Windbloc®')   { echo 'selected';} else echo ''; echo '>Polartec® Windbloc®</option>';
+                                                echo '<option value="Polartec® Windbloc®"';   if($value_row['option_value']=='Polartec® Windbloc®')   { echo 'selected';} else echo ''; echo '>Polartec® Windbloc®</option>';
 
-										echo '<option value="Polartec® Wind Pro®"';   if($value_row['option_value']=='Polartec® Wind Pro®')   { echo 'selected';} else echo ''; echo '>Polartec® Wind Pro®</option>';
+                                                echo '<option value="Polartec® Wind Pro®"';   if($value_row['option_value']=='Polartec® Wind Pro®')   { echo 'selected';} else echo ''; echo '>Polartec® Wind Pro®</option>';
 
-										echo '<option value="Polyester 600D Rip Stop / 1680D FTX TM PD, WR, PU"';   if($value_row['option_value']=='Polyester 600D Rip Stop / 1680D FTX TM PD, WR, PU')   { echo 'selected';} else echo ''; echo '>Polyester 600D Rip Stop / 1680D FTX TM PD, WR, PU</option>';
+                                                echo '<option value="Polyester 600D Rip Stop / 1680D FTX TM PD, WR, PU"';   if($value_row['option_value']=='Polyester 600D Rip Stop / 1680D FTX TM PD, WR, PU')   { echo 'selected';} else echo ''; echo '>Polyester 600D Rip Stop / 1680D FTX TM PD, WR, PU</option>';
 
-										echo '<option value="Polyester 450D Rip Stop / 600D DIAMOND Rip Stop, WR, PU"';   if($value_row['option_value']=='Polyester 450D Rip Stop / 600D DIAMOND Rip Stop, WR, PU')   { echo 'selected';} else echo ''; echo '>Polyester 450D Rip Stop / 600D DIAMOND Rip Stop, WR, PU</option>';
+                                                echo '<option value="Polyester 450D Rip Stop / 600D DIAMOND Rip Stop, WR, PU"';   if($value_row['option_value']=='Polyester 450D Rip Stop / 600D DIAMOND Rip Stop, WR, PU')   { echo 'selected';} else echo ''; echo '>Polyester 450D Rip Stop / 600D DIAMOND Rip Stop, WR, PU</option>';
 
-										echo '<option value="Polyester 600D DIAMOND / 1680D, WR, PU"';   if($value_row['option_value']=='Polyester 600D DIAMOND / 1680D, WR, PU')   { echo 'selected';} else echo ''; echo '>Polyester 600D DIAMOND / 1680D, WR, PU</option>';
+                                                echo '<option value="Polyester 600D DIAMOND / 1680D, WR, PU"';   if($value_row['option_value']=='Polyester 600D DIAMOND / 1680D, WR, PU')   { echo 'selected';} else echo ''; echo '>Polyester 600D DIAMOND / 1680D, WR, PU</option>';
 
-										echo '<option value="NYLON CORDURA 500D, Rip Stop PU, W/R, cire, 1680D FTX TM PD, WR"';   if($value_row['option_value']=='NYLON CORDURA 500D, Rip Stop PU, W/R, cire, 1680D FTX TM PD, WR')   { echo 'selected';} else echo ''; echo '>NYLON CORDURA 500D, Rip Stop PU, W/R, cire, 1680D FTX TM PD, WR</option>';
+                                                echo '<option value="NYLON CORDURA 500D, Rip Stop PU, W/R, cire, 1680D FTX TM PD, WR"';   if($value_row['option_value']=='NYLON CORDURA 500D, Rip Stop PU, W/R, cire, 1680D FTX TM PD, WR')   { echo 'selected';} else echo ''; echo '>NYLON CORDURA 500D, Rip Stop PU, W/R, cire, 1680D FTX TM PD, WR</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '67')///-------------------------------------------Подвесная система--------------------------------------------
+                                            elseif ($option_row["optionID"] == '67')///-------------------------------------------Подвесная система--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -3676,71 +3745,71 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="AAS 1"';   if($value_row['option_value']=='AAS 1')   { echo 'selected';} else echo ''; echo '>AAS 1</option>';
+                                                echo '<option value="AAS 1"';   if($value_row['option_value']=='AAS 1')   { echo 'selected';} else echo ''; echo '>AAS 1</option>';
 
-										echo '<option value="V-VAR TORSO"';   if($value_row['option_value']=='V-VAR TORSO')   { echo 'selected';} else echo ''; echo '>V-VAR TORSO</option>';
+                                                echo '<option value="V-VAR TORSO"';   if($value_row['option_value']=='V-VAR TORSO')   { echo 'selected';} else echo ''; echo '>V-VAR TORSO</option>';
 
-										echo '<option value="SV System"';   if($value_row['option_value']=='SV System')   { echo 'selected';} else echo ''; echo '>SV System</option>';
+                                                echo '<option value="SV System"';   if($value_row['option_value']=='SV System')   { echo 'selected';} else echo ''; echo '>SV System</option>';
 
-										echo '<option value="SX System"';   if($value_row['option_value']=='SX System')   { echo 'selected';} else echo ''; echo '>SX System</option>';
+                                                echo '<option value="SX System"';   if($value_row['option_value']=='SX System')   { echo 'selected';} else echo ''; echo '>SX System</option>';
 
-										echo '<option value="YL System"';   if($value_row['option_value']=='YL System')   { echo 'selected';} else echo ''; echo '>YL System</option>';
+                                                echo '<option value="YL System"';   if($value_row['option_value']=='YL System')   { echo 'selected';} else echo ''; echo '>YL System</option>';
 
-										echo '<option value="V2 System"';   if($value_row['option_value']=='V2 System')   { echo 'selected';} else echo ''; echo '>V2 System</option>';
+                                                echo '<option value="V2 System"';   if($value_row['option_value']=='V2 System')   { echo 'selected';} else echo ''; echo '>V2 System</option>';
 
-										echo '<option value="X Vent Vario System"';   if($value_row['option_value']=='X Vent Vario System')   { echo 'selected';} else echo ''; echo '>X Vent Vario System</option>';
+                                                echo '<option value="X Vent Vario System"';   if($value_row['option_value']=='X Vent Vario System')   { echo 'selected';} else echo ''; echo '>X Vent Vario System</option>';
 
-										echo '<option value="X Lite Vario System"';   if($value_row['option_value']=='X Lite Vario System')   { echo 'selected';} else echo ''; echo '>X Lite Vario System</option>';
+                                                echo '<option value="X Lite Vario System"';   if($value_row['option_value']=='X Lite Vario System')   { echo 'selected';} else echo ''; echo '>X Lite Vario System</option>';
 
-										echo '<option value="V1 Eco System"';   if($value_row['option_value']=='V1 Eco System')   { echo 'selected';} else echo ''; echo '>V1 Eco System</option>';
+                                                echo '<option value="V1 Eco System"';   if($value_row['option_value']=='V1 Eco System')   { echo 'selected';} else echo ''; echo '>V1 Eco System</option>';
 
-										echo '<option value="X1 System"';   if($value_row['option_value']=='X1 System')   { echo 'selected';} else echo ''; echo '>X1 System</option>';
+                                                echo '<option value="X1 System"';   if($value_row['option_value']=='X1 System')   { echo 'selected';} else echo ''; echo '>X1 System</option>';
 
-										echo '<option value="TCS TORSO"';   if($value_row['option_value']=='TCS TORSO')   { echo 'selected';} else echo ''; echo '>TCS TORSO</option>';
+                                                echo '<option value="TCS TORSO"';   if($value_row['option_value']=='TCS TORSO')   { echo 'selected';} else echo ''; echo '>TCS TORSO</option>';
 
-										echo '<option value="VAR TORSO"';   if($value_row['option_value']=='VAR TORSO')   { echo 'selected';} else echo ''; echo '>VAR TORSO</option>';
+                                                echo '<option value="VAR TORSO"';   if($value_row['option_value']=='VAR TORSO')   { echo 'selected';} else echo ''; echo '>VAR TORSO</option>';
 
-										echo '<option value="VAR"';   if($value_row['option_value']=='VAR')   { echo 'selected';} else echo ''; echo '>VAR</option>';
+                                                echo '<option value="VAR"';   if($value_row['option_value']=='VAR')   { echo 'selected';} else echo ''; echo '>VAR</option>';
 
-										echo '<option value="FRAME VAR"';   if($value_row['option_value']=='FRAME VAR')   { echo 'selected';} else echo ''; echo '>FRAME VAR</option>';
+                                                echo '<option value="FRAME VAR"';   if($value_row['option_value']=='FRAME VAR')   { echo 'selected';} else echo ''; echo '>FRAME VAR</option>';
 
-										echo '<option value="CR"';   if($value_row['option_value']=='CR')   { echo 'selected';} else echo ''; echo '>CR</option>';
+                                                echo '<option value="CR"';   if($value_row['option_value']=='CR')   { echo 'selected';} else echo ''; echo '>CR</option>';
 
-										echo '<option value="3D EVS"';   if($value_row['option_value']=='3D EVS')   { echo 'selected';} else echo ''; echo '>3D EVS</option>';
+                                                echo '<option value="3D EVS"';   if($value_row['option_value']=='3D EVS')   { echo 'selected';} else echo ''; echo '>3D EVS</option>';
 
-										echo '<option value="VERTI COOL"';   if($value_row['option_value']=='VERTI COOL')   { echo 'selected';} else echo ''; echo '>VERTI COOL</option>';
+                                                echo '<option value="VERTI COOL"';   if($value_row['option_value']=='VERTI COOL')   { echo 'selected';} else echo ''; echo '>VERTI COOL</option>';
 
-										echo '<option value="AVS"';   if($value_row['option_value']=='AVS')   { echo 'selected';} else echo ''; echo '>AVS</option>';
+                                                echo '<option value="AVS"';   if($value_row['option_value']=='AVS')   { echo 'selected';} else echo ''; echo '>AVS</option>';
 
-										echo '<option value="PERFORATE"';   if($value_row['option_value']=='PERFORATE')   { echo 'selected';} else echo ''; echo '>PERFORATE</option>';
+                                                echo '<option value="PERFORATE"';   if($value_row['option_value']=='PERFORATE')   { echo 'selected';} else echo ''; echo '>PERFORATE</option>';
 
-										echo '<option value="AIR DIRECTOR"';   if($value_row['option_value']=='AIR DIRECTOR')   { echo 'selected';} else echo ''; echo '>AIR DIRECTOR</option>';
+                                                echo '<option value="AIR DIRECTOR"';   if($value_row['option_value']=='AIR DIRECTOR')   { echo 'selected';} else echo ''; echo '>AIR DIRECTOR</option>';
 
-										echo '<option value="X-VAR TORSO"';   if($value_row['option_value']=='X-VAR TORSO')   { echo 'selected';} else echo ''; echo '>X-VAR TORSO</option>';
+                                                echo '<option value="X-VAR TORSO"';   if($value_row['option_value']=='X-VAR TORSO')   { echo 'selected';} else echo ''; echo '>X-VAR TORSO</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '68')///-------------------------------------------Совместимость H2O--------------------------------------------
+                                            elseif ($option_row["optionID"] == '68')///-------------------------------------------Совместимость H2O--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -3754,33 +3823,33 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
+                                                echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
 
-										echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
+                                                echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '69')///-------------------------------------------набедреный пояс--------------------------------------------
+                                            elseif ($option_row["optionID"] == '69')///-------------------------------------------набедреный пояс--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -3794,33 +3863,33 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
+                                                echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
 
-										echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
+                                                echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '70')///-------------------------------------------нижний вход с перегородкой--------------------------------------------
+                                            elseif ($option_row["optionID"] == '70')///-------------------------------------------нижний вход с перегородкой--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -3834,33 +3903,33 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
+                                                echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
 
-										echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
+                                                echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '71')///-------------------------------------------регулировка клапана по высоте--------------------------------------------
+                                            elseif ($option_row["optionID"] == '71')///-------------------------------------------регулировка клапана по высоте--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -3874,33 +3943,33 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
+                                                echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
 
-										echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
+                                                echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '72')///-------------------------------------------грудная стяжка--------------------------------------------
+                                            elseif ($option_row["optionID"] == '72')///-------------------------------------------грудная стяжка--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -3914,33 +3983,33 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
+                                                echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
 
-										echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
+                                                echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '73')///-------------------------------------------боковые карманы--------------------------------------------
+                                            elseif ($option_row["optionID"] == '73')///-------------------------------------------боковые карманы--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -3954,33 +4023,33 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
+                                                echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
 
-										echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
+                                                echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '74')///-------------------------------------------фронтальный карман--------------------------------------------
+                                            elseif ($option_row["optionID"] == '74')///-------------------------------------------фронтальный карман--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -3994,33 +4063,33 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
+                                                echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
 
-										echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
+                                                echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '75')///-------------------------------------------накидка от дождя--------------------------------------------
+                                            elseif ($option_row["optionID"] == '75')///-------------------------------------------накидка от дождя--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -4034,33 +4103,33 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
+                                                echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
 
-										echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
+                                                echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '77')///-------------------------------------------Лямки для переноски--------------------------------------------
+                                            elseif ($option_row["optionID"] == '77')///-------------------------------------------Лямки для переноски--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -4074,33 +4143,33 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
+                                                echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
 
-										echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
+                                                echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '78')///------------------------------------------Светоотражатели--------------------------------------------
+                                            elseif ($option_row["optionID"] == '78')///------------------------------------------Светоотражатели--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -4114,33 +4183,33 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
+                                                echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
 
-										echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
+                                                echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '76')///-------------------------------------------гарантия--------------------------------------------
+                                            elseif ($option_row["optionID"] == '76')///-------------------------------------------гарантия--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -4154,39 +4223,39 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="6 месяцев"';   if($value_row['option_value']=='6 месяцев')   { echo 'selected';} else echo ''; echo '>6 месяцев</option>';
+                                                echo '<option value="6 месяцев"';   if($value_row['option_value']=='6 месяцев')   { echo 'selected';} else echo ''; echo '>6 месяцев</option>';
 
-										echo '<option value="12 месяцев"';   if($value_row['option_value']=='12 месяцев')   { echo 'selected';} else echo ''; echo '>12 месяцев</option>';
+                                                echo '<option value="12 месяцев"';   if($value_row['option_value']=='12 месяцев')   { echo 'selected';} else echo ''; echo '>12 месяцев</option>';
 
-										echo '<option value="24 месяцев"';   if($value_row['option_value']=='24 месяцев')   { echo 'selected';} else echo ''; echo '>24 месяцев</option>';
+                                                echo '<option value="24 месяцев"';   if($value_row['option_value']=='24 месяцев')   { echo 'selected';} else echo ''; echo '>24 месяцев</option>';
 
-										echo '<option value="36 месяцев"';   if($value_row['option_value']=='36 месяцев')   { echo 'selected';} else echo ''; echo '>36 месяцев</option>';
+                                                echo '<option value="36 месяцев"';   if($value_row['option_value']=='36 месяцев')   { echo 'selected';} else echo ''; echo '>36 месяцев</option>';
 
-										echo '<option value="пожизненная"';   if($value_row['option_value']=='пожизненная')   { echo 'selected';} else echo ''; echo '>пожизненная</option>';
+                                                echo '<option value="пожизненная"';   if($value_row['option_value']=='пожизненная')   { echo 'selected';} else echo ''; echo '>пожизненная</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '131')///-------------------------------------------Оттяжки--------------------------------------------
+                                            elseif ($option_row["optionID"] == '131')///-------------------------------------------Оттяжки--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -4200,33 +4269,33 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
+                                                echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
 
-										echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
+                                                echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				elseif ($option_row["optionID"] == '132')///-------------------------------------------Колышки--------------------------------------------
+                                            elseif ($option_row["optionID"] == '132')///-------------------------------------------Колышки--------------------------------------------
 
-				{
+                                            {
 
-					if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-								$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-					else
+                                                else
 
-								$str_checked = "";
+                                                    $str_checked = "";
 
-					echo '<tr>
+                                                echo '<tr>
 
 								<td>&nbsp;</td>
 
@@ -4240,39 +4309,39 @@ $skidka = $product["skidka"];
 
 									<select name="option_value_'.$option_row["optionID"].'">';
 
-										echo '<option value="0">'.ADMIN_CHOICE.'</option>';
+                                                echo '<option value="0">'.ADMIN_CHOICE.'</option>';
 
-										echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
+                                                echo '<option value="есть"';   if($value_row['option_value']=='есть')   { echo 'selected';} else echo ''; echo '>есть</option>';
 
-										echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
+                                                echo '<option value="нет"';   if($value_row['option_value']=='нет')   { echo 'selected';} else echo ''; echo '>нет</option>';
 
-										echo '<option value="ввертыши сталь 6 шт"';   if($value_row['option_value']=='ввертыши сталь 6 шт')   { echo 'selected';} else echo ''; echo '>ввертыши сталь 6 шт</option>';
+                                                echo '<option value="ввертыши сталь 6 шт"';   if($value_row['option_value']=='ввертыши сталь 6 шт')   { echo 'selected';} else echo ''; echo '>ввертыши сталь 6 шт</option>';
 
-					echo '			</select>
+                                                echo '			</select>
 
 								</td>
 
 						  </tr>';
 
-				}
+                                            }
 
-				///-------------------------------------------Стандартное поле ввода---------------------------------------------
+                                            ///-------------------------------------------Стандартное поле ввода---------------------------------------------
 
-				else
+                                            else
 
-				{
+                                            {
 
-						if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
+                                                if ( $value_row["option_type"]==0 && strlen($value_row["option_value"]) > 0 )
 
-									$str_checked = "checked";
+                                                    $str_checked = "checked";
 
-						else
+                                                else
 
-									$str_checked = "";
+                                                    $str_checked = "";
 
-						$value_str = str_replace("\"","&quot;",$value_row["option_value"]);
+                                                $value_str = str_replace("\"","&quot;",$value_row["option_value"]);
 
-					 echo '<tr>
+                                                echo '<tr>
 
 					<td>&nbsp;</td>
 
@@ -4286,746 +4355,746 @@ $skidka = $product["skidka"];
 
 						'.ADMIN_ANY_VALUE.'';
 
-						echo '<input type=text  size="100" name="option_value_'.$option_row["optionID"].'"	value="'.$value_str.'"  ></td></tr>';
+                                                echo '<input type=text  size="100" name="option_value_'.$option_row["optionID"].'"	value="'.$value_str.'"  ></td></tr>';
 
-				}
+                                            }
 
-			?>
+                                            ?>
 
-			<tr>
+                                            <tr>
 
-				<td>&nbsp;</td>
+                                                <td>&nbsp;</td>
 
-				<td valign='top'>
+                                                <td valign='top'>
 
-					<input name='option_radio_type_<?php echo $option_row["optionID"]?>'
+                                                    <input name='option_radio_type_<?php echo $option_row["optionID"]?>'
 
-						type='radio' value="N_VALUES"
+                                                           type='radio' value="N_VALUES"
 
-						onclick="JavaScript:SetEnabledStateTextValueField(<?php echo $option_row['optionID']?>, 'N_VALUES' );"
+                                                           onclick="JavaScript:SetEnabledStateTextValueField(<?php echo $option_row['optionID']?>, 'N_VALUES' );"
 
-						<?php
+                                                        <?php
 
-							if ( $value_row["option_type"]==1 )
+                                                        if ( $value_row["option_type"]==1 )
 
-								echo "checked";
+                                                            echo "checked";
 
-						?>
+                                                        ?>
 
-					>
+                                                    >
 
-				</td>
+                                                </td>
 
-				<td>
+                                                <td>
 
-					<table cellpadding='0' id='OptionTable_<?php echo $option_row["optionID"]?>'>
+                                                    <table cellpadding='0' id='OptionTable_<?php echo $option_row["optionID"]?>'>
 
-						<tr>
+                                                        <tr>
 
-							<td>
+                                                            <td>
 
-								<?php echo ADMIN_SELECTING_FROM_VALUES;?> (<?php echo $ValueCount?> <?php echo ADMIN_VARIANTS;?>)
+                                                                <?php echo ADMIN_SELECTING_FROM_VALUES;?> (<?php echo $ValueCount?> <?php echo ADMIN_VARIANTS;?>)
 
-							</td>
+                                                            </td>
 
-						</tr>
+                                                        </tr>
 
-						<tr>
+                                                        <tr>
 
-							<td>
+                                                            <td>
 
-								<a name="option_value_configurator_<?php echo $option_row['optionID']?>"
+                                                                <a name="option_value_configurator_<?php echo $option_row['optionID']?>"
 
-									<?php
+                                                                    <?php
 
-										if ( $_GET["productID"] != 0 )
+                                                                    if ( $_GET["productID"] != 0 )
 
-										{
+                                                                    {
 
-									?>
+                                                                        ?>
 
-											href="JavaScript:open_window('option_value_configurator.php?optionID=<?php echo $option_row["optionID"]?>&productID=<?php echo $_GET["productID"]?>',400,400);"
+                                                                        href="JavaScript:open_window('option_value_configurator.php?optionID=<?php echo $option_row["optionID"]?>&productID=<?php echo $_GET["productID"]?>',400,400);"
 
-									<?php
+                                                                        <?php
 
-										} else
+                                                                    } else
 
-										{
+                                                                    {
 
-									?>
+                                                                        ?>
 
-											href="JavaScript:AddProductAndOpen_option_value_configurator(<?php echo $option_row["optionID"]?>)"
+                                                                        href="JavaScript:AddProductAndOpen_option_value_configurator(<?php echo $option_row["optionID"]?>)"
 
-									<?php
+                                                                        <?php
 
-										}
+                                                                    }
 
-									?>
+                                                                    ?>
 
-									>
+                                                                >
 
-									<?php echo ADMIN_SELECT_SETTING;?>...
+                                                                    <?php echo ADMIN_SELECT_SETTING;?>...
 
-								</a>
+                                                                </a>
 
-							</td>
+                                                            </td>
 
-						</tr>
+                                                        </tr>
 
-					</table>
+                                                    </table>
 
-				</td>
+                                                </td>
 
-			</tr>
+                                            </tr>
 
-			<tr>
+                                            <tr>
 
-				<td colspan=3>
+                                                <td colspan=3>
 
-					<hr width="100%" color=black></hr>
+                                                    <hr width="100%" color=black></hr>
 
-				</td>
+                                                </td>
 
-			</tr>
+                                            </tr>
 
-		</table>
+                                        </table>
 
-				<?php
+                                        <?php
 
-		}
+                                    }
 
-?>
+                                    ?>
 
-		</td></tr>
+                                </td></tr>
 
-		</table>
+                        </table>
 
-		<script language='JavaScript'>
+                        <script language='JavaScript'>
 
-			<?php
+                            <?php
 
-			if ( $showConfiguratorTable == 0 )
+                            if ( $showConfiguratorTable == 0 )
 
-			{
+                            {
 
-			?>
+                            ?>
 
-				ConfiguratorTable.style.display = 'none';
+                            ConfiguratorTable.style.display = 'none';
 
-			<?php
+                            <?php
 
-			}
+                            }
 
-			?>
+                            ?>
 
-		</script>
+                        </script>
 
-		<input type="submit" name="AddProductAndOpenConfigurator"
+                        <input type="submit" name="AddProductAndOpenConfigurator"
 
-			value="" width=5>
+                               value="" width=5>
 
-		<input type="hidden" name="optionID" value="">
+                        <input type="hidden" name="optionID" value="">
 
-		<script language='JavaScript'>
+                        <script language='JavaScript'>
 
-			document.MainForm.AddProductAndOpenConfigurator.style.display = 'none';
+                            document.MainForm.AddProductAndOpenConfigurator.style.display = 'none';
 
-			function AddProductAndOpen_option_value_configurator(optionID)
+                            function AddProductAndOpen_option_value_configurator(optionID)
 
-			{
+                            {
 
-				document.MainForm.optionID.value = optionID;
+                                document.MainForm.optionID.value = optionID;
 
-				document.MainForm.AddProductAndOpenConfigurator.click();
+                                document.MainForm.AddProductAndOpenConfigurator.click();
 
-			}
+                            }
 
-		</script>
+                        </script>
 
-		</td>
+                    </td>
 
-		</tr>
+                </tr>
 
-<tr align=right><td>&nbsp;</td></tr>
+                <tr align=right><td>&nbsp;</td></tr>
 
-<tr>
+                <tr>
 
-	<td colspan=2 align=center>
+                    <td colspan=2 align=center>
 
-		<center>
+                        <center>
 
-			<a href="JavaScript:PhotoHideTable();">
+                            <a href="JavaScript:PhotoHideTable();">
 
-				<?php echo ADMIN_PHOTOS;?>
+                                <?php echo ADMIN_PHOTOS;?>
 
-			</a>
+                            </a>
 
-			<input type=hidden name='PhotoHideTable_hidden'
+                            <input type=hidden name='PhotoHideTable_hidden'
 
-					value='<?php echo $showPhotoTable;?>'>
+                                   value='<?php echo $showPhotoTable;?>'>
 
-		</center>
+                        </center>
 
-		<script language='javascript'>
+                        <script language='javascript'>
 
-		function PhotoHideTable()
+                            function PhotoHideTable()
 
-		{
+                            {
 
-			if ( PhotoTable.style.display == 'none' )
+                                if ( PhotoTable.style.display == 'none' )
 
-			{
+                                {
 
-				PhotoTable.style.display = 'block';
+                                    PhotoTable.style.display = 'block';
 
-				document.MainForm.PhotoHideTable_hidden.value='1';
+                                    document.MainForm.PhotoHideTable_hidden.value='1';
 
-			}
+                                }
 
-			else
+                                else
 
-			{
+                                {
 
-				PhotoTable.style.display = 'none';
+                                    PhotoTable.style.display = 'none';
 
-				document.MainForm.PhotoHideTable_hidden.value='0';
+                                    document.MainForm.PhotoHideTable_hidden.value='0';
 
-			}
+                                }
 
-		}
+                            }
 
-		</script>
+                        </script>
 
-		<table id='PhotoTable'><tr><td>
+                        <table id='PhotoTable'><tr><td>
 
-		<table border=0 cellpadding=5 cellspacing=1 bgcolor=#C3BD7C>
+                                    <table border=0 cellpadding=5 cellspacing=1 bgcolor=#C3BD7C>
 
-			<tr>
+                                        <tr>
 
-				<td colspan=5 align=center>
+                                            <td colspan=5 align=center>
 
-				<b><?php echo ADMIN_PHOTOS;?></b>
+                                                <b><?php echo ADMIN_PHOTOS;?></b>
 
-				</td>
+                                            </td>
 
-			</tr>
+                                        </tr>
 
-			<tr bgcolor=#F5F5C5>
+                                        <tr bgcolor=#F5F5C5>
 
-				<td><?php echo ADMIN_DEFAULT_PHOTO;?></td>
+                                            <td><?php echo ADMIN_DEFAULT_PHOTO;?></td>
 
-				<td><?php echo ADMIN_PRODUCT_PICTURE;?></td>
+                                            <td><?php echo ADMIN_PRODUCT_PICTURE;?></td>
 
-				<td><?php echo ADMIN_PRODUCT_THUMBNAIL;?></td>
+                                            <td><?php echo ADMIN_PRODUCT_THUMBNAIL;?></td>
 
-				<td><?php echo ADMIN_PRODUCT_BIGPICTURE;?></td>
+                                            <td><?php echo ADMIN_PRODUCT_BIGPICTURE;?></td>
 
-				<td width=1%>&nbsp;</td>
+                                            <td width=1%>&nbsp;</td>
 
-			</tr>
+                                        </tr>
 
-			<?php
+                                        <?php
 
-				foreach( $picturies as $picture )
+                                        foreach( $picturies as $picture )
 
-				{
+                                        {
 
-					echo("<tr bgcolor=#FFFFE2>");
+                                            echo("<tr bgcolor=#FFFFE2>");
 
-					// default picture radio button
+                                            // default picture radio button
 
-					if ( $picture["default_picture"] == 1 )
+                                            if ( $picture["default_picture"] == 1 )
 
-					{
+                                            {
 
-						$default_picture_exists = true;
+                                                $default_picture_exists = true;
 
-						echo("<td><input type=radio name=default_picture value='".$picture["photoID"].
+                                                echo("<td><input type=radio name=default_picture value='".$picture["photoID"].
 
-								"' checked></input></td>");
+                                                    "' checked></input></td>");
 
-					}
+                                            }
 
-					else
+                                            else
 
-						echo("<td><input type=radio name=default_picture value='".$picture["photoID"].
+                                                echo("<td><input type=radio name=default_picture value='".$picture["photoID"].
 
-								"'></input></td>");
+                                                    "'></input></td>");
 
-					// conventional picture ( filename field )
+                                            // conventional picture ( filename field )
 
-					echo("<td>");
+                                            echo("<td>");
 
-					echo("		<input type=text name=filename_".$picture["photoID"].
+                                            echo("		<input type=text name=filename_".$picture["photoID"].
 
-							" value='".$picture["filename"]."'><br>" );
+                                                " value='".$picture["filename"]."'><br>" );
 
-					if ( file_exists("./products_pictures/".$picture["filename"])
+                                            if ( file_exists("./products_pictures/".$picture["filename"])
 
-						 && trim($picture["filename"]) != "" )
+                                                && trim($picture["filename"]) != "" )
 
-						echo("		<a class=small href='javascript:open_window(\"products_pictures/".$picture["filename"]."\",".GetPictureSize($picture["filename"]).")'>".ADMIN_PHOTO_PREVIEW."</a>");
+                                                echo("		<a class=small href='javascript:open_window(\"products_pictures/".$picture["filename"]."\",".GetPictureSize($picture["filename"]).")'>".ADMIN_PHOTO_PREVIEW."</a>");
 
-					else
+                                            else
 
-						echo(ADMIN_PICTURE_NOT_UPLOADED);
+                                                echo(ADMIN_PICTURE_NOT_UPLOADED);
 
-					echo("</td>");
+                                            echo("</td>");
 
-					// small picture ( thumbnail field )
+                                            // small picture ( thumbnail field )
 
-					echo("<td>");
+                                            echo("<td>");
 
-					echo("		<input type=text name=thumbnail_".$picture["photoID"].
+                                            echo("		<input type=text name=thumbnail_".$picture["photoID"].
 
-							" value='".$picture["thumbnail"]."'><br>" );
+                                                " value='".$picture["thumbnail"]."'><br>" );
 
-					if ( file_exists("./products_pictures/".$picture["thumbnail"])
+                                            if ( file_exists("./products_pictures/".$picture["thumbnail"])
 
-						 && trim($picture["thumbnail"]) != "" )
+                                                && trim($picture["thumbnail"]) != "" )
 
-					{
+                                            {
 
-						echo("		<a class=small href='javascript:open_window(\"products_pictures/".$picture["thumbnail"]."\",".GetPictureSize($picture["thumbnail"]).")'>".ADMIN_PHOTO_PREVIEW."</a>");
+                                                echo("		<a class=small href='javascript:open_window(\"products_pictures/".$picture["thumbnail"]."\",".GetPictureSize($picture["thumbnail"]).")'>".ADMIN_PHOTO_PREVIEW."</a>");
 
-						echo("		<a class=small href=\"javascript:confirmDelete('".QUESTION_DELETE_PICTURE."', 'products.php?delete_one_picture=1&thumbnail=".$picture["photoID"]."&productID=".$_GET["productID"]."')\">".DELETE_BUTTON."</a>" );
+                                                echo("		<a class=small href=\"javascript:confirmDelete('".QUESTION_DELETE_PICTURE."', 'products.php?delete_one_picture=1&thumbnail=".$picture["photoID"]."&productID=".$_GET["productID"]."')\">".DELETE_BUTTON."</a>" );
 
-					}
+                                            }
 
-					else
+                                            else
 
-						echo(ADMIN_PICTURE_NOT_UPLOADED);
+                                                echo(ADMIN_PICTURE_NOT_UPLOADED);
 
-					echo("</td>");
+                                            echo("</td>");
 
-					// large picture ( enlarged field )
+                                            // large picture ( enlarged field )
 
-					echo("<td>");
+                                            echo("<td>");
 
-					echo("		<input type=text name=enlarged_".$picture["photoID"].
+                                            echo("		<input type=text name=enlarged_".$picture["photoID"].
 
-							" value='".$picture["enlarged"]."'><br>" );
+                                                " value='".$picture["enlarged"]."'><br>" );
 
-					if ( file_exists("./products_pictures/".$picture["enlarged"])
+                                            if ( file_exists("./products_pictures/".$picture["enlarged"])
 
-						 && trim($picture["enlarged"]) != "" )
+                                                && trim($picture["enlarged"]) != "" )
 
-					{
+                                            {
 
-						echo("		<a class=small href='javascript:open_window(\"products_pictures/".$picture["enlarged"]."\",".GetPictureSize($picture["enlarged"]).")'>".ADMIN_PHOTO_PREVIEW."</a>");
+                                                echo("		<a class=small href='javascript:open_window(\"products_pictures/".$picture["enlarged"]."\",".GetPictureSize($picture["enlarged"]).")'>".ADMIN_PHOTO_PREVIEW."</a>");
 
-						echo("		<a class=small href=\"javascript:confirmDelete('".QUESTION_DELETE_PICTURE."', 'products.php?delete_one_picture=1&enlarged=".$picture["photoID"]."&productID=".$_GET["productID"]."')\">".DELETE_BUTTON."</a>" );
+                                                echo("		<a class=small href=\"javascript:confirmDelete('".QUESTION_DELETE_PICTURE."', 'products.php?delete_one_picture=1&enlarged=".$picture["photoID"]."&productID=".$_GET["productID"]."')\">".DELETE_BUTTON."</a>" );
 
-					}
+                                            }
 
-					else
+                                            else
 
-						echo( ADMIN_PICTURE_NOT_UPLOADED );
+                                                echo( ADMIN_PICTURE_NOT_UPLOADED );
 
-					echo("</td>");
+                                            echo("</td>");
 
-					// delete button
+                                            // delete button
 
-					echo("<td>");
+                                            echo("<td>");
 
-					?>
+                                            ?>
 
-						<a href=
+                                            <a href=
 
-							"javascript:confirmDelete('<?php echo QUESTION_DELETE_PICTURE?>','products.php?productID=<?php echo $_GET["productID"]?>&photoID=<?php echo $picture["photoID"]?>&delete_pictures=1');">
+                                               "javascript:confirmDelete('<?php echo QUESTION_DELETE_PICTURE?>','products.php?productID=<?php echo $_GET["productID"]?>&photoID=<?php echo $picture["photoID"]?>&delete_pictures=1');">
 
-							<img src="images/remove.jpg" border=0 alt="<?php echo DELETE_BUTTON?>">
+                                                <img src="images/remove.jpg" border=0 alt="<?php echo DELETE_BUTTON?>">
 
-						</a>
+                                            </a>
 
-					<?php
+                                            <?php
 
-					echo("</td>");
+                                            echo("</td>");
 
-					echo("</tr>");
+                                            echo("</tr>");
 
-				}
+                                        }
 
-			?>
+                                        ?>
 
-			<tr>
+                                        <tr>
 
-				<td colspan=5 align=center>
+                                            <td colspan=5 align=center>
 
-					<?php echo ADD_BUTTON?>:
+                                                <?php echo ADD_BUTTON?>:
 
-				</td>
+                                            </td>
 
-			</tr>
+                                        </tr>
 
-			<tr bgcolor=#FFFFE2>
+                                        <tr bgcolor=#FFFFE2>
 
-				<td width=1%>
+                                            <td width=1%>
 
-					<input type=radio name=default_picture
+                                                <input type=radio name=default_picture
 
-					<?php
+                                                    <?php
 
-						if ( !isset($default_picture_exists) )
+                                                    if ( !isset($default_picture_exists) )
 
-						{
+                                                    {
 
-					?>
+                                                        ?>
 
-						checked
+                                                        checked
 
-					<?php
+                                                        <?php
 
-						}
+                                                    }
 
-					?>
+                                                    ?>
 
-						value=-1
+                                                       value=-1
 
-						>
+                                                >
 
-					</input>
+                                                </input>
 
-				</td>
+                                            </td>
 
-				<td>
+                                            <td>
 
-				<input type="file" name="new_filename" width=10></td>
+                                                <input type="file" name="new_filename" width=10></td>
 
-				<td><input type="file" name="new_thumbnail"></td>
+                                            <td><input type="file" name="new_thumbnail"></td>
 
-				<td><input type="file" name="new_enlarged"></td>
+                                            <td><input type="file" name="new_enlarged"></td>
 
-				<td width=1%>&nbsp;</td>
+                                            <td width=1%>&nbsp;</td>
 
-			</tr>
+                                        </tr>
 
-		</table>
+                                    </table>
 
-		<br>
+                                    <br>
 
-		<center>
+                                    <center>
 
-			<input type=submit name="save_pictures" value="<?php echo ADMIN_SAVE_PHOTOS?>">
+                                        <input type=submit name="save_pictures" value="<?php echo ADMIN_SAVE_PHOTOS?>">
 
-		</center>
+                                    </center>
 
-		</td></td></table>
+                                </td></td></table>
 
-		<script language='JavaScript'>
+                        <script language='JavaScript'>
 
-			<?php
+                            <?php
 
-			if ( $showPhotoTable == 0 )
+                            if ( $showPhotoTable == 0 )
 
-			{
+                            {
 
-			?>
+                            ?>
 
-				PhotoTable.style.display = 'none';
+                            PhotoTable.style.display = 'none';
 
-			<?php
+                            <?php
 
-			}
+                            }
 
-			?>
+                            ?>
 
-		</script>
+                        </script>
 
-	</td>
+                    </td>
 
-</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-	<td colspan=2 align=center>
+                    <td colspan=2 align=center>
 
-	</td>
+                    </td>
 
-</tr>
+                </tr>
 
-<?php
+                <?php
 
-// }
+                // }
 
-?>
+                ?>
 
-<?php
+                <?php
 
-?>
+                ?>
 
-<tr>
+                <tr>
 
-	<td colspan=2 align=center>
+                    <td colspan=2 align=center>
 
-		<table id='FileNameTable'>
+                        <table id='FileNameTable'>
 
-			<tr>
+                            <tr>
 
-				<td colspan=3>
+                                <td colspan=3>
 
-					<input type=checkbox name='ProductIsProgram'
+                                    <input type=checkbox name='ProductIsProgram'
 
-							value='1'
+                                           value='1'
 
-							onclick='JavaScript:ProductIsProgramHandler();'
+                                           onclick='JavaScript:ProductIsProgramHandler();'
 
-							<?php
+                                        <?php
 
-							if ( trim($product["eproduct_filename"]) != "" )
+                                        if ( trim($product["eproduct_filename"]) != "" )
 
-							{
+                                        {
 
-							?>
+                                            ?>
 
-								checked
+                                            checked
 
-							<?php
+                                            <?php
 
-							}
+                                        }
 
-							?>
+                                        ?>
 
-							>
+                                    >
 
-							<?php echo ADMIN_PRODUCT_IS_PROGRAM;?>
+                                    <?php echo ADMIN_PRODUCT_IS_PROGRAM;?>
 
-				</td>
+                                </td>
 
-			</tr>
+                            </tr>
 
-			<script language='JavaScript'>
+                            <script language='JavaScript'>
 
-				function ProductIsProgramHandler()
+                                function ProductIsProgramHandler()
 
-				{
+                                {
 
-					document.MainForm.eproduct_filename.disabled =
+                                    document.MainForm.eproduct_filename.disabled =
 
-							!document.MainForm.ProductIsProgram.checked;
+                                        !document.MainForm.ProductIsProgram.checked;
 
-					document.MainForm.eproduct_available_days.disabled =
+                                    document.MainForm.eproduct_available_days.disabled =
 
-							!document.MainForm.ProductIsProgram.checked;
+                                        !document.MainForm.ProductIsProgram.checked;
 
-					document.MainForm.eproduct_download_times.disabled =
+                                    document.MainForm.eproduct_download_times.disabled =
 
-							!document.MainForm.ProductIsProgram.checked;
+                                        !document.MainForm.ProductIsProgram.checked;
 
-				}
+                                }
 
-			</script>
+                            </script>
 
-			<tr>
+                            <tr>
 
-				<td>
+                                <td>
 
-					<?php echo ADMIN_EPRODUCT_FILENAME;?>
+                                    <?php echo ADMIN_EPRODUCT_FILENAME;?>
 
-				</td>
+                                </td>
 
-				<td>
+                                <td>
 
-					<?php echo ADMIN_EPRODUCT_AVAILABLE_DAYS;?>
+                                    <?php echo ADMIN_EPRODUCT_AVAILABLE_DAYS;?>
 
-				</td>
+                                </td>
 
-				<td>
+                                <td>
 
-					<?php echo ADMIN_EPRODUCT_DOWNLOAD_TIMES;?>
+                                    <?php echo ADMIN_EPRODUCT_DOWNLOAD_TIMES;?>
 
-				</td>
+                                </td>
 
-			</tr>
+                            </tr>
 
-			<tr>
+                            <tr>
 
-				<td>
+                                <td>
 
-					<input type='file' name='eproduct_filename'
+                                    <input type='file' name='eproduct_filename'
 
-							value='<?php echo $product["eproduct_filename"];?>' >
+                                           value='<?php echo $product["eproduct_filename"];?>' >
 
-					<br>
+                                    <br>
 
-					<?php
+                                    <?php
 
-					if ( file_exists("./products_files/".$product["eproduct_filename"])  &&
+                                    if ( file_exists("./products_files/".$product["eproduct_filename"])  &&
 
-							 $product["eproduct_filename"]!=null )
+                                        $product["eproduct_filename"]!=null )
 
-					{
+                                    {
 
-					?>
+                                        ?>
 
-						(<?php echo $product["eproduct_filename"];?>)
+                                        (<?php echo $product["eproduct_filename"];?>)
 
-					<?php
+                                        <?php
 
-					}
+                                    }
 
-					else
+                                    else
 
-					{
+                                    {
 
-					?>
+                                        ?>
 
-						<?php echo ADMIN_FILE_NOT_UPLOADED;?>
+                                        <?php echo ADMIN_FILE_NOT_UPLOADED;?>
 
-					<?php
+                                        <?php
 
-					}
+                                    }
 
-					?>
+                                    ?>
 
-				</td>
+                                </td>
 
-				<td>
+                                <td>
 
-					<?php
+                                    <?php
 
-						$valueArray[] = 1;
+                                    $valueArray[] = 1;
 
-						$valueArray[] = 2;
+                                    $valueArray[] = 2;
 
-						$valueArray[] = 3;
+                                    $valueArray[] = 3;
 
-						$valueArray[] = 4;
+                                    $valueArray[] = 4;
 
-						$valueArray[] = 5;
+                                    $valueArray[] = 5;
 
-						$valueArray[] = 7;
+                                    $valueArray[] = 7;
 
-						$valueArray[] = 14;
+                                    $valueArray[] = 14;
 
-						$valueArray[] = 30;
+                                    $valueArray[] = 30;
 
-						$valueArray[] = 180;
+                                    $valueArray[] = 180;
 
-						$valueArray[] = 365;
+                                    $valueArray[] = 365;
 
-					?>
+                                    ?>
 
-					<select name='eproduct_available_days'>
+                                    <select name='eproduct_available_days'>
 
-						<?php
+                                        <?php
 
-						foreach($valueArray as $value)
+                                        foreach($valueArray as $value)
 
-						{
+                                        {
 
-						?>
+                                            ?>
 
-							<option value='<?php echo $value;?>'
+                                            <option value='<?php echo $value;?>'
 
-							<?php
+                                                <?php
 
-								if ( $product["eproduct_available_days"] == $value )
+                                                if ( $product["eproduct_available_days"] == $value )
 
-								{
+                                                {
 
-							?>
+                                                    ?>
 
-									selected
+                                                    selected
 
-							<?php
+                                                    <?php
 
-								}
+                                                }
 
-							?>
+                                                ?>
 
-							> <?php echo $value;?> </option>
+                                            > <?php echo $value;?> </option>
 
-						<?php
+                                            <?php
 
-						}
+                                        }
 
-						?>
+                                        ?>
 
-					</select>
+                                    </select>
 
-				</td>
+                                </td>
 
-				<td>
+                                <td>
 
-					<input type=text name='eproduct_download_times'
+                                    <input type=text name='eproduct_download_times'
 
-						value='<?php echo $product["eproduct_download_times"];?>' >
+                                           value='<?php echo $product["eproduct_download_times"];?>' >
 
-				</td>
+                                </td>
 
-			</tr>
+                            </tr>
 
-		</table>
+                        </table>
 
-		<script language='JavaScript'>
+                        <script language='JavaScript'>
 
-			ProductIsProgramHandler();
+                            ProductIsProgramHandler();
 
-		</script>
+                        </script>
 
-	</td>
+                    </td>
 
-</tr>
+                </tr>
 
-<?php
+                <?php
 
-?>
+                ?>
 
-<tr>
+                <tr>
 
-<td align="left" colspan="2" style="font-weight:bold;"><?php echo ADMIN_PRODUCT_BRIEF_DESC;?> (HTML):</td>
+                    <td align="left" colspan="2" style="font-weight:bold;"><?php echo ADMIN_PRODUCT_BRIEF_DESC;?> (HTML):</td>
 
-</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-<!--<td><textarea name="brief_description" rows=7 cols=40><?php //echo str_replace("<","&lt;",$product["brief_description"]); ?></textarea></td>-->
+                    <!--<td><textarea name="brief_description" rows=7 cols=40><?php //echo str_replace("<","&lt;",$product["brief_description"]); ?></textarea></td>-->
 
-<td colspan="2">
+                    <td colspan="2">
 
-<?php
-//echo $product["brief_description"];
+                        <?php
+                        //echo $product["brief_description"];
 
-			    $oFCKeditor = new FCKeditor('brief_description') ;
+                        $oFCKeditor = new FCKeditor('brief_description') ;
 
-				$oFCKeditor->BasePath = '/js/fckeditor/' ;
+                        $oFCKeditor->BasePath = '/js/fckeditor/' ;
 
-				$oFCKeditor->Value = $product["brief_description"];
+                        $oFCKeditor->Value = $product["brief_description"];
 
-               	$oFCKeditor->Create();
+                        $oFCKeditor->Create();
 
-?>
+                        ?>
 
-</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-<td align="left" colspan="2" style="font-weight:bold;"><?php echo ADMIN_PRODUCT_DESC;?> (HTML):</td>
+                    <td align="left" colspan="2" style="font-weight:bold;"><?php echo ADMIN_PRODUCT_DESC;?> (HTML):</td>
 
-</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-<!--<td><textarea name="description" rows=15 cols=40><?php //echo str_replace("<","&lt;",$product["description"]); ?></textarea></td>-->
+                    <!--<td><textarea name="description" rows=15 cols=40><?php //echo str_replace("<","&lt;",$product["description"]); ?></textarea></td>-->
 
-<td colspan="2">
+                    <td colspan="2">
 
-<?php
+                        <?php
 
-			    $oFCKeditor = new FCKeditor('description') ;
+                        $oFCKeditor = new FCKeditor('description') ;
 
-				$oFCKeditor->BasePath = '/js/fckeditor/' ;
+                        $oFCKeditor->BasePath = '/js/fckeditor/' ;
 
-				$oFCKeditor->Value = $product["description"];
+                        $oFCKeditor->Value = $product["description"];
 
-               	$oFCKeditor->Create();
+                        $oFCKeditor->Create();
 
-?>
+                        ?>
 
-</td>
+                    </td>
 
-</tr>
+                </tr>
 
 
 
@@ -5035,159 +5104,159 @@ $skidka = $product["skidka"];
 
 
 
-<tr>
+                <tr>
 
-<td align="left" colspan="2" style="font-weight:bold;"><?php echo ADMIN_PRODUCT_BRIEF_DESC2;?> (HTML):</td>
+                    <td align="left" colspan="2" style="font-weight:bold;"><?php echo ADMIN_PRODUCT_BRIEF_DESC2;?> (HTML):</td>
 
-</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-<!--<td><textarea name="brief_description" rows=7 cols=40><?php //echo str_replace("<","&lt;",$product["brief_description"]); ?></textarea></td>-->
+                    <!--<td><textarea name="brief_description" rows=7 cols=40><?php //echo str_replace("<","&lt;",$product["brief_description"]); ?></textarea></td>-->
 
-<td colspan="2">
+                    <td colspan="2">
 
-<?php
+                        <?php
 
-			    $oFCKeditor = new FCKeditor('brief_description2') ;
+                        $oFCKeditor = new FCKeditor('brief_description2') ;
 
-				$oFCKeditor->BasePath = '/js/fckeditor/' ;
+                        $oFCKeditor->BasePath = '/js/fckeditor/' ;
 
-				$oFCKeditor->Value = $product["brief_description2"];
+                        $oFCKeditor->Value = $product["brief_description2"];
 
-               	$oFCKeditor->Create();
+                        $oFCKeditor->Create();
 
-?>
+                        ?>
 
-</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-<td align="left" colspan="2" style="font-weight:bold;"><?php echo ADMIN_PRODUCT_DESC2;?> (HTML):</td>
+                    <td align="left" colspan="2" style="font-weight:bold;"><?php echo ADMIN_PRODUCT_DESC2;?> (HTML):</td>
 
-</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-<!--<td><textarea name="description" rows=15 cols=40><?php //echo str_replace("<","&lt;",$product["description"]); ?></textarea></td>-->
+                    <!--<td><textarea name="description" rows=15 cols=40><?php //echo str_replace("<","&lt;",$product["description"]); ?></textarea></td>-->
 
-<td colspan="2">
+                    <td colspan="2">
 
-<?php
+                        <?php
 
-			    $oFCKeditor = new FCKeditor('description2') ;
+                        $oFCKeditor = new FCKeditor('description2') ;
 
-				$oFCKeditor->BasePath = '/js/fckeditor/' ;
+                        $oFCKeditor->BasePath = '/js/fckeditor/' ;
 
-				$oFCKeditor->Value = $product["description2"];
+                        $oFCKeditor->Value = $product["description2"];
 
-               	$oFCKeditor->Create();
+                        $oFCKeditor->Create();
 
-?>
+                        ?>
 
-</td>
+                    </td>
 
-</tr>
+                </tr>
 
 
 
-<tr>
+                <tr>
 
-	<td align="center" colspan="2">
+                    <td align="center" colspan="2">
 
-		<?php echo ADMIN_META_DESCRIPTION;?><br>
+                        <?php echo ADMIN_META_DESCRIPTION;?><br>
 
-		<textarea name='meta_description' rows=10 cols=90><?php echo $product["meta_description"];?></textarea>
+                        <textarea name='meta_description' rows=10 cols=90><?php echo $product["meta_description"];?></textarea>
 
-	</td>
+                    </td>
 
-</tr>
+                </tr>
 
-<tr>
+                <tr>
 
-	<td align="center" colspan="2">
+                    <td align="center" colspan="2">
 
-		<?php echo ADMIN_META_KEYWORDS;?><br>
+                        <?php echo ADMIN_META_KEYWORDS;?><br>
 
-		<textarea name='meta_keywords' 	rows=10 cols=90><?php echo $product["meta_keywords"];?></textarea>
+                        <textarea name='meta_keywords' 	rows=10 cols=90><?php echo $product["meta_keywords"];?></textarea>
 
-	</td>
+                    </td>
 
-</tr>
+                </tr>
 
-</table>
+            </table>
 
-<?php if ($_GET["productID"]) { ?>
+            <?php if ($_GET["productID"]) { ?>
 
-<hr size=1 width=90%>
+                <hr size=1 width=90%>
 
-<center>
+                <center>
 
-<font><b><?php echo STRING_RELATED_ITEMS;?></b></font>
+                    <font><b><?php echo STRING_RELATED_ITEMS;?></b></font>
 
-<?php
+                    <?php
 
-	$q = db_query("SELECT count(*) FROM ".RELATED_PRODUCTS_TABLE." WHERE Owner='".$_GET["productID"]."'") or die (db_error());
+                    $q = db_query("SELECT count(*) FROM ".RELATED_PRODUCTS_TABLE." WHERE Owner='".$_GET["productID"]."'") or die (db_error());
 
-	$cnt = db_fetch_row($q);
+                    $cnt = db_fetch_row($q);
 
-	if ($cnt[0] == 0) echo "<p><font>< ".STRING_EMPTY_CATEGORY." ></font></p>";
+                    if ($cnt[0] == 0) echo "<p><font>< ".STRING_EMPTY_CATEGORY." ></font></p>";
 
-	else {
+                    else {
 
-		$q = db_query("SELECT productID FROM ".RELATED_PRODUCTS_TABLE." WHERE Owner='".$_GET["productID"]."'") or die (db_error());
+                        $q = db_query("SELECT productID FROM ".RELATED_PRODUCTS_TABLE." WHERE Owner='".$_GET["productID"]."'") or die (db_error());
 
-		echo "<table>";
+                        echo "<table>";
 
-		while ($r = db_fetch_row($q))
+                        while ($r = db_fetch_row($q))
 
-		{
+                        {
 
-			$p = db_query("SELECT productID, name FROM ".PRODUCTS_TABLE." WHERE productID=$r[0]") or die (db_error());
+                            $p = db_query("SELECT productID, name FROM ".PRODUCTS_TABLE." WHERE productID=$r[0]") or die (db_error());
 
-			if ($r1 = db_fetch_row($p))
+                            if ($r1 = db_fetch_row($p))
 
-			{
+                            {
 
-			  echo "<tr>";
+                                echo "<tr>";
 
-			  echo "<td width=100%>$r1[1]</td>";
+                                echo "<td width=100%>$r1[1]</td>";
 
-			  echo "</tr>";
+                                echo "</tr>";
 
-			}
+                            }
 
-		}
+                        }
 
-		echo "</table>";
+                        echo "</table>";
 
-	}
+                    }
 
-?>
+                    ?>
 
-[ <a href="javascript:open_window('wishlist.php?owner=<?php echo $_GET["productID"]; ?>',400,600);"><?php echo EDIT_BUTTON; ?></a> ]
+                    [ <a href="javascript:open_window('wishlist.php?owner=<?php echo $_GET["productID"]; ?>',400,600);"><?php echo EDIT_BUTTON; ?></a> ]
 
-</center>
+                </center>
 
-<hr size=1 width=90%>
+                <hr size=1 width=90%>
 
-<?php } ?>
+            <?php } ?>
 
-<p><center>
+    <p><center>
 
-<input type="submit" name="save_product" value="<?php echo SAVE_BUTTON;?>" width=5>
+        <input type="submit" name="save_product" value="<?php echo SAVE_BUTTON;?>" width=5>
 
-<input type="button" value="<?php echo CANCEL_BUTTON;?>" onClick="window.close();">
+        <input type="button" value="<?php echo CANCEL_BUTTON;?>" onClick="window.close();">
 
-<?php	if ($_GET["productID"]) echo "<input type=button value=\"".DELETE_BUTTON."\" onClick=\"confirmDelete('".QUESTION_DELETE_CONFIRMATION."','products.php?productID=".$_GET["productID"]."&delete=1');\">"; ?>
+        <?php	if ($_GET["productID"]) echo "<input type=button value=\"".DELETE_BUTTON."\" onClick=\"confirmDelete('".QUESTION_DELETE_CONFIRMATION."','products.php?productID=".$_GET["productID"]."&delete=1');\">"; ?>
 
-&nbsp;<?php    if ($_GET["productID"]) echo "<input type=submit name=dbl_product value=\"".DBL_BUTTON."\" onClick=\"confirmDelete('".QUESTION_DBL_CONFIRMATION."','products.php?productID=".$_GET["productID"]."&dbl=1');\">"; ?>
+        &nbsp;<?php    if ($_GET["productID"]) echo "<input type=submit name=dbl_product value=\"".DBL_BUTTON."\" onClick=\"confirmDelete('".QUESTION_DBL_CONFIRMATION."','products.php?productID=".$_GET["productID"]."&dbl=1');\">"; ?>
 
-</center></p>
+    </center></p>
 
-<input type=hidden name='save_product_without_closing' value='0'>
+    <input type=hidden name='save_product_without_closing' value='0'>
 
-</form>
+    </form>
 
 </center>
 
