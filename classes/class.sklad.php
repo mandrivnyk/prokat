@@ -193,7 +193,8 @@ class sklad
                 array_walk($variant, array($this, '_convertVariantsTo1251'));
                 $com_str .= "<option value='".$key."'>";
                 if(isset($variant['size']) && $variant['size'] !== '') {
-                    $com_str .=  "размер: ".$variant['size'];
+                   // $com_str .=  "размер: ".$variant['size'];
+                    $com_str .=  "".$variant['size'];
                 }
                 if(isset($variant['color']) && $variant['color'] !== '') {
                     $com_str .=  " цвет: ".$variant['color'];

@@ -40,26 +40,33 @@
                     $("#sklad").show();
                     $("#skladContent").html(responseText);
                     $("#variantsOld").remove();
+                    getSkladForCharacterList(productCodeString, size_arr, colors_arr);
                 }
             }
         });
-        $.ajax({
-            type: "POST",
-            url: "/public_scripts/ajax_sklad_get.php",
-            data: {
-                size_arr: size_arr,
-                colors_arr: colors_arr,
-                productCode: productCodeString,
-                forCharacterList: 1
-            },
-            success: function(responseList){
-                if( !$.isEmptyObject(responseList)) {
-                    $("#inSkladTRTag").show();
-                    $("#inSkladTDTag").html(responseList);
-                }
-            }
-        });
+
     }
+
+       function getSkladForCharacterList(productCodeString, size_arr, colors_arr) {
+                $.ajax({
+                    type: "POST",
+                    url: "/public_scripts/ajax_sklad_get.php",
+                    data: {
+                        size_arr: size_arr,
+                        colors_arr: colors_arr,
+                        productCode: productCodeString,
+                        forCharacterList: 1
+                    },
+                    success: function(responseList){
+                        if( !$.isEmptyObject(responseList)) {
+                            $("#inSkladTRTag").show();
+                            $("#inSkladTDTag").html(responseList);
+                        }
+                    }
+                });
+        }
+
+
 </script>
     {/literal}
 
