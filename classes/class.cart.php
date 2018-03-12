@@ -129,6 +129,7 @@ class Cart
 
             $resCart = cartGetCartContent();
 
+
             $resDiscount = dscCalculateDiscount( $resCart["total_price"],
                 isset($_SESSION["log"])?$_SESSION["log"]:"" );
             $discount_value		= addUnitToPrice( $resDiscount["discount_current_unit"] );
@@ -210,6 +211,10 @@ class Cart
                     break;
             }
         }
+
+//        print_r($resCart);
+//        print_r("TEST");
+//        exit();
         $this->smarty->assign( "main_content_template", "shopping_cart.tpl.html" );
     }
 }

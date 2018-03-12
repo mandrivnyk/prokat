@@ -115,7 +115,7 @@ require_once('./classes/class.sklad.php');
         foreach ($productCodeArr as $key=>$productCode){
 
 
-            if(trim($variantNumArr[$key]) !== ""){
+            if(isset($variantNumArr[$key]) && trim($variantNumArr[$key]) !== ""){
                 if($key == 1){
                     $res .= "<br>";
                 }

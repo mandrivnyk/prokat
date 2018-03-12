@@ -180,7 +180,21 @@ class sklad
 //                print_r($variants);
 //            echo '</pre>';
 //            exit();
-            $result = 'артикул: '.$variants[$variantNum]['productCode'].', размер: '.$variants[$variantNum]['size'].', цвет: '.$variants[$variantNum]['color'];
+            if(!isset($variants[$variantNum]['size'])) {
+                $sizeString = '';
+            }
+            else {
+                $sizeString = ', размер: '.$variants[$variantNum]['size'];
+            }
+
+            if(!isset($variants[$variantNum]['color'])) {
+                $colorString = '';
+            }
+            else {
+                $colorString = ', цвет: '.$variants[$variantNum]['color'];
+            }
+
+            $result = 'артикул: '.$variants[$variantNum]['productCode'].$sizeString.$colorString;
         }
         return $result;
     }

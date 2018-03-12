@@ -1,5 +1,5 @@
 <?php
-$cache_enable =0;  //-------------------Включение -  1/отключение -  0 кеширования--------------------------------
+$cache_enable =1;  //-------------------Включение -  1/отключение -  0 кеширования--------------------------------
 //unset( $_SESSION );
 //exit();
 	
@@ -24,6 +24,9 @@ if ($cache_enable == 1)
 		&& !isset($_GET['register'])
 		&& !isset($_GET['change_address'])
 		&& !isset($_GET['discuss'])
+        && !isset($_POST['shopping_cart'])
+        && !isset($_POST['addproduct'])
+        && !isset($_GET['addproduct'])
 		&& !isset($_GET['shopping_cart']))
 	{
 		if($_SERVER['REQUEST_URI'] == '/')

@@ -57,7 +57,7 @@ $badBots = array(
 );
 for($i=0;$i<count($badBots);$i++)
 {
-	if(stristr($_SERVER['HTTP_USER_AGENT'], $badBots[$i]))
+	if(isset($_SERVER['HTTP_USER_AGENT']) && stristr($_SERVER['HTTP_USER_AGENT'], $badBots[$i]))
 	{
 		//header('Location: http://prokat.ho.com.ua');
 		exit; //  - запрещаю вход для ненужных поисковых ботов и прочей нечести

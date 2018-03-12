@@ -33,7 +33,10 @@
 				$fp = fopen('./statistic/'.$_SERVER['REMOTE_ADDR'].'/'.date('Y-m-d').'.txt', "a"); // ("r" - считывать "w" - создавать "a" - добовлять к тексту), мы создаем файл
 				$str = $_SERVER['REMOTE_ADDR'].' = '.date('Y-m-d').' = '.date('H:m:s Y-m-d');
 				$str = $str.' = '.$_SERVER['REQUEST_URI'];
-				$str = $str.' = '.$_SERVER['HTTP_USER_AGENT']."\r\n";
+				if(isset($_SERVER['HTTP_USER_AGENT'])) {
+                    $str = $str.' = '.$_SERVER['HTTP_USER_AGENT']."\r\n";
+                }
+
 				$res = fwrite($fp, $str);
 				fclose ($fp);
 			}
@@ -41,7 +44,10 @@
 $fp = fopen('./incomeip.txt', 'a');
 $str = $_SERVER['REMOTE_ADDR'].' = '.date('Y-m-d').' = '. date('H:m:s Y-m-d');
 $str = $str.' = '.$_SERVER['REQUEST_URI'];
-$str = $str.' = '.$_SERVER['HTTP_USER_AGENT']."\r\n";
+if(isset($_SERVER['HTTP_USER_AGENT'])) {
+    $str = $str.' = '.$_SERVER['HTTP_USER_AGENT']."\r\n";
+}
+
 $res = fwrite($fp, $str);
 fclose($fp);
 //echo $_SERVER['REMOTE_ADDR'];
