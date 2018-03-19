@@ -411,7 +411,7 @@ echo '</pre>';*/
 
 //-------------------------------------------------------------------------------------------------------
 		$q = db_query("SELECT productID, producer, title_one,url_name, name, enabled FROM ".PRODUCTS_TABLE." WHERE  enabled <> 0 ORDER BY RAND() LIMIT 0,50") or die (db_error());
-					
+		$CloudTags1 = array();
 					while ($rowCloud = db_fetch_row($q))
 					{
 						$CloudTags1[] = $rowCloud;
@@ -461,6 +461,7 @@ if(isset($rand_prod_action)){
 		//t1 LEFT JOIN ".PRODUCT_PICTURES." t2 ON t1.productID= t2.productID WHERE t1.categoryID <> 283 AND t1.enabled =1 ORDER BY RAND() LIMIT 0 , 4" ) or die (db_error());
 		//$q = db_query("SELECT * FROM ".PRODUCTS_TABLE." t1 LEFT JOIN ".PRODUCT_PICTURES." t2 ON t1.productID= t2.productID WHERE t1.categoryID <> 283 AND t1.enabled =1 ORDER BY RAND() LIMIT 0 , 4" ) or die (db_error());
 		//echo "SELECT * FROM ".PRODUCTS_TABLE." t1 LEFT JOIN ".PRODUCT_PICTURES." t2 ON t1.productID= t2.productID  ORDER BY RAND() LIMIT 0 , 4";
+		$new_pred = array();
 		while ($row = db_fetch_row($q))
 		{
 			$q1 = db_query("SELECT * FROM ".PRODUCTS_TABLE." t1 LEFT JOIN ".PRODUCT_PICTURES." t2 ON t1.productID= t2.productID WHERE t1.productID =".$row['productID']." AND t1.enabled =1"  ) or die (db_error());

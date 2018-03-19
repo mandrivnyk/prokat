@@ -73,7 +73,7 @@ if(isset($productCode)) {
                 }
 
                 if($sklad->checkIsFile($productCode)) {
-                    $productCode1251 = iconv("UTF-8","windows-1251",trim($_POST['productCode']));
+                    $productCode1251 = iconv("UTF-8","windows-1251",trim($productCode));
                     $result .= '<br><b>Артикул: ' . $productCode1251 . '</b><br>';
                     $result .= $sklad->createSkladInSelectTag($sklad->getVariantsFromFile($productCode), $key);
                 }

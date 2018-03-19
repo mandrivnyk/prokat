@@ -161,7 +161,7 @@ function settingDefineConstants()
 		
 		$EvalStr = 'define(\''.$row["settings_constant_name"].'\', \''.
 			str_replace(array('\\',"'"),array('\\\\',"\'"), $row["settings_value"] ).'\');';
-		eval( $EvalStr );
+		@eval( $EvalStr );
 	}
 }
 
