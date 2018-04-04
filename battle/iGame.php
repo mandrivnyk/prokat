@@ -8,6 +8,6 @@
 
 interface iGame
 {
-    public function show(): void;
+    public function start(): void;
 
 }

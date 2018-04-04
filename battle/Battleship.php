@@ -13,7 +13,7 @@ class Battleship extends Ship
      */
     public function __construct()
     {
-        $data['size'] = 5;
-//        parent::__construct($data);
+        $this->setSize(5);
+        $this->setType("Battleship");
     }
 }

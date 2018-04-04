@@ -11,11 +11,12 @@ class FactoryShip
     public function create($type)
     {
         switch ($type) {
-            case'Battleship':
+            case 'Battleship':
                 return new Battleship();
-            case'Battleship':
-            default:
+                break;
+            case 'Destroyers':
                 return new Destroyers();
+                break;
         }
     }
 }

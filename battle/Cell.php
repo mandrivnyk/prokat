@@ -47,18 +47,18 @@ class Cell implements iCell
         return $this->filling;
     }
 
-    /**
-     * @param mixed $filling
-     * @return void
-     */
+
     public function fill(): void
     {
         $this->filling = 1;
     }
 
-    /**
-     * @param mixed $filling
-     */
+    public function fillOutHistory(): void
+    {
+        $this->filling = 2;
+    }
+
+
     public function fillOut(): void
     {
         $this->filling = 0;

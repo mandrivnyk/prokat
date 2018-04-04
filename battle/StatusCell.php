@@ -9,19 +9,24 @@
 class StatusCell
 {
     private $status;
+    const STATUS_NO_SHOT = "noShot";
+    const STATUS_MISS = "miss";
+    const STATUS_HIT = "hit";
+
     public function __construct()
     {
-        $this->set("noShot");
+        $this->set(self::STATUS_NO_SHOT);
     }
 
     public function set(string $status): void{
         switch ($status) {
-            case "noShot":
+            case self::STATUS_NO_SHOT:
                 $this->status = ".";
                 break;
-            case "miss":
+            case self::STATUS_MISS:
                 $this->status = "-";
-            case "hit":
+                break;
+            case self::STATUS_HIT:
                 $this->status = "x";
         }
     }

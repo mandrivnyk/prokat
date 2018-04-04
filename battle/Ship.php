@@ -6,26 +6,71 @@
  * Time: 14:00
  */
 
-abstract class  Ship
+abstract class  Ship implements iShip
 {
+    const   POSITIONS_AVAILABLE = array("horizontal", "vertical");
+    const   STATUS_LIVE = "live";
+    const   STATUS_DAMAGED = "damaged";
+    const   STATUS_DEAD = "sunk";
     private $size;
     private $position;
+    private $status;
     private $startPointX;
     private $startPointY;
     private $coords;
+    private $type;
+
 
     /**
      * Ship constructor.
      */
     public function __construct()
     {
-//       $this->setSize($data['size']);
-//       $this->setPosition($data['position']);
-//       $this->setStartPointX($data['startPointX']);
-//       $this->setStartPointY($data['startPointY']);
-//       $this->setCoords();
-//       $this->genCoordinatesOfShip();
+
     }
+
+    /**
+     * @return mixed
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType(string $type): void
+    {
+        $this->type = $type;
+    }
+
+
+    /**
+     * @return array
+     */
+    public static function getPositionsAvailable()
+    {
+        return self::POSITIONS_AVAILABLE;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status): void
+    {
+        $this->status = $status;
+    }
+
+
 
     /**
      * @return array
@@ -45,28 +90,21 @@ abstract class  Ship
 
 
 
-    public function genCoordinatesOfShip(): void{
+    public function genCoordinatesOfShip(): void
+    {
         $coords = array();
+        if(empty($this->getPosition()) || is_null($this->getStartPointX()) || is_null($this->getStartPointY())){
+            throw new Exception("The data of ship is not set");
+        }
+
         switch ($this->getPosition()){
-            case "up":
-                for ($y = $this->getStartPointY(); $y > ($this->getStartPointY()-$this->getSize()); $y-- ) {
-                    $coords[] = $this->getStartPointX().":".$y;
-                }
-                $this->setCoords($coords);
-                break;
-            case "down":
+            case "vertical":
                 for ($y = $this->getStartPointY(); $y < ($this->getStartPointY()+$this->getSize()); $y++ ) {
                     $coords[] = $this->getStartPointX().":".$y;
                 }
                 $this->setCoords($coords);
                 break;
-            case "left":
-                for ($x = $this->getStartPointX(); $x > ($this->getStartPointX()-$this->getSize()); $x-- ) {
-                    $coords[] = $x.":".$this->getStartPointY();
-                }
-                $this->setCoords($coords);
-                break;
-            case "right":
+            case "horizontal":
                 for ($x = $this->getStartPointX(); $x < ($this->getStartPointX()+$this->getSize()); $x++ ) {
                     $coords[] = $x.":".$this->getStartPointY();
                 }
@@ -99,13 +137,23 @@ abstract class  Ship
         return $this->position;
     }
 
-    /**
-     * @param mixed $position
-     */
+
     public function setPosition(string $position)
     {
+        if(!in_array($position, self::getPositionsAvailable())){
+            throw new Exception("This position is not exist");
+        }
         $this->position = $position;
     }
+
+    public function getRandomPosition(): string
+    {
+        return array_rand(self::POSITIONS_AVAILABLE(), 1);
+    }
+
+
+
+
 
     /**
      * @return mixed

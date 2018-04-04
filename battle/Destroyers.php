@@ -14,7 +14,7 @@ class Destroyers extends Ship
      */
     public function __construct()
     {
-        $data['size'] = 4;
-//        parent::__construct($data);
+        $this->setSize(4);
+        $this->setType("Destroyers");
     }
 }
