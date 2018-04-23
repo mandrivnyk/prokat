@@ -75,29 +75,20 @@ if(isset($productCode)) {
                 if($sklad->checkIsFile($productCode)) {
                     $productCode1251 = iconv("UTF-8","windows-1251",trim($productCode));
                     $result .= '<br><b>Артикул: ' . $productCode1251 . '</b><br>';
-                    $result .= $sklad->createSkladInSelectTag($sklad->getVariantsFromFile($productCode), $key);
+                    $result .= $sklad->createSkladInSelectTag($sklad->getVariantsFromFile($productCode), $key, $sizes, $colors);
                 }
             }
             echo $result.'<br>';
             exit();
         }
 
-        if($forCharacterList >0) {
-            $result .= '<b>';
-            $result .= '<table class="datatableSkladList"><tr><td>Артикул</td>';
-            if(!empty($sizes)){
-                $result .='<td>Размер</td>';
-            }
-            if(!empty($colors)){
-                $result .='<td>Цвет</td>';
-            }
+        if($forCharacterList >0 && (count($sizes)>0 || count($colors)>0 )) {
 
-            $result .= '</tr>';
 
             foreach ($productCodes as $productCode) {
-                $result .= $sklad->createSkladInList($sklad->getVariantsFromFile($productCode));
+                $result .= $sklad->createSkladInList($sklad->getVariantsFromFile($productCode), $sizes, $colors);
             }
-            $result .= '</table></b>';
+            $result .='</table></b>';
             echo $result.'<br>';
             exit();
         }

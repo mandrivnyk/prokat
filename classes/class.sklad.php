@@ -4,29 +4,26 @@ class sklad
 
     private $dir;
     private $data;
+    const IN_SHOP = 'в магазине';
+    const IN_SUPPLIER = 'на складе';
 
 
     public  function __construct(){
         $this->_setDir($_SERVER['DOCUMENT_ROOT'].'/sklad/');
     }
 
-//
-//    public function getVariants($productCode)
-//    {
-//        if($productCode >0) {
-//            $variants = $this->getVariantsFromFile($productCode);
-//        }
-//    }
+    public  function getSkladName($number){
+        switch ($number) {
+            case 1:
+                return self::IN_SHOP;
+                break;
+            case 2:
+                return  self::IN_SUPPLIER;
+                break;
+            }
+        }
 
-//    public function _convertVariantsTo1251($variant)
-//    {
-//       // print_r($variant) ;
-//        $variant['size'] = iconv("UTF-8","windows-1251",$variant['size']);
-//        $variant['color'] = iconv("UTF-8","windows-1251",$variant['color']);
-//        $variant['price'] = iconv("UTF-8","windows-1251",$variant['price']);
-//        $variant['sklad'] = iconv("UTF-8","windows-1251",$variant['sklad']);
-//        return $variant;
-//    }
+
 
     public function utf8_fopen_read($fileName) {
         $fc = file_get_contents($fileName);
@@ -143,9 +140,17 @@ class sklad
     }
 
     function _convertVariantsTo1251(&$value, $key){
+
+        //if(is_string($value) && !is_array($value) && mb_detect_encoding($value) == 'UTF-8'){
         if(is_string($value) && !is_array($value)){
             $value = iconv("UTF-8","windows-1251",  $value);
         }
+    }
+    function _convertStringTo1251($value){
+        if(is_string($value) && !is_array($value)){
+            $value = iconv("UTF-8","windows-1251",  $value);
+        }
+        return $value;
     }
 
 
@@ -176,10 +181,6 @@ class sklad
             }
 
             array_walk($variants[$variantNum], array($this, '_convertVariantsTo1251'));
-//            echo '<pre>';
-//                print_r($variants);
-//            echo '</pre>';
-//            exit();
             if(!isset($variants[$variantNum]['size'])) {
                 $sizeString = '';
             }
@@ -199,44 +200,115 @@ class sklad
         return $result;
     }
 
-    public function createSkladInSelectTag($variants, $i){
+    public function createSkladInSelectTag($variants, $i, $sizes, $colors){
         $com_str = '';
+
         if(count($variants) > 0) {
             $com_str .= "<select id='select_variants_".$i."' name='select_variants_".$i."'><option value=''>Выберите варианты</option>";
+            $optionArr = array();
             foreach ($variants as $key=>$variant) {
                 array_walk($variant, array($this, '_convertVariantsTo1251'));
-                $com_str .= "<option value='".$key."'>";
+                $optionString = "";
                 if(isset($variant['size']) && $variant['size'] !== '') {
                    // $com_str .=  "размер: ".$variant['size'];
-                    $com_str .=  "".$variant['size'];
+                    $optionString .=  "".$variant['size'];
+                } else if(count($sizes) > 0){
+
+                    foreach ($sizes as $size) {
+                        if(!empty($size)){
+                            $size =  $this->_convertStringTo1251($size);
+                            $optionString .=  "".$size;
+                        }
+                    }
                 }
+
                 if(isset($variant['color']) && $variant['color'] !== '') {
-                    $com_str .=  " цвет: ".$variant['color'];
+                    $optionString .=  " цвет: ".$variant['color'];
+                } else if(count($colors) > 0){
+
+                    foreach ($colors as $color) {
+                        if(!empty($color)){
+                            $color =  $this->_convertStringTo1251($color);
+                            $optionString .=  " цвет: ".$color;
+                        }
+                    }
                 }
-                $com_str .=  "</option>";
+                $optionString .=  "";
+                $optionArr[] = trim($optionString);
+            }
+
+            $options = array_unique($optionArr);
+
+            foreach ($options as $key=>$option) {
+                $com_str .= "<option value='".$key."'>".$option."</option>";
             }
             $com_str .= "</select><br>";
         }
         return $com_str;
     }
 
-    public function createSkladInList($variants){
+    public function createSkladInList($variants, $sizes, $colors){
+
         $com_str = '';
         $variantsLength = count($variants);
         if($variantsLength > 0) {
-            $com_str = '';
+
+            $com_str .= '<b>';
+            $com_str .= '<table class="datatableSkladList">';
+//            $com_str .='<tr><td>Артикул</td>';
+//            if(!empty($sizes)){
+//                $com_str .='<td>Размер</td>';
+//            }
+//            if(!empty($colors)){
+//                $com_str .='<td>Цвет</td>';
+//            }
+//
+//            $com_str .='<td> </td>';
+//            $com_str .= '</tr>';
             $i = 0;
             foreach ($variants as $variant) {
+
                 array_walk($variant, array($this, '_convertVariantsTo1251'));
                 $com_str .= '<tr>';
                 if($i == 0) {
                     $com_str .= '<td rowspan='.$variantsLength.' valign="top">'.$variant['productCode'].'</td>';
                 }
+
                 if(isset($variant['size']) && $variant['size'] !== '') {
                     $com_str .=  '<td>'.$variant['size'].'</td>';
                 }
+                else if(count($sizes) > 0){
+
+                    $com_str .=  '<td>';
+                    foreach ($sizes as $size) {
+                        if(!empty($size)){
+                            $size =  $this->_convertStringTo1251($size);
+                            $com_str .= $size;
+                        }
+                    }
+                    $com_str .=  '</td>';
+                }
+
                 if(isset($variant['color']) && $variant['color'] !== '') {
                     $com_str .=  '<td>'.$variant['color'].'</td>';
+                } else if(count($colors) > 0){
+
+                    $com_str .=  '<td>';
+                    foreach ($colors as $color) {
+                        //print_r(mb_detect_encoding($color));
+                        if(!empty($color)){
+                            $color =  $this->_convertStringTo1251($color);
+                            $com_str .= $color;
+                        }
+                    }
+                    $com_str .=  '</td>';
+                }
+
+
+                if(isset($variant['sklad'])) {
+                    $com_str .=  '<td>';
+                    $com_str .= $this->getSkladName($variant['sklad']);
+                    $com_str .=  '</td>';
                 }
                 $com_str .= '</tr>';
                 $i++;
